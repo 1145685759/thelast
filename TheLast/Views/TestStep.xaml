@@ -1,0 +1,101 @@
+﻿<UserControl x:Class="TheLast.Views.TestStep"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TheLast.Views"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:rg="clr-namespace:unvell.ReoGrid;assembly=unvell.ReoGrid"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
+    <Grid Margin="50">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox
+            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+            Text="{Binding CurrentDto.SpecificationRequirements}"
+            VerticalAlignment="Stretch"
+            AcceptsReturn="True"
+            TextWrapping="Wrap"
+            VerticalScrollBarVisibility="Auto"
+            md:HintAssist.Hint="规格书要求"/>
+        <Grid  Margin="20 0"  Grid.Column="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.2*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button Content="添加步骤" Width="200" HorizontalAlignment="Right"  Command="{Binding AddTestStep}" Cursor="Hand"/>
+            <DataGrid SelectionUnit="FullRow" Grid.Row="1" SelectedItem="{Binding CurrentItem}" MinHeight="400" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="grid" LoadingRow="DataGrid_LoadingRow" AutoGenerateColumns="False"  CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding TestStepDtos}">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="序号" IsReadOnly="True"  >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Header}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="应用条件" Width="200">
+                        <DataGridTemplateColumn.CellTemplate >
+                            <DataTemplate>
+                                <TextBox Text="{Binding Conditions}" Name="Conditions" TextWrapping="Wrap" >
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="LostFocus">
+                                            <i:InvokeCommandAction 
+                                                    CommandParameter="{Binding ElementName=Conditions, Path=Text}"
+                                                    Command="{Binding DataContext.ConditionsLostFocus, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </TextBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="测试内容" Width="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding TestContent}" Name="TestContent" TextWrapping="Wrap">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="LostFocus">
+                                            <i:InvokeCommandAction 
+                                                    CommandParameter="{Binding ElementName=TestContent, Path=Text}"
+                                                    Command="{Binding DataContext.TestContentLostFocus, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </TextBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn ElementStyle="{DynamicResource MaterialDesignDataGridTextColumnStyle}"  Header="测试过程" Binding="{Binding TestProcess}" IsReadOnly="True"/>
+                    <DataGridTextColumn ElementStyle="{DynamicResource MaterialDesignDataGridTextColumnStyle}"  Header="判断内容" Binding="{Binding JudgmentContent}" IsReadOnly="True"/>
+                    <DataGridTemplateColumn Header="备注" Width="200" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Remark}" Name="Remark" TextWrapping="Wrap">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="LostFocus">
+                                            <i:InvokeCommandAction 
+                                                    CommandParameter="{Binding ElementName=Remark, Path=Text}"
+                                                    Command="{Binding DataContext.RemarkLostFocus, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </TextBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="操作">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="配置测试过程" CommandParameter="{Binding ElementName=grid, Path=CurrentCell.Item}" Command="{Binding DataContext.ConfigInit,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
+                                    <Button Content="配置判断内容" CommandParameter="{Binding ElementName=grid, Path=CurrentCell.Item}" Command="{Binding DataContext.ConfigFeedback,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}" Margin="5 0"/>
+                                    <Button Content="删除" CommandParameter="{Binding ElementName=grid, Path=CurrentCell.Item}" Command="{Binding DataContext.DeleteTestStep,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+        </Grid>
+    </Grid>
+</UserControl>

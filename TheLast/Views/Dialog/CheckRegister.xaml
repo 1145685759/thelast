@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="TheLast.Views.Dialog.CheckRegister"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TheLast.Views.Dialog"
+             mc:Ignorable="d" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Width="450" Height="280">
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock
+            Padding="20,10"
+            Text="查看/编辑寄存器" FontWeight="Bold" FontSize="20" />
+        
+            <DockPanel Grid.Row="1" LastChildFill="False">
+                <TextBlock Text="是否启用:" DockPanel.Dock="Top" Margin="20 10"/>
+                <ComboBox DockPanel.Dock="Top" Margin="20 0" SelectedIndex="{Binding SelectedIndex}">
+                    <ComboBoxItem Content="关闭"/>
+                    <ComboBoxItem Content="启用"/>
+                </ComboBox>
+                <TextBox
+                Text="{Binding Model.Address}"
+                Margin="20,0" md:HintAssist.Hint="请输入寄存器地址" DockPanel.Dock="Top" Cursor="IBeam"/>
+                <TextBox Margin="20,10" 
+                     MinHeight="100"  Text="{Binding Model.Name}"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     md:HintAssist.Hint="请给寄存器命名" DockPanel.Dock="Top" Cursor="IBeam"/>
+            </DockPanel>
+
+            <StackPanel Margin="10" Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
+                <Button Content="取消" Margin="0,0,10,0"
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource MaterialDesignOutlinedButton}"/>
+                <Button Content="确定"      Command="{Binding SaveCommand}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

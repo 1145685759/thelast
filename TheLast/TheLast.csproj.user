@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <ApplicationDefinition Update="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Views\AutomaticTestingView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\BasicParameters.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Dialog\ComSetting.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Dialog\AddRegister.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Dialog\AddInit.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Dialog\CheckRegister.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\ManualTest.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\ModuleView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\ProjectManager.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\TestStep.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\AutomaticTestingView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\BasicParameters.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dialog\ComSetting.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dialog\AddFeedback.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dialog\AddRegister.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dialog\AddInit.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dialog\CheckRegister.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ManualTest.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ModuleView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\MsgView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ProgressView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ProjectManager.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\TestStep.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

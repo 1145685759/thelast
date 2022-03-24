@@ -1,0 +1,215 @@
+﻿using AutoMapper;
+using Modbus.Device;
+using Prism.Commands;
+using Prism.Events;
+using Prism.Ioc;
+using Prism.Mvvm;
+using Prism.Regions;
+using SqlSugar;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using TheLast.Common;
+using TheLast.Dtos;
+using TheLast.Entities;
+using TheLast.Events;
+using TheLast.Extensions;
+
+namespace TheLast.ViewModels
+{
+    public class AutomaticTestingViewModel: NavigationViewModel
+    {
+        private ProjectDto currentProjectDto;
+        public ProjectDto CurrentProjectDto
+        {
+            get { return currentProjectDto; }
+            set { SetProperty(ref currentProjectDto, value); }
+        }
+        public ModbusSerialMaster ModbusSerialMaster { get; set; }
+        private List<Module> currentModules;
+        private readonly ISqlSugarClient sqlSugarClient;
+        private readonly IMapper mapper;
+        private readonly IEventAggregator eventAggregator;
+        private readonly IDialogHostService dialogHostService;
+
+        public List<Module> CurrentModules
+        {
+            get { return currentModules; }
+            set { SetProperty(ref currentModules, value); }
+        }
+        private Module currentModule;
+        public Module CurrentModule
+        {
+            get { return currentModule; }
+            set { SetProperty(ref currentModule, value); }
+        }
+        private ModuleDto currentDto;
+        public ModuleDto CurrentDto
+        {
+            get { return currentDto; }
+            set { SetProperty(ref currentDto, value); }
+        }
+        private SolidColorBrush color=new SolidColorBrush(Colors.Black);
+        public SolidColorBrush Color
+        {
+            get { return color; }
+            set { SetProperty(ref color, value); }
+        }
+        private List<TestStepDto> currentTestStepDtos;
+        public List<TestStepDto> CurrentTestStepDtos
+        {
+            get { return currentTestStepDtos; }
+            set { SetProperty(ref currentTestStepDtos, value); }
+        }
+        private ObservableCollection<TestStepDto> testStepDtos;
+        public ObservableCollection<TestStepDto> TestStepDtos
+        {
+            get { return testStepDtos; }
+            set { SetProperty(ref testStepDtos, value); }
+        }
+        public AutomaticTestingViewModel(IContainerProvider containerProvider,ISqlSugarClient sqlSugarClient,IMapper mapper,  IDialogHostService dialogHostService) :base(containerProvider)
+        {
+            TestStepDtos = new ObservableCollection<TestStepDto>();
+            this.sqlSugarClient = sqlSugarClient;
+            this.mapper = mapper;
+            this.dialogHostService = dialogHostService;
+        }
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            base.OnNavigatedTo(navigationContext);
+            CurrentProjectDto=navigationContext.Parameters.GetValue<ProjectDto>("Project");
+            ModbusSerialMaster = navigationContext.Parameters.GetValue<ModbusSerialMaster>("Master");
+            CurrentModules =await sqlSugarClient.Queryable<Module>().Where(x => x.ProjectId == CurrentProjectDto.Id).ToListAsync();
+            CurrentDto = mapper.Map<ModuleDto>(CurrentModules[0]);
+            var list = await sqlSugarClient.Queryable<TestStep>().Mapper(it => it.Inits, it => it.Inits.First().TestStepId).Mapper(it => it.FeedBacks, it => it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
+            TestStepDtos.Clear();
+            foreach (var item in list)
+            {
+                TestStepDtos.Add(new TestStepDto 
+                {
+                    Conditions = item.Conditions,
+                    FeedBacks = item.FeedBacks,
+                    Id = item.Id,
+                    Inits = item.Inits,
+                    JudgmentContent = item.JudgmentContent,
+                    ModuleId = item.ModuleId,
+                    Remark = item.Remark,
+                    Result = item.Result,
+                    TestContent = item.TestContent,
+                    TestProcess = item.TestProcess
+                });
+            }
+        }
+
+        private void GetMessage(ModbusSerialMaster obj)
+        {
+            ModbusSerialMaster = obj;
+        }
+
+        private DelegateCommand startRun;
+        public DelegateCommand StartRun =>
+            startRun ?? (startRun = new DelegateCommand(ExecuteStartRun));
+
+        async void ExecuteStartRun()
+        {
+            if (ModbusSerialMaster==null)
+            {
+                var dialogResult = await dialogHostService.Question("温馨提示", $"未设置串口");
+                if (dialogResult.Result==Prism.Services.Dialogs.ButtonResult.OK)
+                {
+                    return;
+                }
+                if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK) return;
+            }
+            foreach (var item in CurrentModules)
+            {
+                var testSteps =await sqlSugarClient.Queryable<TestStep>().Mapper(it=>it.Inits,it=>it.Inits.First().TestStepId).Mapper(it=>it.FeedBacks,it=>it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == item.Id).ToListAsync();
+                CurrentTestStepDtos = new List<TestStepDto>();
+                foreach (var item1 in testSteps)
+                {
+                    CurrentTestStepDtos.Add(new TestStepDto 
+                    {
+                        Conditions=item1.Conditions,
+                        FeedBacks=item1.FeedBacks,
+                        Id=item1.Id,
+                        Inits=item1.Inits,
+                        JudgmentContent=item1.JudgmentContent,
+                        ModuleId=item1.ModuleId,
+                        Remark=item1.Remark,
+                        Result=item1.Result,
+                        TestContent=item1.TestContent,
+                        TestProcess=item1.TestProcess
+                    });
+                }
+                foreach (var testStep in testSteps)
+                {
+                    foreach (var init in testStep.Inits)
+                    {
+                        var address = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId)).Address;
+                        await ModbusSerialMaster.WriteSingleRegisterAsync(1, address, Convert.ToUInt16(init.WriteValue));
+                    }
+                    foreach (var feedback in testStep.FeedBacks)
+                    {
+                        var address = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedback.RegisterId)).Address;
+                        if (feedback.DelayModeId==1)
+                        {
+                            await Task.Delay(feedback.DelayTime * 1000);
+                            var result= await ModbusSerialMaster.ReadHoldingRegistersAsync(1, address, 1);
+                            if (result[0].ToString()!=feedback.TagetValue)
+                            {
+                                testStep.Result="未通过";
+                                Color =new SolidColorBrush(Colors.Red);
+                                await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
+                                var list = await sqlSugarClient.Queryable<TestStep>().Mapper(it => it.Inits, it => it.Inits.First().TestStepId).Mapper(it => it.FeedBacks, it => it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
+                                TestStepDtos.Clear();
+                                foreach (var item2 in list)
+                                {
+                                    TestStepDtos.Add(new TestStepDto
+                                    {
+                                        Conditions = item2.Conditions,
+                                        FeedBacks = item2.FeedBacks,
+                                        Id = item2.Id,
+                                        Inits = item2.Inits,
+                                        JudgmentContent = item2.JudgmentContent,
+                                        ModuleId = item2.ModuleId,
+                                        Remark = item2.Remark,
+                                        Result = item2.Result,
+                                        TestContent = item2.TestContent,
+                                        TestProcess = item2.TestProcess
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                testStep.Result = "通过";
+                                await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
+                                var list = await sqlSugarClient.Queryable<TestStep>().Mapper(it => it.Inits, it => it.Inits.First().TestStepId).Mapper(it => it.FeedBacks, it => it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
+                                TestStepDtos.Clear();
+                                foreach (var item2 in list)
+                                {
+                                    TestStepDtos.Add(new TestStepDto
+                                    {
+                                        Conditions = item2.Conditions,
+                                        FeedBacks = item2.FeedBacks,
+                                        Id = item2.Id,
+                                        Inits = item2.Inits,
+                                        JudgmentContent = item2.JudgmentContent,
+                                        ModuleId = item2.ModuleId,
+                                        Remark = item2.Remark,
+                                        Result = item2.Result,
+                                        TestContent = item2.TestContent,
+                                        TestProcess = item2.TestProcess
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

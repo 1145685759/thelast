@@ -136,6 +136,7 @@ namespace TheLast.ViewModels
                     }).ExecuteCommandAsync();
                     var testStep = await sqlSugarClient.Queryable<TestStep>().FirstAsync(x => x.Id == item.TestStepId);
                     var registerName = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId)).Name;
+                    testStep.JudgmentContent = string.Empty;
                     testStep.JudgmentContent += $"寄存器【{registerName}】=【{item.DisplayTagetValue}】\r\n";
                     await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
                 }
@@ -153,6 +154,7 @@ namespace TheLast.ViewModels
                     }).ExecuteCommandAsync();
                     var testStep = await sqlSugarClient.Queryable<TestStep>().FirstAsync(x => x.Id == item.TestStepId);
                     var registerName = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId)).Name;
+                    testStep.JudgmentContent = string.Empty;
                     testStep.JudgmentContent += $"寄存器【{registerName}】=【{item.DisplayTagetValue}】\r\n";
                     await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
                 }
@@ -261,6 +263,7 @@ namespace TheLast.ViewModels
         async void ExecuteDeleteFeedbackCommand(FeedBackDto parameter)
         {
             await sqlSugarClient.Deleteable(mapper.Map<FeedBack>(parameter)).ExecuteCommandAsync();
+            
             AddFeedbackDtoList.Remove(parameter);
         }
     }

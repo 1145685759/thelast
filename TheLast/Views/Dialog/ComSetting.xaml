@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              Width="450" Height="280"
-             xmlns:local="clr-namespace:TheLast.Views">
-    <Grid>
+             xmlns:local="clr-namespace:TheLast.Views" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <materialDesign:Card>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -15,7 +15,10 @@
             <TextBlock
             Padding="20,10"
             Text="端口设置" FontWeight="Bold" FontSize="20" />
-            <ComboBox Grid.Row="1" ItemsSource="{Binding ComPorts}" SelectedItem="{Binding CurrentComPort}" Width="200" VerticalContentAlignment="Center" Height="50"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" >
+                <TextBlock Text="端口号:" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding ComPorts}" SelectedItem="{Binding CurrentComPort}" VerticalContentAlignment="Center" Width="200"  Height="30"/>
+            </StackPanel>
             <StackPanel Margin="10" Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
                 <Button Content="取消" Margin="0,0,10,0"
                     Command="{Binding CancelCommand}"
@@ -23,5 +26,5 @@
                 <Button Content="确定"      Command="{Binding SaveCommand}" Cursor="Hand"/>
             </StackPanel>
         </Grid>
-    </Grid>
+    </materialDesign:Card>
 </UserControl>

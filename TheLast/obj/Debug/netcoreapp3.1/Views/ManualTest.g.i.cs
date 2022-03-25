@@ -62,7 +62,7 @@ namespace TheLast.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/TheLast;V1.0.0.0;component/views/manualtest.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/TheLast;component/views/manualtest.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\ManualTest.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

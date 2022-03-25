@@ -38,5 +38,11 @@ namespace TheLast.Dtos
             get { return isEnable; }
             set { SetProperty(ref isEnable, value); }
         }
+        private bool isDisplay=true;
+        public bool IsDisplay
+        {
+            get { return isDisplay; }
+            set { SetProperty(ref isDisplay, value); }
+        }
     }
 }

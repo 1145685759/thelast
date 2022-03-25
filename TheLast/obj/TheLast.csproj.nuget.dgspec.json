@@ -68,9 +68,17 @@
               "target": "Package",
               "version": "[1.0.2, )"
             },
+            "OxyPlot.Wpf": {
+              "target": "Package",
+              "version": "[2.1.0, )"
+            },
             "Prism.DryIoc": {
               "target": "Package",
               "version": "[8.0.0.1909, )"
+            },
+            "SharpVectors": {
+              "target": "Package",
+              "version": "[1.7.7, )"
             },
             "SqlSugarCore": {
               "target": "Package",

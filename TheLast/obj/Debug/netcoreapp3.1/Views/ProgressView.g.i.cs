@@ -54,7 +54,7 @@ namespace TheLast.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/TheLast;V1.0.0.0;component/views/progressview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/TheLast;component/views/progressview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\ProgressView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

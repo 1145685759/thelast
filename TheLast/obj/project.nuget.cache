@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "kCLzcyeO2e7tMS5XrUImIGgFQzqpk/pXwCk8l5wBmcsqPcyzJeNm8Q9kZmFFKRhN/lxa9jBXglGxYsieRFPlEA==",
+  "dgSpecHash": "zFymZki74tcXaUChr4F4EisYeXpHA/QAqosVdoCbaWdV5Vo2sOtY9EWh78lTXU0QWeTWOiM67DKGNQaowU24TA==",
   "success": true,
   "projectFilePath": "E:\\奥克斯项目\\奥克斯项目\\TheLast\\TheLast\\TheLast.csproj",
   "expectedPackageFiles": [
@@ -45,6 +45,9 @@
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\nmodbus4.core\\1.0.2\\nmodbus4.core.1.0.2.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\npgsql\\5.0.7\\npgsql.5.0.7.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\oracle.manageddataaccess.core\\3.21.1\\oracle.manageddataaccess.core.3.21.1.nupkg.sha512",
+    "C:\\Users\\wangzhuhui\\.nuget\\packages\\oxyplot.core\\2.1.0\\oxyplot.core.2.1.0.nupkg.sha512",
+    "C:\\Users\\wangzhuhui\\.nuget\\packages\\oxyplot.wpf\\2.1.0\\oxyplot.wpf.2.1.0.nupkg.sha512",
+    "C:\\Users\\wangzhuhui\\.nuget\\packages\\oxyplot.wpf.shared\\2.1.0\\oxyplot.wpf.shared.2.1.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\prism.core\\8.0.0.1909\\prism.core.8.0.0.1909.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\prism.dryioc\\8.0.0.1909\\prism.dryioc.8.0.0.1909.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\prism.wpf\\8.0.0.1909\\prism.wpf.8.0.0.1909.nupkg.sha512",
@@ -69,6 +72,7 @@
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
+    "C:\\Users\\wangzhuhui\\.nuget\\packages\\sharpvectors\\1.7.7\\sharpvectors.1.7.7.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.0.4\\sqlitepclraw.bundle_e_sqlite3.2.0.4.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\sqlitepclraw.core\\2.0.4\\sqlitepclraw.core.2.0.4.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.0.4\\sqlitepclraw.lib.e_sqlite3.2.0.4.nupkg.sha512",

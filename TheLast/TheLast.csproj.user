@@ -34,6 +34,9 @@
     <Compile Update="Views\ProjectManager.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\RealTimeCurve.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\TestStep.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -60,6 +63,9 @@
     <Page Update="Views\Dialog\CheckRegister.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\LoginView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -76,6 +82,12 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\ProjectManager.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\RealTimeCurve.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SkinView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\TestStep.xaml">

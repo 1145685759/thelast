@@ -25,7 +25,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Button Content="开始运行" Command="{Binding StartRun}" Width="200" HorizontalAlignment="Right" Margin="0 10" Cursor="Hand"/>
-            <DataGrid SelectionUnit="FullRow" IsReadOnly="True" Grid.Row="1" SelectedItem="{Binding CurrentItem}" MinHeight="400" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="grid" LoadingRow="DataGrid_LoadingRow" AutoGenerateColumns="False"  CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding TestStepDtos}">
+            <DataGrid  SelectionUnit="FullRow" IsReadOnly="True" Grid.Row="1" SelectedItem="{Binding CurrentItem}" MinHeight="400" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="grid" LoadingRow="DataGrid_LoadingRow" AutoGenerateColumns="False"  CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding TestStepDtos}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="序号" IsReadOnly="True"  >
                         <DataGridTemplateColumn.CellTemplate>
@@ -37,7 +37,7 @@
                     <DataGridTemplateColumn Header="应用条件" Width="200">
                         <DataGridTemplateColumn.CellTemplate >
                             <DataTemplate>
-                                <TextBox Text="{Binding Conditions}" Name="Conditions" TextWrapping="Wrap" >
+                                <TextBox Text="{Binding Conditions}" Name="Conditions" TextWrapping="Wrap" IsReadOnly="True" >
                                 </TextBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -45,7 +45,7 @@
                     <DataGridTemplateColumn Header="测试内容" Width="200">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox Text="{Binding TestContent}" Name="TestContent" TextWrapping="Wrap">
+                                <TextBox Text="{Binding TestContent}" Name="TestContent" TextWrapping="Wrap" IsReadOnly="True">
                                 </TextBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -55,14 +55,14 @@
                     <DataGridTemplateColumn Header="结果" Width="200" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox Text="{Binding Result}" x:Name="Result" TextWrapping="Wrap" TextChanged="Remark_TextChanged"/>
+                                <TextBox Text="{Binding Result}" x:Name="Result" TextWrapping="Wrap" TextChanged="Remark_TextChanged" IsReadOnly="True"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="备注" Width="200" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox Text="{Binding Remark}" Name="Remark" TextWrapping="Wrap">
+                                <TextBox Text="{Binding Remark}" Name="Remark" TextWrapping="Wrap" IsReadOnly="True">
                                 </TextBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

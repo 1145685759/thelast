@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:TheLast.Views.Dialog"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
-             Width="450" Height="280" >
+             Width="450"  >
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -19,16 +19,20 @@
             Text="添加寄存器" FontWeight="Bold" FontSize="20" />
 
             <DockPanel Grid.Row="1" LastChildFill="False">
-                <TextBox
-                Text="{Binding Model.Address}"
-                Margin="20,0" md:HintAssist.Hint="请输入寄存器地址" DockPanel.Dock="Top" Cursor="IBeam"/>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="20 10">
+                    <TextBlock Text="寄存器地址：" VerticalAlignment="Center"/>
+                    <TextBox
+                        Text="{Binding Model.Address}"
+                        Margin="10,0" md:HintAssist.Hint="请输入寄存器地址"  Cursor="IBeam"/>
+                </StackPanel>
+
                 <TextBox Margin="20,10" 
-                     MinHeight="100"  Text="{Binding Model.Name}"
+                     Text="{Binding Model.Name}"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
+                     VerticalAlignment="Center"
                      md:HintAssist.Hint="请给寄存器命名" DockPanel.Dock="Top" Cursor="IBeam"/>
             </DockPanel>
-
             <StackPanel Margin="10" Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
                 <Button Content="取消" Margin="0,0,10,0"
                     Command="{Binding CancelCommand}"

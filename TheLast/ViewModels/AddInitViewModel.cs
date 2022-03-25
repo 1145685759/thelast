@@ -121,6 +121,7 @@ namespace TheLast.ViewModels
                         }).ExecuteCommandAsync();
                     var testStep= await sqlSugarClient.Queryable<TestStep>().FirstAsync(x => x.Id == item.TestStepId);
                     var registerName = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId)).Name;
+                    testStep.TestProcess = string.Empty;
                     testStep.TestProcess += $"向寄存器【{registerName}】写入值【{item.DisplayValue}】\r\n";
                     await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
                 }
@@ -134,6 +135,11 @@ namespace TheLast.ViewModels
                             WriteValue = item.WriteValue,
                             DisplayValue=item.DisplayValue
                         }).ExecuteCommandAsync();
+                    var testStep = await sqlSugarClient.Queryable<TestStep>().FirstAsync(x => x.Id == item.TestStepId);
+                    var registerName = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId)).Name;
+                    testStep.TestProcess = string.Empty;
+                    testStep.TestProcess += $"向寄存器【{registerName}】写入值【{item.DisplayValue}】\r\n";
+                    await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
 
                 }
             }

@@ -21,25 +21,23 @@ namespace TheLast.ViewModels
         private ObservableCollection<WriteRegister> writeRegisters;
         private readonly ISqlSugarClient sqlSugarClient;
         private readonly IMapper mapper;
-        private readonly IDialogHostService dialogHostService;
         private ModbusSerialMaster modbusSerialMaster;
         public ObservableCollection<WriteRegister> WriteRegisters
         {
             get { return writeRegisters; }
             set { SetProperty(ref writeRegisters, value); }
         }
-        public ManualTestViewModel(IContainerProvider containerProvider,ISqlSugarClient sqlSugarClient,IMapper mapper, IDialogHostService dialogHostService) : base(containerProvider)
+        public ManualTestViewModel(IContainerProvider containerProvider,ISqlSugarClient sqlSugarClient,IMapper mapper) : base(containerProvider)
         {
 
             WriteRegisters = new ObservableCollection<WriteRegister>();
             this.sqlSugarClient = sqlSugarClient;
             this.mapper = mapper;
-            this.dialogHostService = dialogHostService;
         }
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
-            modbusSerialMaster=navigationContext.Parameters.GetValue<ModbusSerialMaster>("Master");
+            modbusSerialMaster = App.ModbusSerialMaster;
             WriteRegisters.Clear();
             var registers= await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true).ToListAsync();
             foreach (var item in registers)

@@ -15,7 +15,9 @@
           "MaterialDesignThemes": "4.3.0",
           "Microsoft.Extensions.DependencyInjection": "6.0.0",
           "NModbus4.Core": "1.0.2",
+          "OxyPlot.Wpf": "2.1.0",
           "Prism.DryIoc": "8.0.0.1909",
+          "SharpVectors": "1.7.7",
           "SqlSugarCore": "5.0.6.1",
           "unvell.ReoGridWPF.dll": "3.0.0"
         },
@@ -567,6 +569,37 @@
           }
         }
       },
+      "OxyPlot.Core/2.1.0": {
+        "runtime": {
+          "lib/netstandard2.0/OxyPlot.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.1.0.0"
+          }
+        }
+      },
+      "OxyPlot.Wpf/2.1.0": {
+        "dependencies": {
+          "OxyPlot.Core": "2.1.0",
+          "OxyPlot.Wpf.Shared": "2.1.0"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/OxyPlot.Wpf.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.1.0.0"
+          }
+        }
+      },
+      "OxyPlot.Wpf.Shared/2.1.0": {
+        "dependencies": {
+          "OxyPlot.Core": "2.1.0"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/OxyPlot.Wpf.Shared.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.1.0.0"
+          }
+        }
+      },
       "Prism.Core/8.0.0.1909": {
         "runtime": {
           "lib/netstandard2.0/Prism.dll": {
@@ -691,6 +724,42 @@
       "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
       "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
       "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
+      "SharpVectors/1.7.7": {
+        "runtime": {
+          "lib/netcoreapp3.1/SharpVectors.Converters.Wpf.dll": {
+            "assemblyVersion": "1.7.7.0",
+            "fileVersion": "1.7.7.0"
+          },
+          "lib/netcoreapp3.1/SharpVectors.Core.dll": {
+            "assemblyVersion": "1.7.7.0",
+            "fileVersion": "1.7.7.0"
+          },
+          "lib/netcoreapp3.1/SharpVectors.Css.dll": {
+            "assemblyVersion": "1.7.7.0",
+            "fileVersion": "1.7.7.0"
+          },
+          "lib/netcoreapp3.1/SharpVectors.Dom.dll": {
+            "assemblyVersion": "1.7.7.0",
+            "fileVersion": "1.7.7.0"
+          },
+          "lib/netcoreapp3.1/SharpVectors.Model.dll": {
+            "assemblyVersion": "1.7.7.0",
+            "fileVersion": "1.7.7.0"
+          },
+          "lib/netcoreapp3.1/SharpVectors.Rendering.Gdi.dll": {
+            "assemblyVersion": "1.7.7.0",
+            "fileVersion": "1.7.7.0"
+          },
+          "lib/netcoreapp3.1/SharpVectors.Rendering.Wpf.dll": {
+            "assemblyVersion": "1.7.7.0",
+            "fileVersion": "1.7.7.0"
+          },
+          "lib/netcoreapp3.1/SharpVectors.Runtime.Wpf.dll": {
+            "assemblyVersion": "1.7.7.0",
+            "fileVersion": "1.7.7.0"
+          }
+        }
+      },
       "SQLitePCLRaw.bundle_e_sqlite3/2.0.4": {
         "dependencies": {
           "SQLitePCLRaw.core": "2.0.4",
@@ -2132,6 +2201,27 @@
       "path": "oracle.manageddataaccess.core/3.21.1",
       "hashPath": "oracle.manageddataaccess.core.3.21.1.nupkg.sha512"
     },
+    "OxyPlot.Core/2.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jG+Ct3T59fXDG2LE1hyUaXqH7i+h5Nfway1iB0+0NaY2mvDsz8Row/BKjiBWCt5NHp3+q9JSMiD2wpin2hh3kw==",
+      "path": "oxyplot.core/2.1.0",
+      "hashPath": "oxyplot.core.2.1.0.nupkg.sha512"
+    },
+    "OxyPlot.Wpf/2.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-behQPbPDbV5+OerxO1E2iKH7dNaDN4OFSCzWF8Dy296p9CG/RFd4KyOEHDmcckZ7mYp5KQ4BMLD+WtQLjDSQvQ==",
+      "path": "oxyplot.wpf/2.1.0",
+      "hashPath": "oxyplot.wpf.2.1.0.nupkg.sha512"
+    },
+    "OxyPlot.Wpf.Shared/2.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ign36iiFEadBUNF7SVgsPn3DCqP1VWjISRVgEChW5M4LNyC9Lz8iOPy1mypQG/imdn0mCQppTjju+0a4k+yTsA==",
+      "path": "oxyplot.wpf.shared/2.1.0",
+      "hashPath": "oxyplot.wpf.shared.2.1.0.nupkg.sha512"
+    },
     "Prism.Core/8.0.0.1909": {
       "type": "package",
       "serviceable": true,
@@ -2299,6 +2389,13 @@
       "sha512": "sha512-VB5cn/7OzUfzdnC8tqAIMQciVLiq2epm2NrAm1E9OjNRyG4lVhfR61SMcLizejzQP8R8Uf/0l5qOIbUEi+RdEg==",
       "path": "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl/4.3.0",
       "hashPath": "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512"
+    },
+    "SharpVectors/1.7.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jMGVqc/HvxlDo5kSm24VdNd3yi+QaeY9ubSFcksDleBnGWXMoW/jCtAc6u3k1EzY7uKjwb/e//8fWiRZC80OHw==",
+      "path": "sharpvectors/1.7.7",
+      "hashPath": "sharpvectors.1.7.7.nupkg.sha512"
     },
     "SQLitePCLRaw.bundle_e_sqlite3/2.0.4": {
       "type": "package",

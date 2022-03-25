@@ -33,7 +33,7 @@
                             HorizontalAlignment="Center"
                             Text="{Binding UserName}" />
                     </StackPanel>
-                    <mde:SideNavigation Items="{Binding NavigationItems}" Name="menu" WillSelectNavigationItemCommand="{Binding WillSelectNavigationItemCommand}" />
+                    <mde:SideNavigation Items="{Binding NavigationItems}" Name="menu"   WillSelectNavigationItemCommand="{Binding WillSelectNavigationItemCommand}"  />
                 </DockPanel>
             </md:DrawerHost.LeftDrawerContent>
             <Grid>
@@ -81,12 +81,9 @@
                             </md:PopupBox.ToggleContent>
 
                             <StackPanel>
-                                <!--<Button Command="{Binding AppCenterCommand}" Content="个人中心"/>-->
                                 <Button Command="{Binding LoginOutCommand}" Content="注销当前账户"/>
                             </StackPanel>
                         </md:PopupBox>
-
-
 
                         <StackPanel Orientation="Horizontal">
                             <ToggleButton
@@ -125,7 +122,6 @@
                         </StackPanel>
                     </DockPanel>
                 </md:ColorZone>
-
                 <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
             </Grid>
         </md:DrawerHost>

@@ -19,7 +19,6 @@ namespace TheLast.ViewModels
     
     public class MainWindowViewModel : NavigationViewModel, IConfigureService
     {
-        private ModbusSerialMaster ModbusSerialMaster;
         private IRegionNavigationJournal journal;
         private string _title = "Prism Application";
         public string Title
@@ -54,6 +53,7 @@ namespace TheLast.ViewModels
                 new SubheaderNavigationItem() { Subheader = "菜单" },
                 new FirstLevelNavigationItem() { Label = "系统设置", Icon = PackIconKind.SetAll},
                 new SecondLevelNavigationItem() { Label = "端口设置", Icon = PackIconKind.Baseball },
+                new SecondLevelNavigationItem() { Label = "个性化", Icon = PackIconKind.Magic },
                 new FirstLevelNavigationItem() { Label = "寄存器配置", Icon = PackIconKind.CashRegister},
                 new SecondLevelNavigationItem() { Label = "基础参数配置", Icon = PackIconKind.Baseball },
                 new SecondLevelNavigationItem() { Label = "内机控制参数配置", Icon = PackIconKind.Allergy },
@@ -84,25 +84,16 @@ namespace TheLast.ViewModels
         public DelegateCommand<WillSelectNavigationItemEventArgs> WillSelectNavigationItemCommand =>
             willSelectNavigationItemCommand ?? (willSelectNavigationItemCommand = new DelegateCommand<WillSelectNavigationItemEventArgs>(ExecuteWillSelectNavigationItemCommand));
 
-        async void ExecuteWillSelectNavigationItemCommand(WillSelectNavigationItemEventArgs eventArgs)
+        void ExecuteWillSelectNavigationItemCommand(WillSelectNavigationItemEventArgs eventArgs)
         {
-         
+
             var s = ((NavigationItem)eventArgs.NavigationItemToSelect).Label;
-            if (s=="端口设置")
-            {
-                var dialogResult= await dialog.ShowDialog("ComSetting",null);
-                if (dialogResult.Result == ButtonResult.OK)
-                {
-                    ModbusSerialMaster = dialogResult.Parameters.GetValue<ModbusSerialMaster>("Master");
-                }
-            }
             var menu = Views.FirstOrDefault(x => x.NavigationName == s);
             if (menu != null)
             {
                 UpdateLoading(true);
                 NavigationParameters keyValuePairs = new NavigationParameters();
                 keyValuePairs.Add("Type", s);
-                keyValuePairs.Add("Master", ModbusSerialMaster);
                 regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(menu.View, back =>
                 {
                     journal = back.Context.NavigationService.Journal;
@@ -121,7 +112,7 @@ namespace TheLast.ViewModels
             {
                 new Navigation2View{NavigationName="基础参数配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="内机控制参数配置",View="BasicParameters" },
-                new Navigation2View{NavigationName="外机控制参数",View="BasicParameters" },
+                new Navigation2View{NavigationName="外机控制参数配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="模拟量输入配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="模拟量输出配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="数字量输入配置",View="BasicParameters" },
@@ -133,13 +124,15 @@ namespace TheLast.ViewModels
                 new Navigation2View{NavigationName="实时曲线",View="RealTimeCurve" },
                 new Navigation2View{NavigationName="历史曲线",View="HistoricalCurve" },
                 new Navigation2View{NavigationName="用户列表",View="UserList" },
+                new Navigation2View{NavigationName="端口设置",View="ComSetting" },
+                new Navigation2View{NavigationName="个性化",View="SkinView" },
             };
         }
 
         public void Configure()
         {
             
-            regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("IndexView");
+            regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("ProjectManager");
         }
     }
 }

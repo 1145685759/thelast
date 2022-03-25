@@ -3,14 +3,12 @@ using Modbus.Device;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using TheLast.Common;
@@ -33,9 +31,6 @@ namespace TheLast.ViewModels
         private List<Module> currentModules;
         private readonly ISqlSugarClient sqlSugarClient;
         private readonly IMapper mapper;
-        private readonly IEventAggregator eventAggregator;
-        private readonly IDialogHostService dialogHostService;
-
         public List<Module> CurrentModules
         {
             get { return currentModules; }
@@ -71,18 +66,17 @@ namespace TheLast.ViewModels
             get { return testStepDtos; }
             set { SetProperty(ref testStepDtos, value); }
         }
-        public AutomaticTestingViewModel(IContainerProvider containerProvider,ISqlSugarClient sqlSugarClient,IMapper mapper,  IDialogHostService dialogHostService) :base(containerProvider)
+        public AutomaticTestingViewModel(IContainerProvider containerProvider,ISqlSugarClient sqlSugarClient,IMapper mapper) :base(containerProvider)
         {
             TestStepDtos = new ObservableCollection<TestStepDto>();
             this.sqlSugarClient = sqlSugarClient;
             this.mapper = mapper;
-            this.dialogHostService = dialogHostService;
         }
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
             CurrentProjectDto=navigationContext.Parameters.GetValue<ProjectDto>("Project");
-            ModbusSerialMaster = navigationContext.Parameters.GetValue<ModbusSerialMaster>("Master");
+            ModbusSerialMaster = App.ModbusSerialMaster;
             CurrentModules =await sqlSugarClient.Queryable<Module>().Where(x => x.ProjectId == CurrentProjectDto.Id).ToListAsync();
             CurrentDto = mapper.Map<ModuleDto>(CurrentModules[0]);
             var list = await sqlSugarClient.Queryable<TestStep>().Mapper(it => it.Inits, it => it.Inits.First().TestStepId).Mapper(it => it.FeedBacks, it => it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
@@ -105,10 +99,6 @@ namespace TheLast.ViewModels
             }
         }
 
-        private void GetMessage(ModbusSerialMaster obj)
-        {
-            ModbusSerialMaster = obj;
-        }
 
         private DelegateCommand startRun;
         public DelegateCommand StartRun =>
@@ -118,12 +108,8 @@ namespace TheLast.ViewModels
         {
             if (ModbusSerialMaster==null)
             {
-                var dialogResult = await dialogHostService.Question("温馨提示", $"未设置串口");
-                if (dialogResult.Result==Prism.Services.Dialogs.ButtonResult.OK)
-                {
-                    return;
-                }
-                if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK) return;
+                HandyControl.Controls.Growl.Info("未设置串口");
+                return;
             }
             foreach (var item in CurrentModules)
             {
@@ -154,15 +140,124 @@ namespace TheLast.ViewModels
                     }
                     foreach (var feedback in testStep.FeedBacks)
                     {
+                        var now = DateTime.Now;
                         var address = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedback.RegisterId)).Address;
                         if (feedback.DelayModeId==1)
                         {
-                            await Task.Delay(feedback.DelayTime * 1000);
+                           
                             var result= await ModbusSerialMaster.ReadHoldingRegistersAsync(1, address, 1);
                             if (result[0].ToString()!=feedback.TagetValue)
                             {
                                 testStep.Result="未通过";
                                 Color =new SolidColorBrush(Colors.Red);
+                                await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
+                                var list = await sqlSugarClient.Queryable<TestStep>().Mapper(it => it.Inits, it => it.Inits.First().TestStepId).Mapper(it => it.FeedBacks, it => it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
+                                TestStepDtos.Clear();
+                                foreach (var item2 in list)
+                                {
+                                    TestStepDtos.Add(new TestStepDto
+                                    {
+                                        Conditions = item2.Conditions,
+                                        FeedBacks = item2.FeedBacks,
+                                        Id = item2.Id,
+                                        Inits = item2.Inits,
+                                        JudgmentContent = item2.JudgmentContent,
+                                        ModuleId = item2.ModuleId,
+                                        Remark = item2.Remark,
+                                        Result = item2.Result,
+                                        TestContent = item2.TestContent,
+                                        TestProcess = item2.TestProcess
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                testStep.Result = "通过";
+                                await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
+                                var list = await sqlSugarClient.Queryable<TestStep>().Mapper(it => it.Inits, it => it.Inits.First().TestStepId).Mapper(it => it.FeedBacks, it => it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
+                                TestStepDtos.Clear();
+                                foreach (var item2 in list)
+                                {
+                                    TestStepDtos.Add(new TestStepDto
+                                    {
+                                        Conditions = item2.Conditions,
+                                        FeedBacks = item2.FeedBacks,
+                                        Id = item2.Id,
+                                        Inits = item2.Inits,
+                                        JudgmentContent = item2.JudgmentContent,
+                                        ModuleId = item2.ModuleId,
+                                        Remark = item2.Remark,
+                                        Result = item2.Result,
+                                        TestContent = item2.TestContent,
+                                        TestProcess = item2.TestProcess
+                                    });
+                                }
+                            }
+                            await Task.Delay(feedback.DelayTime * 1000);
+                        }
+                        if (feedback.DelayModeId==2)
+                        {
+                            
+                            while ((DateTime.Now-now).TotalSeconds<feedback.DelayTime)
+                            {
+                                var result= await ModbusSerialMaster.ReadHoldingRegistersAsync(1, address, 1);
+                                if (result[0].ToString() != feedback.TagetValue)
+                                {
+                                    testStep.Result = "未通过";
+                                    Color = new SolidColorBrush(Colors.Red);
+                                    await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
+                                    var list = await sqlSugarClient.Queryable<TestStep>().Mapper(it => it.Inits, it => it.Inits.First().TestStepId).Mapper(it => it.FeedBacks, it => it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
+                                    TestStepDtos.Clear();
+                                    foreach (var item2 in list)
+                                    {
+                                        TestStepDtos.Add(new TestStepDto
+                                        {
+                                            Conditions = item2.Conditions,
+                                            FeedBacks = item2.FeedBacks,
+                                            Id = item2.Id,
+                                            Inits = item2.Inits,
+                                            JudgmentContent = item2.JudgmentContent,
+                                            ModuleId = item2.ModuleId,
+                                            Remark = item2.Remark,
+                                            Result = item2.Result,
+                                            TestContent = item2.TestContent,
+                                            TestProcess = item2.TestProcess
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    testStep.Result = "通过";
+                                    await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
+                                    var list = await sqlSugarClient.Queryable<TestStep>().Mapper(it => it.Inits, it => it.Inits.First().TestStepId).Mapper(it => it.FeedBacks, it => it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
+                                    TestStepDtos.Clear();
+                                    foreach (var item2 in list)
+                                    {
+                                        TestStepDtos.Add(new TestStepDto
+                                        {
+                                            Conditions = item2.Conditions,
+                                            FeedBacks = item2.FeedBacks,
+                                            Id = item2.Id,
+                                            Inits = item2.Inits,
+                                            JudgmentContent = item2.JudgmentContent,
+                                            ModuleId = item2.ModuleId,
+                                            Remark = item2.Remark,
+                                            Result = item2.Result,
+                                            TestContent = item2.TestContent,
+                                            TestProcess = item2.TestProcess
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        if (feedback.DelayModeId==3)
+                        {
+                            await Task.Delay(feedback.DelayTime * 1000);
+                            var result = await ModbusSerialMaster.ReadHoldingRegistersAsync(1, address, 1);
+                            if (result[0].ToString() != feedback.TagetValue)
+                            {
+                                testStep.Result = "未通过";
+                                Color = new SolidColorBrush(Colors.Red);
                                 await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
                                 var list = await sqlSugarClient.Queryable<TestStep>().Mapper(it => it.Inits, it => it.Inits.First().TestStepId).Mapper(it => it.FeedBacks, it => it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
                                 TestStepDtos.Clear();

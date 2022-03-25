@@ -78,7 +78,7 @@ namespace TheLast.Views.Dialog {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/TheLast;V1.0.0.0;component/views/dialog/addinit.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/TheLast;component/views/dialog/addinit.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\..\Views\Dialog\AddInit.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

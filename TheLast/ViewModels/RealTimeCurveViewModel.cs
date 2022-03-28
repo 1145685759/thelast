@@ -56,7 +56,7 @@ namespace TheLast.ViewModels
                 HandyControl.Controls.Growl.Info("串口未设置");
                 return;
             }
-            var registerList= await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true).ToListAsync();
+            var registerList= await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true&&x.IsDisplay==true).ToListAsync();
             RegisterDtos = mapper.Map<ObservableCollection<RegisterDto>>(registerList);
             MyModel.Series.Clear();
             MyModel.IsLegendVisible = true;
@@ -70,15 +70,13 @@ namespace TheLast.ViewModels
                 LegendItemOrder = LegendItemOrder.Normal,
                 LegendItemAlignment = HorizontalAlignment.Right,
                 LegendSymbolPlacement = LegendSymbolPlacement.Right,
-                LegendMaxWidth = 200,
-                LegendMaxHeight = 200
             };
             MyModel.Legends.Add(l);
 
             foreach (var item in registerList)
             {
                
-                MyModel.Series.Add(new LineSeries {Title=item.Name,MarkerType=MarkerType.Circle}) ;
+                MyModel.Series.Add(new LineSeries {Title=item.Name,MarkerType=MarkerType.Circle,IsVisible=false}) ;
                 
             }
             await Task.Run(async () =>
@@ -89,6 +87,10 @@ namespace TheLast.ViewModels
                     {
                         foreach (LineSeries item in MyModel.Series)
                         {
+                            if (item==null)
+                            {
+                                continue;
+                            }
                             var result= await App.ModbusSerialMaster.ReadHoldingRegistersAsync(1,(await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == item.Title)).Address, 1);
                             item.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]));
                             if (item.Points.Count>60)
@@ -108,7 +110,7 @@ namespace TheLast.ViewModels
 
         void ExecuteCheck(RegisterDto parameter)
         {
-            if (parameter.IsDisplay)
+            if (parameter.IsVisible)
             {
                 MyModel.Series.FirstOrDefault(x => x.Title == parameter.Name).IsVisible = true;
             }

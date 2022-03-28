@@ -5,6 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TheLast.Views" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             Background="{DynamicResource MaterialDesignPaper}"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Grid Margin="50">
         <Grid.ColumnDefinitions>
@@ -21,10 +27,16 @@
             md:HintAssist.Hint="规格书要求"/>
         <Grid  Margin="20 0"  Grid.Column="1" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.1*"/>
+                <RowDefinition Height="0.2*"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Content="开始运行" Command="{Binding StartRun}" Width="200" HorizontalAlignment="Right" Margin="0 10" Cursor="Hand"/>
+            <StackPanel>
+                <StackPanel Margin="10  10 ">
+                    <TextBlock Text="进度条"/>
+                    <ProgressBar Value="{Binding ProValue}" Height="10"  />
+                </StackPanel>
+                <Button Content="开始运行" Command="{Binding StartRun}" Width="200" HorizontalAlignment="Right"  Cursor="Hand"/>
+            </StackPanel>
             <DataGrid  SelectionUnit="FullRow" IsReadOnly="True" Grid.Row="1" SelectedItem="{Binding CurrentItem}" MinHeight="400" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="grid" LoadingRow="DataGrid_LoadingRow" AutoGenerateColumns="False"  CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding TestStepDtos}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="序号" IsReadOnly="True"  >

@@ -18,6 +18,7 @@
     <PackageReference Include="NModbus4.Core" Version="1.0.2" />
     <PackageReference Include="OxyPlot.Wpf" Version="2.1.0" />
     <PackageReference Include="Prism.DryIoc" Version="8.0.0.1909" />
+    <PackageReference Include="Quartz" Version="3.4.0" />
     <PackageReference Include="SharpVectors" Version="1.7.7" />
     <PackageReference Include="SqlSugarCore" Version="5.0.6.1" />
     <PackageReference Include="unvell.ReoGridWPF.dll" Version="3.0.0" />

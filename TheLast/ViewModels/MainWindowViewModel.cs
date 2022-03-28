@@ -53,11 +53,12 @@ namespace TheLast.ViewModels
                 new SubheaderNavigationItem() { Subheader = "菜单" },
                 new FirstLevelNavigationItem() { Label = "系统设置", Icon = PackIconKind.SetAll},
                 new SecondLevelNavigationItem() { Label = "端口设置", Icon = PackIconKind.Baseball },
+                 new SecondLevelNavigationItem() { Label = "后台任务管理", Icon = PackIconKind.TicketConfirmation },
                 new SecondLevelNavigationItem() { Label = "个性化", Icon = PackIconKind.Magic },
                 new FirstLevelNavigationItem() { Label = "寄存器配置", Icon = PackIconKind.CashRegister},
                 new SecondLevelNavigationItem() { Label = "基础参数配置", Icon = PackIconKind.Baseball },
                 new SecondLevelNavigationItem() { Label = "内机控制参数配置", Icon = PackIconKind.Allergy },
-                new SecondLevelNavigationItem() { Label = "外机控制参数配置", Icon = PackIconKind.ApplicationSettingsOutline },
+                new SecondLevelNavigationItem() { Label = "步进电机脉冲检测", Icon = PackIconKind.ApplicationSettingsOutline },
                 new SecondLevelNavigationItem() { Label = "模拟量输入配置", Icon = PackIconKind.AlphaABox },
                 new SecondLevelNavigationItem() { Label = "模拟量输出配置", Icon = PackIconKind.AlphaABoxOutline },
                 new SecondLevelNavigationItem() { Label = "数字量输入配置", Icon = PackIconKind.AlphaDBox },
@@ -112,7 +113,7 @@ namespace TheLast.ViewModels
             {
                 new Navigation2View{NavigationName="基础参数配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="内机控制参数配置",View="BasicParameters" },
-                new Navigation2View{NavigationName="外机控制参数配置",View="BasicParameters" },
+                new Navigation2View{NavigationName="步进电机脉冲检测",View="BasicParameters" },
                 new Navigation2View{NavigationName="模拟量输入配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="模拟量输出配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="数字量输入配置",View="BasicParameters" },
@@ -126,6 +127,7 @@ namespace TheLast.ViewModels
                 new Navigation2View{NavigationName="用户列表",View="UserList" },
                 new Navigation2View{NavigationName="端口设置",View="ComSetting" },
                 new Navigation2View{NavigationName="个性化",View="SkinView" },
+                new Navigation2View{ NavigationName="后台任务管理",View="QuartzManager"}
             };
         }
 

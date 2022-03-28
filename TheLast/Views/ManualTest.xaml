@@ -3,6 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             Background="{DynamicResource MaterialDesignPaper}"
              xmlns:local="clr-namespace:TheLast.Views" xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
     <Grid>
         <ScrollViewer Margin="50">
@@ -15,7 +21,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <md:TransitioningContent OpeningEffect="{md:TransitionEffect Kind=ExpandIn}">
-                            <StackPanel Orientation="Horizontal" Margin="20 0">
+                            <StackPanel Orientation="Horizontal" Margin="20 10">
                                 <TextBlock Text="{Binding RegisterDto.Name}" VerticalAlignment="Center"/>
                                 <TextBox Width="50" VerticalAlignment="Center" Text="{Binding Value}"/>
                                 <Button Width="50" Margin="10 0 0 0" Content="写" CommandParameter="{Binding}" Command="{Binding DataContext.LostFocusCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>

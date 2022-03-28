@@ -5,6 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TheLast.Views"
              mc:Ignorable="d" 
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             Background="{DynamicResource MaterialDesignPaper}"
              xmlns:oxy="http://oxyplot.org/wpf" xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -25,7 +31,7 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="10 0">
                             <TextBlock Text="{Binding Name}"/>
-                            <CheckBox IsChecked="{Binding IsDisplay}" CommandParameter="{Binding}" Command="{Binding DataContext.Check, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                            <CheckBox IsChecked="{Binding IsVisible}" CommandParameter="{Binding}" Command="{Binding DataContext.Check, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

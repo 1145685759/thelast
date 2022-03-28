@@ -77,5 +77,11 @@ namespace TheLast.Dtos
             get { return address; }
             set { SetProperty(ref address, value); }
         }
+        private byte stationNum=1;
+        public byte StationNum
+        {
+            get { return stationNum; }
+            set { SetProperty(ref stationNum, value); }
+        }
     }
 }

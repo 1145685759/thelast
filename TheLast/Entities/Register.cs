@@ -13,7 +13,8 @@ namespace TheLast.Entities
         public string Name { get; set; }
         public bool IsEnable { get; set; }
         public string RegisterType { get; set; }
-        public bool IsDisplay { get; set; } = true;
+        public bool IsDisplay { get; set; } = false;
+        public byte StationNum { get; set; } = 1;
 
     }
 }

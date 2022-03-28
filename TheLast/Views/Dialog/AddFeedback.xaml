@@ -5,8 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TheLast.Views.Dialog"
              mc:Ignorable="d" 
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             Background="{DynamicResource MaterialDesignPaper}"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             Width="800" Height="600" >
+             >
     
     
     <Grid>
@@ -21,8 +27,18 @@
             Text="配置判断内容" FontWeight="Bold" FontSize="20" />
             <DockPanel Grid.Row="1" LastChildFill="False" Margin="20 10">
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                    <TextBlock Text="站号：" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding StationNumList}" SelectedItem="{Binding CurrentStationNum}" Name="StationCombox"  Margin="10 0" Width="50" VerticalAlignment="Center" >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction 
+                                                    CommandParameter="{Binding ElementName=StationCombox, Path=SelectedItem}"
+                                                    Command="{Binding DataContext.StationSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
                     <TextBlock Text="寄存器类型：" VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding RegisterTypeDtos}" SelectedItem="{Binding CurrentRegisterType}" Name="TypeCombox"  Margin="10 0" Width="50" VerticalAlignment="Center" >
+                    <ComboBox ItemsSource="{Binding RegisterTypeDtos}" SelectedItem="{Binding CurrentRegisterType}" Name="TypeCombox"  Margin="10 0" MinWidth="50" VerticalAlignment="Center" >
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction 
@@ -32,7 +48,7 @@
                         </i:Interaction.Triggers>
                     </ComboBox>
                     <TextBlock Text="可选寄存器：" VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding RegisterDtos}" SelectedItem="{Binding CurrentRegister}" Name="RegisterCombox"  DisplayMemberPath="Name"  Margin="10 0 " Width="50" VerticalAlignment="Center">
+                    <ComboBox ItemsSource="{Binding RegisterDtos}" SelectedItem="{Binding CurrentRegister}" Name="RegisterCombox"  DisplayMemberPath="Name"  Margin="10 0" MinWidth="50" VerticalAlignment="Center">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction 
@@ -44,13 +60,14 @@
                     <TextBlock Text="目标值：" VerticalAlignment="Center"/>
                     <ComboBox ItemsSource="{Binding ValueDictionaryDtos}" VerticalAlignment="Center" IsEditable="{Binding IsEditable}" SelectedItem="{Binding CurrentValueDictionary}" Text="{Binding InputValue}" DisplayMemberPath="DisplayValue" Margin=" 10 0" Width="50"/>
                     <TextBlock Text="延时模式：" VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding DelayModeList}" VerticalAlignment="Center"  SelectedIndex="{Binding CurrentDelayMode}"  DisplayMemberPath="Mode" Margin=" 10 0" Width="50"/>
+                    <ComboBox ItemsSource="{Binding DelayModeList}" VerticalAlignment="Center"  SelectedIndex="{Binding CurrentDelayMode}"  DisplayMemberPath="Mode" Margin=" 10 0" MinWidth="50"/>
                     <TextBlock Text="延时时间：" VerticalAlignment="Center"/>
                     <TextBox Text="{Binding DelatTime}" VerticalAlignment="Center"   Margin=" 10 0" Width="50"/>
                     <Button Content="添加" Command="{Binding AddFeedback}"/>
                 </StackPanel>
                 <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" Width="700" Margin="0 20" ItemsSource="{Binding AddFeedbackDtoList}">
                     <DataGrid.Columns>
+                        <DataGridTextColumn Header="站号" Binding="{Binding StationNum}"/>
                         <DataGridTextColumn Header="寄存器" Binding="{Binding Address}"/>
                         <DataGridTextColumn Header="目标值" Binding="{Binding DisplayTagetValue}"/>
                         <DataGridTextColumn Header="延时模式" Binding="{Binding DisplayDelayMode}"/>

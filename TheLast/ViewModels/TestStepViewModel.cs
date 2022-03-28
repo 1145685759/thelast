@@ -67,13 +67,13 @@ namespace TheLast.ViewModels
                 foreach (var init in listInit)
                 {
                     var register= await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
-                    initStr += $"向寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
+                    initStr += $"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
                 }
                 var feedbackList = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == item.Id).ToListAsync();
                 foreach (var feedBack in feedbackList)
                 {
                     var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedBack.RegisterId);
-                    feedbackStr += $"寄存器【{register.Name}】=【{feedBack.TagetValue}】\r\n";
+                    feedbackStr += $"站号【{register.StationNum}】 寄存器【{register.Name}】=【{feedBack.TagetValue}】\r\n";
                 }
                 TestStepDtos.Add(new TestStepDto
                 {
@@ -122,13 +122,13 @@ namespace TheLast.ViewModels
                         foreach (var init in listInit)
                         {
                             var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
-                            initStr += $"向寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
+                            initStr += $"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
                         }
                         var feedbackList = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == item.Id).ToListAsync();
                         foreach (var feedBack in feedbackList)
                         {
                             var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedBack.RegisterId);
-                            feedbackStr += $"寄存器【{register.Name}】=【{feedBack.TagetValue}】\r\n";
+                            feedbackStr += $"站号【{register.StationNum}】 寄存器【{register.Name}】=【{feedBack.TagetValue}】\r\n";
                         }
                         TestStepDtos.Add(new TestStepDto
                         {
@@ -176,13 +176,13 @@ namespace TheLast.ViewModels
                         foreach (var init in listInit)
                         {
                             var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
-                            initStr += $"向寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
+                            initStr += $"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
                         }
                         var feedbackList = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == item.Id).ToListAsync();
                         foreach (var feedBack in feedbackList)
                         {
                             var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedBack.RegisterId);
-                            feedbackStr += $"寄存器【{register.Name}】=【{feedBack.TagetValue}】\r\n";
+                            feedbackStr += $"站号【{register.StationNum}】 寄存器【{register.Name}】=【{feedBack.TagetValue}】\r\n";
                         }
                         TestStepDtos.Add(new TestStepDto
                         {
@@ -221,13 +221,13 @@ namespace TheLast.ViewModels
                 foreach (var init in listInit)
                 {
                     var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
-                    initStr += $"向寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
+                    initStr += $"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
                 }
                 var feedbackList = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == item.Id).ToListAsync();
                 foreach (var feedBack in feedbackList)
                 {
                     var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedBack.RegisterId);
-                    feedbackStr += $"寄存器【{register.Name}】=【{feedBack.TagetValue}】\r\n";
+                    feedbackStr += $"站号【{register.StationNum}】 寄存器【{register.Name}】=【{feedBack.TagetValue}】\r\n";
                 }
                 TestStepDtos.Add(new TestStepDto
                 {

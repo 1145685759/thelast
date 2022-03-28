@@ -18,6 +18,7 @@ namespace TheLast.Entities
         public int DelayModeId { get; set; }
         [SugarColumn(IsIgnore = true)]
         public DelayModel DelayModel { get; set; }
+        public byte StationNum { get; set; } = 1;
         public string DisplayTagetValue { get; set; }
     }
 }

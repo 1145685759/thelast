@@ -16,6 +16,18 @@ namespace TheLast.ViewModels
 {
     public class AddFeedbackViewModel : BindableBase, IDialogHostAware
     {
+        private List<byte> stationNumList;
+        public List<byte> StationNumList
+        {
+            get { return stationNumList; }
+            set { SetProperty(ref stationNumList, value); }
+        }
+        private byte stationNum;
+        public byte StationNum
+        {
+            get { return stationNum; }
+            set { SetProperty(ref stationNum, value); }
+        }
         private int currentDelayMode;
         public int CurrentDelayMode
         {
@@ -27,6 +39,12 @@ namespace TheLast.ViewModels
         {
             get { return delatTime; }
             set { SetProperty(ref delatTime, value); }
+        }
+        private byte currentStationNum;
+        public byte CurrentStationNum
+        {
+            get { return currentStationNum; }
+            set { SetProperty(ref currentStationNum, value); }
         }
         private List<DelayModelDto> delayModeList;
         public List<DelayModelDto> DelayModeList
@@ -101,6 +119,7 @@ namespace TheLast.ViewModels
         }
         public AddFeedbackViewModel(IMapper mapper, ISqlSugarClient sqlSugarClient)
         {
+            StationNumList = new List<byte>();
             DelayModeList = new List<DelayModelDto>();
             RegisterTypeDtos = new List<string>();
             ValueDictionaryDtos = new List<ValueDictionaryDto>();
@@ -117,7 +136,16 @@ namespace TheLast.ViewModels
             if (DialogHost.IsDialogOpen(DialogHostName))
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No)); //取消返回NO告诉操作结束
         }
+        private DelegateCommand<object> stationSelectedCommand;
+        public DelegateCommand<object> StationSelectedCommand =>
+            stationSelectedCommand ?? (stationSelectedCommand = new DelegateCommand<object>(ExecuteStationSelectedCommand));
 
+        async void ExecuteStationSelectedCommand(object parameter)
+        {
+            CurrentStationNum = (byte)parameter;
+            List<string> registerTypes = await sqlSugarClient.Queryable<Register>().Where(it => it.StationNum == CurrentStationNum).Select(it => it.RegisterType).ToListAsync();
+            RegisterTypeDtos = registerTypes.Distinct().ToList();
+        }
         private async void Save()
         {
             foreach (var item in AddFeedbackDtoList)
@@ -135,9 +163,9 @@ namespace TheLast.ViewModels
                         DelayTime = item.DelayTime,
                     }).ExecuteCommandAsync();
                     var testStep = await sqlSugarClient.Queryable<TestStep>().FirstAsync(x => x.Id == item.TestStepId);
-                    var registerName = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId)).Name;
+                    var register = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId));
                     testStep.JudgmentContent = string.Empty;
-                    testStep.JudgmentContent += $"寄存器【{registerName}】=【{item.DisplayTagetValue}】\r\n";
+                    testStep.JudgmentContent += $"站号【{register.StationNum}】 寄存器【{register.Name}】=【{item.DisplayTagetValue}】\r\n";
                     await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
                 }
                 else
@@ -153,9 +181,9 @@ namespace TheLast.ViewModels
                         DisplayTagetValue=item.DisplayTagetValue
                     }).ExecuteCommandAsync();
                     var testStep = await sqlSugarClient.Queryable<TestStep>().FirstAsync(x => x.Id == item.TestStepId);
-                    var registerName = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId)).Name;
+                    var register = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId));
                     testStep.JudgmentContent = string.Empty;
-                    testStep.JudgmentContent += $"寄存器【{registerName}】=【{item.DisplayTagetValue}】\r\n";
+                    testStep.JudgmentContent += $"站号【{register.StationNum}】 寄存器【{register.Name}】=【{item.DisplayTagetValue}】\r\n";
                     await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
                 }
             }
@@ -169,6 +197,7 @@ namespace TheLast.ViewModels
 
         public async void OnDialogOpend(IDialogParameters parameters)
         {
+            StationNumList = (await sqlSugarClient.Queryable<Register>().Select(it => it.StationNum).ToListAsync()).Distinct().ToList();
             CurrentTestStepDto = parameters.GetValue<TestStepDto>("Value");
             var delayList = await sqlSugarClient.Queryable<DelayModel>().ToListAsync();
             DelayModeList = mapper.Map<List<DelayModelDto>>(delayList);
@@ -177,6 +206,7 @@ namespace TheLast.ViewModels
             foreach (var item in list)
             {
                 FeedBackDto feedBackDto = new FeedBackDto();
+                feedBackDto.StationNum = sqlSugarClient.Queryable<Register>().First(x => x.Id == item.RegisterId).StationNum;
                 feedBackDto.Address = sqlSugarClient.Queryable<Register>().First(x => x.Id == item.RegisterId).Name;
                 feedBackDto.Id = item.Id;
                 feedBackDto.RegisterId = item.RegisterId;
@@ -189,8 +219,6 @@ namespace TheLast.ViewModels
                 feedBackDto.DisplayDelayMode = s.Mode;
                 AddFeedbackDtoList.Add(feedBackDto);
             }
-            List<string> registerTypes = await sqlSugarClient.Queryable<Register>().Select(it => it.RegisterType).ToListAsync();
-            RegisterTypeDtos = registerTypes.Distinct().ToList();
         }
         private DelegateCommand<string> selectedCommand;
         public DelegateCommand<string> SelectedCommand =>
@@ -198,7 +226,7 @@ namespace TheLast.ViewModels
 
         async void ExecuteSelectedCommand(string parameter)
         {
-            var resulet = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == parameter).ToListAsync();
+            var resulet = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == parameter && x.StationNum == CurrentStationNum).ToListAsync();
 
             RegisterDtos = mapper.Map<List<RegisterDto>>(resulet);
         }
@@ -229,6 +257,7 @@ namespace TheLast.ViewModels
             if (IsEditable)
             {
                 FeedBackDto feedBackDto = new FeedBackDto();
+                feedBackDto.StationNum =(await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id)).StationNum;
                 feedBackDto.Address = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id)).Name;
                 feedBackDto.RegisterId = CurrentRegister.Id;
                 feedBackDto.DisplayDelayMode = (await sqlSugarClient.Queryable<DelayModel>().FirstAsync(x => x.Id == CurrentDelayMode + 1)).Mode;
@@ -242,6 +271,7 @@ namespace TheLast.ViewModels
             else
             {
                 FeedBackDto feedBackDto = new FeedBackDto();
+                feedBackDto.StationNum = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id)).StationNum;
                 feedBackDto.Address = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id)).Name;
                 feedBackDto.RegisterId = CurrentRegister.Id;
                 feedBackDto.DisplayDelayMode = (await sqlSugarClient.Queryable<DelayModel>().FirstAsync(x => x.Id == CurrentDelayMode + 1)).Mode;

@@ -60,7 +60,7 @@ namespace TheLast.ViewModels
                 HandyControl.Controls.Growl.Info("写入失败：未设置串口");
                 return;
             }
-            await modbusSerialMaster.WriteSingleRegisterAsync(1, parameter.RegisterDto.Address, parameter.Value);
+            await modbusSerialMaster.WriteSingleRegisterAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, parameter.Value);
         }
     }
 }

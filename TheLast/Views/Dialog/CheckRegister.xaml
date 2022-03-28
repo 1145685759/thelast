@@ -5,6 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TheLast.Views.Dialog"
              mc:Ignorable="d" 
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             Background="{DynamicResource MaterialDesignPaper}"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              Width="450" >
     <Grid>
@@ -24,6 +30,10 @@
                     <ComboBoxItem Content="关闭"/>
                     <ComboBoxItem Content="启用"/>
                 </ComboBox>
+                <TextBlock Text="所属站号：" DockPanel.Dock="Top" Margin="20 10"/>
+                <TextBox
+                Text="{Binding Model.StationNum}"
+                Margin="20,10" md:HintAssist.Hint="请输入所属站号" DockPanel.Dock="Top" Cursor="IBeam"/>
                 <TextBlock Text="寄存器地址：" DockPanel.Dock="Top" Margin="20 10"/>
                 <TextBox
                 Text="{Binding Model.Address}"
@@ -35,6 +45,10 @@
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
                      md:HintAssist.Hint="请给寄存器命名" DockPanel.Dock="Top" Cursor="IBeam"/>
+                <TextBlock Text="是否显示实时曲线：" DockPanel.Dock="Top" Margin="20 10"/>
+                <CheckBox Margin="20,10" 
+                      IsChecked="{Binding Model.IsDisplay}"
+                      VerticalAlignment="Center" Content="是否显示" />
             </DockPanel>
 
             <StackPanel Margin=" 10" Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">

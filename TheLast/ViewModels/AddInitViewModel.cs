@@ -25,6 +25,18 @@ namespace TheLast.ViewModels
             get { return valueDictionaryDtos; }
             set { SetProperty(ref valueDictionaryDtos, value); }
         }
+        private byte currentStationNum;
+        public byte CurrentStationNum
+        {
+            get { return currentStationNum; }
+            set { SetProperty(ref currentStationNum, value); }
+        }
+        private List<byte> stationNumList;
+        public List<byte> StationNumList
+        {
+            get { return stationNumList; }
+            set { SetProperty(ref stationNumList, value); }
+        }
         private List<string> registerTypeDtos;
         private readonly IMapper mapper;
         private readonly ISqlSugarClient sqlSugarClient;
@@ -69,6 +81,12 @@ namespace TheLast.ViewModels
             get { return addInitDtoList; }
             set { SetProperty(ref addInitDtoList, value); }
         }
+        private byte stationNum;
+        public byte StationNum
+        {
+            get { return stationNum; }
+            set { SetProperty(ref stationNum, value); }
+        }
         private bool isEditable = false;
         public bool IsEditable
         {
@@ -96,6 +114,7 @@ namespace TheLast.ViewModels
             AddInitDtoList = new ObservableCollection<InitDto>();
             RegisterDtos = new List<RegisterDto>();
             this.mapper = mapper;
+            StationNumList = new List<byte>();
             this.sqlSugarClient = sqlSugarClient;
         }
 
@@ -110,6 +129,12 @@ namespace TheLast.ViewModels
             foreach (var item in AddInitDtoList)
             {
                 var entity = await sqlSugarClient.Queryable<Init>().FirstAsync(x => x.Id == item.Id);
+                var testStep = await sqlSugarClient.Queryable<TestStep>().FirstAsync(x => x.Id == item.TestStepId);
+                if (AddInitDtoList.IndexOf(item)==0)
+                {
+                    testStep.TestProcess = string.Empty;
+                }
+                
                 if (entity == null)
                 {
                         await sqlSugarClient.Insertable(new Init
@@ -119,10 +144,8 @@ namespace TheLast.ViewModels
                             WriteValue = item.WriteValue,
                             DisplayValue=item.DisplayValue,
                         }).ExecuteCommandAsync();
-                    var testStep= await sqlSugarClient.Queryable<TestStep>().FirstAsync(x => x.Id == item.TestStepId);
-                    var registerName = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId)).Name;
-                    testStep.TestProcess = string.Empty;
-                    testStep.TestProcess += $"向寄存器【{registerName}】写入值【{item.DisplayValue}】\r\n";
+                    var register = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId));
+                    testStep.TestProcess += $"向 站号【{register.StationNum}】寄存器【{register.Name}】写入值【{item.DisplayValue}】\r\n";
                     await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
                 }
                 else
@@ -135,10 +158,9 @@ namespace TheLast.ViewModels
                             WriteValue = item.WriteValue,
                             DisplayValue=item.DisplayValue
                         }).ExecuteCommandAsync();
-                    var testStep = await sqlSugarClient.Queryable<TestStep>().FirstAsync(x => x.Id == item.TestStepId);
-                    var registerName = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId)).Name;
-                    testStep.TestProcess = string.Empty;
-                    testStep.TestProcess += $"向寄存器【{registerName}】写入值【{item.DisplayValue}】\r\n";
+                    
+                    var register = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId));
+                    testStep.TestProcess += $"向 站号【{register.StationNum}】寄存器【{register.Name}】写入值【{item.DisplayValue}】\r\n";
                     await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
 
                 }
@@ -150,16 +172,27 @@ namespace TheLast.ViewModels
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK));
             }
         }
+        private DelegateCommand<object> stationSelectedCommand;
+        public DelegateCommand<object> StationSelectedCommand =>
+            stationSelectedCommand ?? (stationSelectedCommand = new DelegateCommand<object>(ExecuteStationSelectedCommand));
 
+        async void ExecuteStationSelectedCommand(object parameter)
+        {
+            CurrentStationNum = (byte)parameter;
+            List<string> registerTypes = await sqlSugarClient.Queryable<Register>().Where(it=>it.StationNum==CurrentStationNum).Select(it => it.RegisterType).ToListAsync();
+            RegisterTypeDtos = registerTypes.Distinct().ToList();
+        }
         public async void OnDialogOpend(IDialogParameters parameters)
         {
             CurrentTestStepDto = parameters.GetValue<TestStepDto>("Value");
+            StationNumList = (await sqlSugarClient.Queryable<Register>().Select(it => it.StationNum).ToListAsync()).Distinct().ToList();
             var list = await sqlSugarClient.Queryable<Init>().Where(x => x.TestStepId ==CurrentTestStepDto.Id).ToListAsync();
             AddInitDtoList.Clear();
             foreach (var item in list)
             {
                     AddInitDtoList.Add(new InitDto
                     {
+                        StationNum= sqlSugarClient.Queryable<Register>().First(x => x.Id == item.RegisterId).StationNum,
                         Address = sqlSugarClient.Queryable<Register>().First(x => x.Id == item.RegisterId).Name,
                         Id = item.Id,
                         RegisterId = item.RegisterId,
@@ -168,8 +201,8 @@ namespace TheLast.ViewModels
                         DisplayValue=item.DisplayValue,
                     });
             }
-            List<string> registerTypes = await sqlSugarClient.Queryable<Register>().Select(it => it.RegisterType).ToListAsync();
-            RegisterTypeDtos = registerTypes.Distinct().ToList();
+            //List<string> registerTypes = await sqlSugarClient.Queryable<Register>().Where(it=>it.StationNum==CurrentStationNum).Select(it => it.RegisterType).ToListAsync();
+            //RegisterTypeDtos = registerTypes.Distinct().ToList();
         }
         private DelegateCommand<string> selectedCommand;
         public DelegateCommand<string> SelectedCommand =>
@@ -177,7 +210,7 @@ namespace TheLast.ViewModels
 
         async void ExecuteSelectedCommand(string parameter)
         {
-            var resulet = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == parameter).ToListAsync();
+            var resulet = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == parameter&&x.StationNum==CurrentStationNum).ToListAsync();
 
             RegisterDtos = mapper.Map<List<RegisterDto>>(resulet);
         }
@@ -192,6 +225,20 @@ namespace TheLast.ViewModels
             if (result.Count == 0)
             {
                 IsEditable = true;
+            }
+            if (result.Count==0&&parameter.RegisterType.Contains("数字量"))
+            {
+                ValueDictionaryDtos.Clear(); IsEditable = false;
+                ValueDictionaryDtos.Add(new ValueDictionaryDto 
+                { 
+                    DisplayValue="断开",
+                    RealValue="0",
+                });
+                ValueDictionaryDtos.Add(new ValueDictionaryDto
+                {
+                    DisplayValue = "闭合",
+                    RealValue = "1",
+                });
             }
             else
             {
@@ -210,6 +257,7 @@ namespace TheLast.ViewModels
                 InitDto initDto = new InitDto
                 {
                     Address = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id)).Name,
+                    StationNum= (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id)).StationNum,
                     RegisterId = CurrentRegister.Id,
                     TestStepId = CurrentTestStepDto.Id,
                     WriteValue = inputValue,
@@ -223,6 +271,7 @@ namespace TheLast.ViewModels
                 InitDto initDto = new InitDto
                 {
                     Address = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id)).Name,
+                    StationNum = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id)).StationNum,
                     RegisterId = CurrentRegister.Id,
                     TestStepId = CurrentTestStepDto.Id,
                     WriteValue = CurrentValueDictionary.RealValue,

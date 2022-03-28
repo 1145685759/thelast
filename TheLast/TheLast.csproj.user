@@ -34,6 +34,9 @@
     <Compile Update="Views\ProjectManager.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\QuartzManager.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\RealTimeCurve.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -82,6 +85,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\ProjectManager.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\QuartzManager.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\RealTimeCurve.xaml">

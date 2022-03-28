@@ -38,11 +38,23 @@ namespace TheLast.Dtos
             get { return isEnable; }
             set { SetProperty(ref isEnable, value); }
         }
-        private bool isDisplay=true;
+        private bool isDisplay;
         public bool IsDisplay
         {
             get { return isDisplay; }
             set { SetProperty(ref isDisplay, value); }
+        }
+        private byte stationNum=1;
+        public byte StationNum
+        {
+            get { return stationNum; }
+            set { SetProperty(ref stationNum, value); }
+        }
+        private bool isVisible = false;
+        public bool IsVisible
+        {
+            get { return isVisible; }
+            set { SetProperty(ref isVisible, value); }
         }
     }
 }

@@ -238,7 +238,9 @@ namespace TheLast.ViewModels
                 ProjectDtos.Clear();
                 foreach (var item in list)
                 {
-                    ProjectDtos.Add(mapper.Map<ProjectDto>(item));
+                    ProjectDto projectDto = mapper.Map<ProjectDto>(item);
+                    projectDto.ModuleCount = (await sqlSugarClient.Queryable<Module>().Where(x => x.ProjectId == item.Id).ToListAsync()).Count;
+                    ProjectDtos.Add(projectDto);
                 }
             }
             if (string.IsNullOrEmpty(Search) && Status==1)
@@ -247,7 +249,9 @@ namespace TheLast.ViewModels
                 ProjectDtos.Clear();
                 foreach (var item in list)
                 {
-                    ProjectDtos.Add(mapper.Map<ProjectDto>(item));
+                    ProjectDto projectDto = mapper.Map<ProjectDto>(item);
+                    projectDto.ModuleCount = (await sqlSugarClient.Queryable<Module>().Where(x => x.ProjectId == item.Id).ToListAsync()).Count;
+                    ProjectDtos.Add(projectDto);
                 }
             }
             if (!string.IsNullOrEmpty(Search)&&Status==null)
@@ -256,7 +260,9 @@ namespace TheLast.ViewModels
                 ProjectDtos.Clear();
                 foreach (var item in list)
                 {
-                    ProjectDtos.Add(mapper.Map<ProjectDto>(item));
+                    ProjectDto projectDto = mapper.Map<ProjectDto>(item);
+                    projectDto.ModuleCount = (await sqlSugarClient.Queryable<Module>().Where(x => x.ProjectId == item.Id).ToListAsync()).Count;
+                    ProjectDtos.Add(projectDto);
                 }
             }
             if (string.IsNullOrEmpty(Search)&&Status==null)
@@ -268,7 +274,9 @@ namespace TheLast.ViewModels
                     ProjectDtos.Clear();
                     foreach (var item in todoResult)
                     {
-                        ProjectDtos.Add(mapper.Map<ProjectDto>(item));
+                        ProjectDto projectDto = mapper.Map<ProjectDto>(item);
+                        projectDto.ModuleCount = (await sqlSugarClient.Queryable<Module>().Where(x => x.ProjectId == item.Id).ToListAsync()).Count;
+                        ProjectDtos.Add(projectDto);
                     }
                 }
             }
@@ -278,7 +286,9 @@ namespace TheLast.ViewModels
                 ProjectDtos.Clear();
                 foreach (var item in list)
                 {
-                    ProjectDtos.Add(mapper.Map<ProjectDto>(item));
+                    ProjectDto projectDto = mapper.Map<ProjectDto>(item);
+                    projectDto.ModuleCount = (await sqlSugarClient.Queryable<Module>().Where(x => x.ProjectId == item.Id).ToListAsync()).Count;
+                    ProjectDtos.Add(projectDto);
                 }
             }
             

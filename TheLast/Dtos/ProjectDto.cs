@@ -31,5 +31,11 @@ namespace TheLast.Dtos
             get { return isComplete; }
             set { SetProperty(ref isComplete, value); }
         }
+        private int moduleCount;
+        public int ModuleCount
+        {
+            get { return moduleCount; }
+            set { SetProperty(ref moduleCount, value); }
+        }
     }
 }

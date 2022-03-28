@@ -220,7 +220,10 @@ namespace TheLast.ViewModels
                     ModuleDtos.Clear();
                     foreach (var item in list)
                     {
-                        ModuleDtos.Add(mapper.Map<ModuleDto>(item));
+                        ModuleDto moduleDto = mapper.Map<ModuleDto>(item);
+                        moduleDto.AbnormalTestStep = (await sqlSugarClient.Queryable<TestStep>().Where(x => x.Result =="未通过").ToListAsync()).Count;
+                        moduleDto.TestStepCount= (await sqlSugarClient.Queryable<TestStep>().Where(x => x.ModuleId == item.Id).ToListAsync()).Count;
+                        ModuleDtos.Add(moduleDto);
                     }
                 }
             }
@@ -236,7 +239,10 @@ namespace TheLast.ViewModels
                     ModuleDtos.Clear();
                     foreach (var item in todoResult)
                     {
-                        ModuleDtos.Add(mapper.Map<ModuleDto>(item));
+                        ModuleDto moduleDto = mapper.Map<ModuleDto>(item);
+                        moduleDto.AbnormalTestStep = (await sqlSugarClient.Queryable<TestStep>().Where(x => x.Result == "未通过").ToListAsync()).Count;
+                        moduleDto.TestStepCount = (await sqlSugarClient.Queryable<TestStep>().Where(x => x.ModuleId == item.Id).ToListAsync()).Count;
+                        ModuleDtos.Add(moduleDto);
                     }
                 }
             }

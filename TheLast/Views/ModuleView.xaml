@@ -7,6 +7,12 @@
              xmlns:cv="clr-namespace:TheLast.Common.Converters" 
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             Background="{DynamicResource MaterialDesignPaper}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <cv:IntToVisibilityConveter x:Key="IntToVisibility"/>
@@ -132,16 +138,13 @@
                                             Text="{Binding SpecificationRequirements}" />-->
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="总步骤数:" Padding="10,5"/>
-                                                <TextBlock Text="{Binding TestStepCount}"/>
+                                                <TextBlock Text="{Binding TestStepCount}" VerticalAlignment="Center"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="异常步骤数:" Padding="10,5"/>
-                                                <TextBlock Text="{Binding TestStepCount}"/>
+                                                <TextBlock Text="{Binding AbnormalTestStep}" VerticalAlignment="Center"/>
                                             </StackPanel>
-                                            <StackPanel Margin="10  10 ">
-                                                <TextBlock Text="进度条"/>
-                                                <ProgressBar Value="25" Height="10" Margin="0 20" />
-                                            </StackPanel>
+                                            
                                         </StackPanel>
                                        
                                         <Canvas Grid.RowSpan="2" ClipToBounds="True">

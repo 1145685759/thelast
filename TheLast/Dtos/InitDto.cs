@@ -54,5 +54,11 @@ namespace TheLast.Dtos
             get { return displayValue; }
             set { SetProperty(ref displayValue, value); }
         }
+        private byte stationNum ;
+        public byte StationNum
+        {
+            get { return stationNum; }
+            set { SetProperty(ref stationNum, value); }
+        }
     }
 }

@@ -37,5 +37,17 @@ namespace TheLast.Dtos
             get { return projectDto; }
             set { SetProperty(ref projectDto, value); }
         }
+        private int testStepCount;
+        public int TestStepCount
+        {
+            get { return testStepCount; }
+            set { SetProperty(ref testStepCount, value); }
+        }
+        private int abnormalTestStep;
+        public int AbnormalTestStep
+        {
+            get { return abnormalTestStep; }
+            set { SetProperty(ref abnormalTestStep, value); }
+        }
     }
 }

@@ -33,7 +33,7 @@
                             HorizontalAlignment="Center"
                             Text="{Binding UserName}" />
                     </StackPanel>
-                    <mde:SideNavigation Items="{Binding NavigationItems}" Name="menu"   WillSelectNavigationItemCommand="{Binding WillSelectNavigationItemCommand}"  />
+                    <mde:SideNavigation Items="{Binding NavigationItems}" Foreground="{DynamicResource MaterialDesignBody}" Name="menu"   WillSelectNavigationItemCommand="{Binding WillSelectNavigationItemCommand}"  />
                 </DockPanel>
             </md:DrawerHost.LeftDrawerContent>
             <Grid>
@@ -41,7 +41,6 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-
                 <md:Snackbar x:Name="Snackbar" Panel.ZIndex="1" MessageQueue="{md:MessageQueue}"/>
                 <md:ColorZone
                     x:Name="ColorZone"
@@ -118,7 +117,7 @@
                                 VerticalAlignment="Center"
                                 AutomationProperties.Name="Material Design In XAML Toolkit"
                                 FontSize="22"
-                                Text="Aux自动化测试软件" />
+                                Text="AUX自动化测试软件" />
                         </StackPanel>
                     </DockPanel>
                 </md:ColorZone>

@@ -4,6 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cv="clr-namespace:TheLast.Common.Converters"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             Background="{DynamicResource MaterialDesignPaper}"
              xmlns:local="clr-namespace:TheLast.Views" xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
@@ -140,22 +146,9 @@
                                             </StackPanel>
                                         </md:PopupBox>
 
-                                        <Border  
+                                        <Border Background="{DynamicResource PrimaryHueMidBrush}"
                                             Grid.RowSpan="2"    
                                             CornerRadius="3">
-                                            <Border.Style>
-                                                <Style TargetType="Border">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsComplete}" Value="0">
-                                                            <Setter Property="Background" Value="#1E90FF"/>
-                                                        </DataTrigger>
-
-                                                        <DataTrigger Binding="{Binding IsComplete}" Value="1">
-                                                            <Setter Property="Background" Value="#3CB371"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Border.Style>
                                         </Border>
 
                                         <TextBlock
@@ -168,20 +161,9 @@
                                                 Text="{Binding ProjectDescribe}" />
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="总模块数:" Padding="10,5"/>
-                                                <TextBlock Text="{Binding ModuleCount}"/>
+                                                <TextBlock Text="{Binding ModuleCount}" VerticalAlignment="Center"/>
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="异常模块数:" Padding="10,5"/>
-                                                <TextBlock Text="{Binding ModuleCount}"/>
-                                            </StackPanel>
-                                            <StackPanel Margin="10  10 ">
-                                                <TextBlock Text="进度条"/>
-                                                <ProgressBar Value="25" Height="10" Margin="0 20" />
-                                            </StackPanel>
-                                            
                                         </StackPanel>
-                                        
-                                        
                                         <Canvas Grid.RowSpan="2" ClipToBounds="True">
                                             <Border
                                                 Canvas.Top="10"

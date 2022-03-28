@@ -42,13 +42,19 @@ namespace TheLast.ViewModels
             get { return currentModule; }
             set { SetProperty(ref currentModule, value); }
         }
+        private int proValue;
+        public int ProValue
+        {
+            get { return proValue; }
+            set { SetProperty(ref proValue, value); }
+        }
         private ModuleDto currentDto;
         public ModuleDto CurrentDto
         {
             get { return currentDto; }
             set { SetProperty(ref currentDto, value); }
         }
-        private SolidColorBrush color=new SolidColorBrush(Colors.Black);
+        private SolidColorBrush color;
         public SolidColorBrush Color
         {
             get { return color; }
@@ -115,6 +121,7 @@ namespace TheLast.ViewModels
             {
                 var testSteps =await sqlSugarClient.Queryable<TestStep>().Mapper(it=>it.Inits,it=>it.Inits.First().TestStepId).Mapper(it=>it.FeedBacks,it=>it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == item.Id).ToListAsync();
                 CurrentTestStepDtos = new List<TestStepDto>();
+                
                 foreach (var item1 in testSteps)
                 {
                     CurrentTestStepDtos.Add(new TestStepDto 
@@ -135,17 +142,17 @@ namespace TheLast.ViewModels
                 {
                     foreach (var init in testStep.Inits)
                     {
-                        var address = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId)).Address;
-                        await ModbusSerialMaster.WriteSingleRegisterAsync(1, address, Convert.ToUInt16(init.WriteValue));
+                        var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
+                        await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, Convert.ToUInt16(init.WriteValue));
                     }
                     foreach (var feedback in testStep.FeedBacks)
                     {
                         var now = DateTime.Now;
-                        var address = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedback.RegisterId)).Address;
+                        var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedback.RegisterId);
                         if (feedback.DelayModeId==1)
                         {
                            
-                            var result= await ModbusSerialMaster.ReadHoldingRegistersAsync(1, address, 1);
+                            var result= await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1);
                             if (result[0].ToString()!=feedback.TagetValue)
                             {
                                 testStep.Result="未通过";
@@ -197,10 +204,9 @@ namespace TheLast.ViewModels
                         }
                         if (feedback.DelayModeId==2)
                         {
-                            
                             while ((DateTime.Now-now).TotalSeconds<feedback.DelayTime)
                             {
-                                var result= await ModbusSerialMaster.ReadHoldingRegistersAsync(1, address, 1);
+                                var result= await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1);
                                 if (result[0].ToString() != feedback.TagetValue)
                                 {
                                     testStep.Result = "未通过";
@@ -253,7 +259,7 @@ namespace TheLast.ViewModels
                         if (feedback.DelayModeId==3)
                         {
                             await Task.Delay(feedback.DelayTime * 1000);
-                            var result = await ModbusSerialMaster.ReadHoldingRegistersAsync(1, address, 1);
+                            var result = await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1);
                             if (result[0].ToString() != feedback.TagetValue)
                             {
                                 testStep.Result = "未通过";
@@ -303,6 +309,8 @@ namespace TheLast.ViewModels
                             }
                         }
                     }
+                    ProValue = (testSteps.IndexOf(testStep) + 1 / testSteps.Count) * 100;
+
                 }
             }
         }

@@ -43,6 +43,7 @@
                 </DataGridTemplateColumn>
                 <DataGridCheckBoxColumn Header="是否启用" Binding="{Binding IsEnable}" />
                 <DataGridTextColumn Header="寄存器命名" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="所属站号" Binding="{Binding StationNum}"/>
                 <DataGridTextColumn Header="寄存器地址" Binding="{Binding Address}"/>
                 <DataGridTemplateColumn Header="操作">
                     <DataGridTemplateColumn.CellTemplate>

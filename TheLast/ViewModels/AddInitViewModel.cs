@@ -220,31 +220,38 @@ namespace TheLast.ViewModels
 
         async void ExecuteSelectedRegisterCommand(RegisterDto parameter)
         {
-
+            if (parameter==null)
+            {
+                return;
+            }
             var result = await sqlSugarClient.Queryable<ValueDictionary>().Where(x => x.RegisterId == parameter.Id).ToListAsync();
             if (result.Count == 0)
             {
                 IsEditable = true;
             }
-            if (result.Count==0&&parameter.RegisterType.Contains("数字量"))
-            {
-                ValueDictionaryDtos.Clear(); IsEditable = false;
-                ValueDictionaryDtos.Add(new ValueDictionaryDto 
-                { 
-                    DisplayValue="断开",
-                    RealValue="0",
-                });
-                ValueDictionaryDtos.Add(new ValueDictionaryDto
-                {
-                    DisplayValue = "闭合",
-                    RealValue = "1",
-                });
-            }
             else
             {
-                IsEditable = false;
-                ValueDictionaryDtos = mapper.Map<List<ValueDictionaryDto>>(result);
+                if (result.Count == 0 && parameter.RegisterType.Contains("数字量"))
+                {
+                    ValueDictionaryDtos.Clear(); IsEditable = false;
+                    ValueDictionaryDtos.Add(new ValueDictionaryDto
+                    {
+                        DisplayValue = "断开",
+                        RealValue = "0",
+                    });
+                    ValueDictionaryDtos.Add(new ValueDictionaryDto
+                    {
+                        DisplayValue = "闭合",
+                        RealValue = "1",
+                    });
+                }
+                else
+                {
+                    IsEditable = false;
+                    ValueDictionaryDtos = mapper.Map<List<ValueDictionaryDto>>(result);
+                }
             }
+           
         }
         private DelegateCommand addInit;
         public DelegateCommand AddInit =>

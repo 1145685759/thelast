@@ -53,7 +53,6 @@ namespace TheLast.ViewModels
                 new SubheaderNavigationItem() { Subheader = "菜单" },
                 new FirstLevelNavigationItem() { Label = "系统设置", Icon = PackIconKind.SetAll},
                 new SecondLevelNavigationItem() { Label = "端口设置", Icon = PackIconKind.Baseball },
-                 new SecondLevelNavigationItem() { Label = "后台任务管理", Icon = PackIconKind.TicketConfirmation },
                 new SecondLevelNavigationItem() { Label = "个性化", Icon = PackIconKind.Magic },
                 new FirstLevelNavigationItem() { Label = "寄存器配置", Icon = PackIconKind.CashRegister},
                 new SecondLevelNavigationItem() { Label = "基础参数配置", Icon = PackIconKind.Baseball },
@@ -126,8 +125,7 @@ namespace TheLast.ViewModels
                 new Navigation2View{NavigationName="历史曲线",View="HistoricalCurve" },
                 new Navigation2View{NavigationName="用户列表",View="UserList" },
                 new Navigation2View{NavigationName="端口设置",View="ComSetting" },
-                new Navigation2View{NavigationName="个性化",View="SkinView" },
-                new Navigation2View{ NavigationName="后台任务管理",View="QuartzManager"}
+                new Navigation2View{NavigationName="个性化",View="SkinView" }
             };
         }
 

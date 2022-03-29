@@ -43,7 +43,6 @@ namespace TheLast.ViewModels
             RegisterDtos = new ObservableCollection<RegisterDto>();
             MyModel = new PlotModel();
             MyModel.Title = "实时状态曲线";
-            
             var dateTimeAxis = new DateTimeAxis();
             dateTimeAxis.Title = "时间";
             MyModel.Axes.Add(dateTimeAxis);
@@ -76,7 +75,7 @@ namespace TheLast.ViewModels
             foreach (var item in registerList)
             {
                
-                MyModel.Series.Add(new LineSeries {Title=item.Name,MarkerType=MarkerType.Circle,IsVisible=false}) ;
+                MyModel.Series.Add(new LineSeries {Title=item.Name,MarkerType=MarkerType.None,IsVisible=false}) ;
                 
             }
             await Task.Run(async () =>
@@ -91,9 +90,10 @@ namespace TheLast.ViewModels
                             {
                                 continue;
                             }
-                            var result= await App.ModbusSerialMaster.ReadHoldingRegistersAsync(1,(await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == item.Title)).Address, 1);
+                            var getvaddress = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == item.Title);
+                            var result= await App.ModbusSerialMaster.ReadHoldingRegistersAsync(1,getvaddress.Address, 1);
                             item.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]));
-                            if (item.Points.Count>60)
+                            if (item.Points.Count>3600)
                             {
                                 item.Points.RemoveAt(0);
                             }

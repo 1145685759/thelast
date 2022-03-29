@@ -6,13 +6,15 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Quartz;
 using Quartz.Impl;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Text;
+using System.Threading.Tasks;
 using TheLast.Common;
+using TheLast.Entities;
 using TheLast.Events;
-using TheLast.QuartzJobs;
 
 namespace TheLast.ViewModels
 {
@@ -25,8 +27,10 @@ namespace TheLast.ViewModels
             get { return currentComPort; }
             set { SetProperty(ref currentComPort, value); }
         }
+        List<HsData> hsDatas;
         private string[] comPorts=SerialPort.GetPortNames();
         private readonly IEventAggregator eventAggregator;
+        private readonly ISqlSugarClient sqlSugarClient;
 
         public string[] ComPorts
         {
@@ -42,11 +46,15 @@ namespace TheLast.ViewModels
             if (DialogHost.IsDialogOpen(DialogHostName))
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No)); //取消返回NO告诉操作结束
         }
-        public ComSettingViewModel(IEventAggregator eventAggregator)
+        public ComSettingViewModel(IEventAggregator eventAggregator,ISqlSugarClient sqlSugarClient)
         {
+            hsDatas = new List<HsData>();
             this.eventAggregator = eventAggregator;
+            this.sqlSugarClient = sqlSugarClient;
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+
+            
         }
 
         private  void Save()
@@ -77,6 +85,22 @@ namespace TheLast.ViewModels
                         App.ModbusSerialMaster = ModbusSerialMaster.CreateRtu(serialPort);
                         HandyControl.Controls.Growl.Success("串口连接成功");
                     }
+                    Task.Run(async () =>
+                    {
+                        while (true)
+                        {
+                            hsDatas.Clear();
+                            var registers= await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true).ToListAsync();
+                            foreach (var item in registers)
+                            {
+                                hsDatas.Add(new HsData { DateTime = DateTime.Now, RealValue = (await App.ModbusSerialMaster.ReadHoldingRegistersAsync(item.StationNum, item.Address, 1))[0], Register = item, RegisterId = item.Id });
+                            }
+                            await sqlSugarClient.Insertable(hsDatas).ExecuteCommandAsync();
+                            await Task.Delay(1000);
+                        }
+
+                    });
+
                 }
                 catch (Exception ex)
                 {
@@ -88,7 +112,7 @@ namespace TheLast.ViewModels
                 HandyControl.Controls.Growl.Error("串口已打开");
             }
            
-           
+            //var TriggerState = await QuartzHelper.Instance.StartJobExecuteByCron<HsDataJob>("0/1 * * * * ?","测试一", sqlSugarClient);
         }
     }
 }

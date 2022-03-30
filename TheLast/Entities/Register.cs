@@ -15,6 +15,7 @@ namespace TheLast.Entities
         public string RegisterType { get; set; }
         public bool IsDisplay { get; set; } = false;
         public byte StationNum { get; set; } = 1;
+        public bool IsHsData { get; set; } = false;
 
     }
 }

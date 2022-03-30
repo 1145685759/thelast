@@ -308,9 +308,6 @@ E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLa
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLast.dll
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLast.pdb
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLast.genruntimeconfig.cache
-E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Logging.Abstractions.dll
-E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\Quartz.dll
-E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\System.Diagnostics.DiagnosticSource.dll
-E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\QuartzManager.g.cs
-E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\QuartzManager.baml
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLast.csproj.AssemblyReference.cache
+E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\HistoricalCurve.g.cs
+E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\HistoricalCurve.baml

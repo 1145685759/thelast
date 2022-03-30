@@ -3,9 +3,8 @@ using Modbus.Device;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using Prism.Regions;
 using Prism.Services.Dialogs;
-using Quartz;
-using Quartz.Impl;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,7 @@ using System.Threading.Tasks;
 using TheLast.Common;
 using TheLast.Entities;
 using TheLast.Events;
+using TheLast.Extensions;
 
 namespace TheLast.ViewModels
 {
@@ -31,6 +31,7 @@ namespace TheLast.ViewModels
         private string[] comPorts=SerialPort.GetPortNames();
         private readonly IEventAggregator eventAggregator;
         private readonly ISqlSugarClient sqlSugarClient;
+        private readonly IRegionManager regionManager;
 
         public string[] ComPorts
         {
@@ -46,15 +47,14 @@ namespace TheLast.ViewModels
             if (DialogHost.IsDialogOpen(DialogHostName))
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No)); //取消返回NO告诉操作结束
         }
-        public ComSettingViewModel(IEventAggregator eventAggregator,ISqlSugarClient sqlSugarClient)
+        public ComSettingViewModel(IEventAggregator eventAggregator,ISqlSugarClient sqlSugarClient,IRegionManager regionManager)
         {
             hsDatas = new List<HsData>();
             this.eventAggregator = eventAggregator;
             this.sqlSugarClient = sqlSugarClient;
+            this.regionManager = regionManager;
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
-
-            
         }
 
         private  void Save()
@@ -90,7 +90,7 @@ namespace TheLast.ViewModels
                         while (true)
                         {
                             hsDatas.Clear();
-                            var registers= await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true).ToListAsync();
+                            var registers= await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true&&x.IsHsData==true).ToListAsync();
                             foreach (var item in registers)
                             {
                                 hsDatas.Add(new HsData { DateTime = DateTime.Now, RealValue = (await App.ModbusSerialMaster.ReadHoldingRegistersAsync(item.StationNum, item.Address, 1))[0], Register = item, RegisterId = item.Id });
@@ -100,6 +100,7 @@ namespace TheLast.ViewModels
                         }
 
                     });
+                    regionManager.RequestNavigate(PrismManager.MainViewRegionName, "ProjectManager");
 
                 }
                 catch (Exception ex)
@@ -111,8 +112,6 @@ namespace TheLast.ViewModels
             {
                 HandyControl.Controls.Growl.Error("串口已打开");
             }
-           
-            //var TriggerState = await QuartzHelper.Instance.StartJobExecuteByCron<HsDataJob>("0/1 * * * * ?","测试一", sqlSugarClient);
         }
     }
 }

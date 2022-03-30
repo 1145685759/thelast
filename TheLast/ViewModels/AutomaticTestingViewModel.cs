@@ -144,6 +144,7 @@ namespace TheLast.ViewModels
                     {
                         var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
                         await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, Convert.ToUInt16(init.WriteValue));
+                       
                     }
                     foreach (var feedback in testStep.FeedBacks)
                     {

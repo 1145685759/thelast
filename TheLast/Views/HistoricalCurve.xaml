@@ -1,0 +1,109 @@
+﻿<UserControl x:Class="TheLast.Views.HistoricalCurve"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TheLast.Views" xmlns:oxy="http://oxyplot.org/wpf"
+             mc:Ignorable="d" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:hc="https://handyorg.github.io/handycontrol" xmlns:viewmodels="clr-namespace:TheLast.ViewModels"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             Background="{DynamicResource MaterialDesignPaper}"
+            >
+    <md:DialogHost>
+        <md:DialogHost.DialogContent>
+            <Grid Margin="-1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0"    
+                                Orientation="Horizontal">
+                    <Calendar md:CalendarAssist.Orientation="Horizontal"  x:Name="CombinedCalendar"
+                                      
+                                  Margin="-1 -2 -1 0" />
+
+                    <md:Clock x:Name="CombinedClock"
+                                      Style="{StaticResource MaterialDesignClockHorizontal}"
+                                              DisplayAutomation="CycleWithSeconds"
+                                              Is24Hours="False" />
+                </StackPanel>
+                <StackPanel Grid.Row="1"
+                                Margin="8"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                    <Button Command="{x:Static md:DialogHost.CloseDialogCommand}"
+                                CommandParameter="0"
+                                Content="CANCEL"
+                                Style="{DynamicResource MaterialDesignFlatButton}" />
+
+                    <Button Command="{x:Static md:DialogHost.CloseDialogCommand}"
+                                CommandParameter="1"
+                                Content="OK"
+                                Style="{DynamicResource MaterialDesignFlatButton}" />
+                </StackPanel>
+            </Grid>
+        </md:DialogHost.DialogContent>
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition/>
+            <RowDefinition Height="0.1*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="20 0" HorizontalAlignment="Center">
+                <TextBlock Text="起始时间:" VerticalAlignment="Center" Style="{DynamicResource TextBlockLarge}"/>
+                <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center"
+                           FontSize="24" Name="dd" 
+                           Text="{Binding StartDate, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                    <Button Margin="8 0 0 0"
+                        md:DialogHost.DialogClosingAttached="CombinedDialogClosingEventHandler"
+                        md:DialogHost.DialogOpenedAttached="CombinedDialogOpenedEventHandler"
+                        Command="{x:Static md:DialogHost.OpenDialogCommand}"
+                        CommandTarget="{Binding ElementName=DatePickerDialogHost}"
+                        Content="选择" Cursor="Hand" />
+                </StackPanel>
+                <TextBlock Text="结束时间:" VerticalAlignment="Center" Style="{DynamicResource TextBlockLarge}" Margin="20 0"/>
+                <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center"
+                           FontSize="24" 
+                           Text="{Binding EndDate, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                    <Button Margin="8 0 0 0"
+                        md:DialogHost.DialogClosingAttached="Combined1DialogClosingEventHandler"
+                        md:DialogHost.DialogOpenedAttached="Combined1DialogOpenedEventHandler"
+                        Command="{x:Static md:DialogHost.OpenDialogCommand}"
+                        CommandTarget="{Binding ElementName=DatePickerDialogHost}"
+                        Content="选择" Cursor="Hand" />
+                </StackPanel>
+                <Button Content="加载数据" Command="{Binding Load}" Margin="20 0 0 0"/>
+        </StackPanel>
+        
+        <oxy:PlotView Model="{Binding MyModel}" Margin="10" Grid.Row="1"/>
+        <ScrollViewer Grid.Row="2">
+                <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding RegisterName}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="10 0">
+                            <TextBlock Text="{Binding}"/>
+                            <CheckBox IsChecked="{Binding IsVisible}" CommandParameter="{Binding}" Command="{Binding DataContext.Check, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+    </md:DialogHost>
+</UserControl>

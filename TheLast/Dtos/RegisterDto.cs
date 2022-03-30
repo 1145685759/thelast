@@ -56,5 +56,11 @@ namespace TheLast.Dtos
             get { return isVisible; }
             set { SetProperty(ref isVisible, value); }
         }
+        private bool isHsData;
+        public bool IsHsData
+        {
+            get { return isHsData; }
+            set { SetProperty(ref isHsData, value); }
+        }
     }
 }

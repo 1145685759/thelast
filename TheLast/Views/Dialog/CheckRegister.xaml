@@ -47,8 +47,13 @@
                      md:HintAssist.Hint="请给寄存器命名" DockPanel.Dock="Top" Cursor="IBeam"/>
                 <TextBlock Text="是否显示实时曲线：" DockPanel.Dock="Top" Margin="20 10"/>
                 <CheckBox Margin="20,10" 
+                          DockPanel.Dock="Top"
                       IsChecked="{Binding Model.IsDisplay}"
-                      VerticalAlignment="Center" Content="是否显示" />
+                      VerticalAlignment="Center" Content="是/否 显示" />
+                <TextBlock Text="是否需要历史记录：" DockPanel.Dock="Top" Margin="20 10"/>
+                <CheckBox Margin="20,10" 
+                      IsChecked="{Binding Model.IsHsData}"
+                      VerticalAlignment="Center" Content="是/否" />
             </DockPanel>
 
             <StackPanel Margin=" 10" Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">

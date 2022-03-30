@@ -100,6 +100,7 @@ namespace TheLast.ViewModels
             if (string.IsNullOrWhiteSpace(UserName) ||
                 string.IsNullOrWhiteSpace(PassWord))
             {
+                aggregator.SendMessage("登陆失败", "Login");
                 return;
             }
             var result = await sqlSugarClient.Queryable<User>().FirstAsync(x => x.UserName == UserName && x.Password == PassWord);

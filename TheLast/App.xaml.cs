@@ -85,7 +85,7 @@ namespace TheLast
             containerRegistry.RegisterForNavigation<RealTimeCurve, RealTimeCurveViewModel>();
             containerRegistry.RegisterForNavigation<SkinView, SkinViewModel>();
             containerRegistry.RegisterForNavigation<LoginView, LoginViewModel>();
-            containerRegistry.RegisterForNavigation<QuartzManager, QuartzManagerViewModel>();
+            containerRegistry.RegisterForNavigation<HistoricalCurve, HistoricalCurveViewModel>();
         }
         protected override IContainerExtension CreateContainerExtension()
         {

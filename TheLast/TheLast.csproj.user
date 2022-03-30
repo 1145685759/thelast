@@ -25,6 +25,9 @@
     <Compile Update="Views\Dialog\CheckRegister.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\HistoricalCurve.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\ManualTest.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -32,9 +35,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ProjectManager.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\QuartzManager.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\RealTimeCurve.xaml.cs">
@@ -66,6 +66,9 @@
     <Page Update="Views\Dialog\CheckRegister.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\HistoricalCurve.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\LoginView.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -85,9 +88,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\ProjectManager.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\QuartzManager.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\RealTimeCurve.xaml">

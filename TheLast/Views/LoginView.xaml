@@ -40,8 +40,8 @@
             Panel.ZIndex="1"
             MessageQueue="{md:MessageQueue}" />
         <Border Margin="50" Background="White"/>
-        <!--<Image Margin="50" Source="/Images/login.png" />-->
-        <svgc:SvgViewbox IsHitTestVisible="False" Source="../Images/测试.svg"/>
+        <Image Margin="50" Source="../Images/a.jpg" />
+        <!--<svgc:SvgViewbox IsHitTestVisible="False" Source="../Images/测试.svg"/>-->
         <md:Transitioner Grid.Column="1" SelectedIndex="{Binding SelectIndex, FallbackValue=0}">
             <md:TransitionerSlide>
                 <DockPanel Margin="15" VerticalAlignment="Center">

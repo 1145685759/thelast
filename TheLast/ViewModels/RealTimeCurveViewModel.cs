@@ -99,7 +99,7 @@ namespace TheLast.ViewModels
                             }
                         }
                     }));
-                    myModel.InvalidatePlot(true);
+                    MyModel.InvalidatePlot(true);
                     await Task.Delay(1000);
                 }
             });

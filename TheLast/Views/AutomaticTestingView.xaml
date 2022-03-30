@@ -33,7 +33,11 @@
             <StackPanel>
                 <StackPanel Margin="10  10 ">
                     <TextBlock Text="进度条"/>
-                    <ProgressBar Value="{Binding ProValue}" Height="10"  />
+                    <ProgressBar Value="{Binding ProValue}" Height="10" />
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock Text="{Binding ProValue}" VerticalAlignment="Center"/>
+                        <TextBlock Text="%"/>
+                    </StackPanel>
                 </StackPanel>
                 <Button Content="开始运行" Command="{Binding StartRun}" Width="200" HorizontalAlignment="Right"  Cursor="Hand"/>
             </StackPanel>

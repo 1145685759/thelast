@@ -71,8 +71,6 @@ namespace TheLast.ViewModels
                 new SecondLevelNavigationItem() { Label = "实时曲线", Icon = PackIconKind.ChartBellCurve },
                 new FirstLevelNavigationItem() { Label = "历史数据管理", Icon = PackIconKind.DatabaseExportOutline },
                 new SecondLevelNavigationItem() { Label = "历史曲线", Icon = PackIconKind.ChartBox },
-                new FirstLevelNavigationItem() { Label = "用户管理", Icon = PackIconKind.AccountBox },
-                new SecondLevelNavigationItem() { Label = "用户列表", Icon = PackIconKind.CardAccountDetails },
             };
             this.regionManager = regionManager;
             this.dialog = dialog;
@@ -116,14 +114,13 @@ namespace TheLast.ViewModels
                 new Navigation2View{NavigationName="模拟量输入配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="模拟量输出配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="数字量输入配置",View="BasicParameters" },
-                new Navigation2View{NavigationName="数字量输出配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="内机数据配置",View="BasicParameters" },
+                new Navigation2View{NavigationName="外机数据配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="外机数据配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="编辑用例",View="ProjectManager" },
                 new Navigation2View{NavigationName="手动测试",View="ManualTest" },
                 new Navigation2View{NavigationName="实时曲线",View="RealTimeCurve" },
                 new Navigation2View{NavigationName="历史曲线",View="HistoricalCurve" },
-                new Navigation2View{NavigationName="用户列表",View="UserList" },
                 new Navigation2View{NavigationName="端口设置",View="ComSetting" },
                 new Navigation2View{NavigationName="个性化",View="SkinView" }
             };

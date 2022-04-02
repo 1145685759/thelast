@@ -51,6 +51,23 @@
                      VerticalAlignment="Center" Content="是/否 显示"
                      Cursor="IBeam"/>
                 </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="20,10" DockPanel.Dock="Top" Visibility="{Binding Visibility}">
+                    <TextBlock Text="起始地址：" VerticalAlignment="Center"/>
+                    <TextBox  Margin="10 0"
+                     Text="{Binding Model.StartAddress}"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     VerticalAlignment="Center"
+                     md:HintAssist.Hint="请输入起始地址" DockPanel.Dock="Top" Cursor="IBeam"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="20,10" DockPanel.Dock="Top" Visibility="{Binding Visibility}">
+                    <TextBlock Text="传感器类型：" VerticalAlignment="Center" />
+                    <ComboBox md:HintAssist.Hint="请选择传感器类型" ItemsSource="{Binding Types}" SelectedIndex="{Binding Model.Type}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="20,10" DockPanel.Dock="Top" Visibility="{Binding Visibility}">
+                    <TextBlock Text="电路电源等级：" VerticalAlignment="Center"/>
+                    <ComboBox md:HintAssist.Hint="请选择电路电源等级" ItemsSource="{Binding Castes}"  SelectedIndex="{Binding Model.Caste}"/>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="20,10">
                     <TextBlock Text="是否需要历史记录：" VerticalAlignment="Center"/>
                     <CheckBox  Margin="10 0"

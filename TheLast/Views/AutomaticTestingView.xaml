@@ -39,7 +39,11 @@
                         <TextBlock Text="%"/>
                     </StackPanel>
                 </StackPanel>
-                <Button Content="开始运行" Command="{Binding StartRun}" Width="200" HorizontalAlignment="Right"  Cursor="Hand"/>
+                <DockPanel>
+                    <Button Content="导出测试报告" Width="200" DockPanel.Dock="Right" Command="{Binding Export}" Cursor="Hand"/>
+                    <Button Content="开始运行" Command="{Binding StartRun}" Width="200" HorizontalAlignment="Right" Margin="0 0 10 0" Cursor="Hand"/>
+
+                </DockPanel>
             </StackPanel>
             <DataGrid  SelectionUnit="FullRow" IsReadOnly="True" Grid.Row="1" SelectedItem="{Binding CurrentItem}" MinHeight="400" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="grid" LoadingRow="DataGrid_LoadingRow" AutoGenerateColumns="False"  CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding TestStepDtos}">
                 <DataGrid.Columns>

@@ -147,6 +147,7 @@ E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\Bounc
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\DotNetZip.dll
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\DryIoc.dll
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\DryIoc.Microsoft.DependencyInjection.dll
+E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\ExcelNumberFormat.dll
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\Google.Protobuf.dll
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\HandyControl.dll
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\K4os.Compression.LZ4.dll
@@ -169,6 +170,7 @@ E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\Micro
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\Microsoft.Xaml.Behaviors.dll
+E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\MiniExcel.dll
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\MySql.Data.dll
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\Ubiety.Dns.Core.dll
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\bin\Debug\netcoreapp3.1\Zstandard.Net.dll
@@ -267,6 +269,7 @@ E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\Dialog\AddRegister.g.cs
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\Dialog\CheckRegister.g.cs
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\Dialog\ComSetting.g.cs
+E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\HistoricalCurve.g.cs
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\LoginView.g.cs
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\MainWindow.g.cs
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\ManualTest.g.cs
@@ -289,6 +292,7 @@ E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\Dialog\AddRegister.baml
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\Dialog\CheckRegister.baml
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\Dialog\ComSetting.baml
+E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\HistoricalCurve.baml
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\LoginView.baml
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\MainWindow.baml
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\ManualTest.baml
@@ -309,5 +313,3 @@ E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLa
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLast.pdb
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLast.genruntimeconfig.cache
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLast.csproj.AssemblyReference.cache
-E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\HistoricalCurve.g.cs
-E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\HistoricalCurve.baml

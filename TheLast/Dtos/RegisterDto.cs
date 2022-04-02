@@ -62,5 +62,23 @@ namespace TheLast.Dtos
             get { return isHsData; }
             set { SetProperty(ref isHsData, value); }
         }
+        private ushort type;
+        public ushort Type
+        {
+            get { return type; }
+            set { SetProperty(ref type, value); }
+        }
+        private ushort caste;
+        public ushort Caste
+        {
+            get { return caste; }
+            set { SetProperty(ref caste, value); }
+        }
+        private ushort startAddress;
+        public ushort StartAddress
+        {
+            get { return startAddress; }
+            set { SetProperty(ref startAddress, value); }
+        }
     }
 }

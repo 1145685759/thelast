@@ -7,6 +7,7 @@ using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 using TheLast.Common;
 using TheLast.Dtos;
 using TheLast.Entities;
@@ -24,10 +25,19 @@ namespace TheLast.ViewModels
             this.sqlSugarClient = sqlSugarClient;
             this.mapper = mapper;
         }
+        private string[] type= { "15K传感器", "20K传感器" };
+        public string[] Types
+        {
+            get { return type; }
+            set { SetProperty(ref type, value); }
+        }
+        private string[] castes = { "5V电源", "3.3V电源" };
+        public string[] Castes
+        {
+            get { return castes; }
+            set { SetProperty(ref castes, value); }
+        }
         private RegisterDto model;
-        
-
-        //public event Action<IDialogResult> RequestClose;
 
         public RegisterDto Model
         {
@@ -49,7 +59,12 @@ namespace TheLast.ViewModels
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
             }
         }
-
+        private Visibility visibility;
+        public Visibility Visibility
+        {
+            get { return visibility; }
+            set { SetProperty(ref visibility, value); }
+        }
         public string DialogHostName { get; set; }
         public DelegateCommand SaveCommand { get ; set ; }
         public DelegateCommand CancelCommand { get ; set ; }
@@ -59,6 +74,14 @@ namespace TheLast.ViewModels
             if (parameters.ContainsKey("Value"))
             {
                 Model = parameters.GetValue<RegisterDto>("Value");
+                if (Model.RegisterType=="模拟量输出")
+                {
+                    Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    Visibility = Visibility.Collapsed;
+                }
             }
             else
                 Model = new RegisterDto();

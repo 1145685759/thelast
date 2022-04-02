@@ -5,6 +5,7 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 using TheLast.Common;
 using TheLast.Dtos;
 
@@ -12,6 +13,12 @@ namespace TheLast.ViewModels
 {
     public class CheckRegisterViewModel : BindableBase, IDialogHostAware
     {
+        private Visibility visibility;
+        public Visibility Visibility
+        {
+            get { return visibility; }
+            set { SetProperty(ref visibility, value); }
+        }
         public string DialogHostName { get ; set ; }
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand CancelCommand { get ; set ; }
@@ -26,6 +33,18 @@ namespace TheLast.ViewModels
         {
             get { return selectedIndex; }
             set { SetProperty(ref selectedIndex, value); }
+        }
+        private string[] type = { "15K传感器", "20K传感器" };
+        public string[] Types
+        {
+            get { return type; }
+            set { SetProperty(ref type, value); }
+        }
+        private string[] castes = { "5V电源", "3.3V电源" };
+        public string[] Castes
+        {
+            get { return castes; }
+            set { SetProperty(ref castes, value); }
         }
         public CheckRegisterViewModel()
         {
@@ -61,6 +80,14 @@ namespace TheLast.ViewModels
         public void OnDialogOpend(IDialogParameters parameters)
         {
             Model = parameters.GetValue<RegisterDto>("Value");
+            if (Model.RegisterType == "模拟量输出")
+            {
+                Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Visibility = Visibility.Collapsed;
+            }
             if (Model.IsEnable)
             {
                 SelectedIndex = 1;

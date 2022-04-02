@@ -31,7 +31,9 @@
                 <RowDefinition Height="0.2*"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Content="添加步骤" Width="200" HorizontalAlignment="Right"  Command="{Binding AddTestStep}" Cursor="Hand"/>
+            <DockPanel LastChildFill="False">
+                <Button Content="添加步骤" Width="200" Margin="10 0 0 0"  Command="{Binding AddTestStep}" Cursor="Hand" DockPanel.Dock="Right"/>
+            </DockPanel>
             <DataGrid SelectionUnit="FullRow" Grid.Row="1" SelectedItem="{Binding CurrentItem}" MinHeight="400" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="grid" LoadingRow="DataGrid_LoadingRow" AutoGenerateColumns="False"  CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding TestStepDtos}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="序号" IsReadOnly="True"  >

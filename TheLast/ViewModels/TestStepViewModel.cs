@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MiniExcelLibs;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
@@ -7,6 +8,7 @@ using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using TheLast.Common;
@@ -16,10 +18,10 @@ using unvell.ReoGrid;
 
 namespace TheLast.ViewModels
 {
-    public class TestStepViewModel: NavigationViewModel
+    public class TestStepViewModel : NavigationViewModel
     {
 
-        public TestStepViewModel(IContainerProvider provider, ISqlSugarClient sqlSugarClient, IDialogHostService dialog,IMapper mapper, IRegionManager regionManager)
+        public TestStepViewModel(IContainerProvider provider, ISqlSugarClient sqlSugarClient, IDialogHostService dialog, IMapper mapper, IRegionManager regionManager)
           : base(provider)
         {
             this.provider = provider;
@@ -52,21 +54,21 @@ namespace TheLast.ViewModels
         private readonly IDialogHostService dialog;
         private readonly IMapper mapper;
         private readonly IRegionManager regionManager;
- 
+
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
             CurrentDto = navigationContext.Parameters.GetValue<ModuleDto>("Module");
-            var list= await sqlSugarClient.Queryable<TestStep>().Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
+            var list = await sqlSugarClient.Queryable<TestStep>().Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
             TestStepDtos.Clear();
             foreach (var item in list)
             {
                 string initStr = string.Empty;
                 string feedbackStr = string.Empty;
-                var listInit= await sqlSugarClient.Queryable<Init>().Where(x => x.TestStepId == item.Id).ToListAsync();
+                var listInit = await sqlSugarClient.Queryable<Init>().Where(x => x.TestStepId == item.Id).ToListAsync();
                 foreach (var init in listInit)
                 {
-                    var register= await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
+                    var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
                     initStr += $"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
                 }
                 var feedbackList = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == item.Id).ToListAsync();
@@ -77,15 +79,15 @@ namespace TheLast.ViewModels
                 }
                 TestStepDtos.Add(new TestStepDto
                 {
-                    Conditions=item.Conditions,
-                    Inits=item.Inits,
-                    ModuleId=item.ModuleId,
-                    Remark=item.Remark,
-                    Result=item.Result,
-                    TestContent=item.TestContent,
-                    TestProcess=initStr,
+                    Conditions = item.Conditions,
+                    Inits = item.Inits,
+                    ModuleId = item.ModuleId,
+                    Remark = item.Remark,
+                    Result = item.Result,
+                    TestContent = item.TestContent,
+                    TestProcess = initStr,
                     JudgmentContent = feedbackStr,
-                    Id =item.Id
+                    Id = item.Id
                 });
             }
         }
@@ -249,7 +251,7 @@ namespace TheLast.ViewModels
 
         async void ExecuteConditionsLostFocus(string parameter)
         {
-            var entity =await sqlSugarClient.Queryable<TestStep>().InSingleAsync(CurrentItem.Id);
+            var entity = await sqlSugarClient.Queryable<TestStep>().InSingleAsync(CurrentItem.Id);
             entity.Conditions = parameter;
             await sqlSugarClient.Updateable(entity).ExecuteCommandAsync();
         }
@@ -273,5 +275,6 @@ namespace TheLast.ViewModels
             entity.Remark = parameter;
             await sqlSugarClient.Updateable(entity).ExecuteCommandAsync();
         }
+        
     }
 }

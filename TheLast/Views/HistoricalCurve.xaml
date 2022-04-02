@@ -55,7 +55,7 @@
             <RowDefinition Height="0.1*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="20 0" HorizontalAlignment="Center">
-                <TextBlock Text="起始时间:" VerticalAlignment="Center" Style="{DynamicResource TextBlockLarge}"/>
+                <TextBlock Text="起始时间:" VerticalAlignment="Center" FontSize="22" Margin="20 0"/>
                 <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Orientation="Horizontal">
@@ -69,7 +69,7 @@
                         CommandTarget="{Binding ElementName=DatePickerDialogHost}"
                         Content="选择" Cursor="Hand" />
                 </StackPanel>
-                <TextBlock Text="结束时间:" VerticalAlignment="Center" Style="{DynamicResource TextBlockLarge}" Margin="20 0"/>
+                <TextBlock Text="结束时间:" VerticalAlignment="Center" FontSize="22" Margin="20 0"/>
                 <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Orientation="Horizontal">

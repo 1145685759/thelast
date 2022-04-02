@@ -79,6 +79,15 @@
           "lib/netstandard2.0/DryIoc.Microsoft.DependencyInjection.dll": {}
         }
       },
+      "ExcelNumberFormat/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/ExcelNumberFormat.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/ExcelNumberFormat.dll": {}
+        }
+      },
       "Google.Protobuf/3.6.1": {
         "type": "package",
         "dependencies": {
@@ -502,6 +511,18 @@
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WPF"
         ]
+      },
+      "MiniExcel/1.24.3": {
+        "type": "package",
+        "dependencies": {
+          "ExcelNumberFormat": "1.1.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/MiniExcel.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/MiniExcel.dll": {}
+        }
       },
       "MySql.Data/8.0.21": {
         "type": "package",
@@ -2779,6 +2800,24 @@
         "logo.png"
       ]
     },
+    "ExcelNumberFormat/1.1.0": {
+      "sha512": "R3BVHPs9O+RkExbZYTGT0+9HLbi8ZrNij1Yziyw6znd3J7P3uoIR07uwTLGOogtz1p6+0sna66eBoXu7tBiVQA==",
+      "type": "package",
+      "path": "excelnumberformat/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "excelnumberformat.1.1.0.nupkg.sha512",
+        "excelnumberformat.nuspec",
+        "icon.png",
+        "lib/net20/ExcelNumberFormat.dll",
+        "lib/net20/ExcelNumberFormat.xml",
+        "lib/netstandard1.0/ExcelNumberFormat.dll",
+        "lib/netstandard1.0/ExcelNumberFormat.xml",
+        "lib/netstandard2.0/ExcelNumberFormat.dll",
+        "lib/netstandard2.0/ExcelNumberFormat.xml"
+      ]
+    },
     "Google.Protobuf/3.6.1": {
       "sha512": "741fGeDQjixBJaU2j+0CbrmZXsNJkTn/hWbOh4fLVXndHsCclJmWznCPWrJmPoZKvajBvAz3e8ECJOUvRtwjNQ==",
       "type": "package",
@@ -3569,6 +3608,21 @@
         "microsoft.xaml.behaviors.wpf.1.1.19.nupkg.sha512",
         "microsoft.xaml.behaviors.wpf.nuspec",
         "tools/Install.ps1"
+      ]
+    },
+    "MiniExcel/1.24.3": {
+      "sha512": "Hkbd4wdHl+jEYcu32tNOGN2o8C1rMkwPOBeD7Tu4WioTpANqokoSutkQsvZOTJjBjEwPVOjdA5SbigFlqHNMHQ==",
+      "type": "package",
+      "path": "miniexcel/1.24.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net45/MiniExcel.dll",
+        "lib/net5.0/MiniExcel.dll",
+        "lib/netstandard2.0/MiniExcel.dll",
+        "miniexcel.1.24.3.nupkg.sha512",
+        "miniexcel.nuspec"
       ]
     },
     "MySql.Data/8.0.21": {
@@ -8654,6 +8708,7 @@
       "MaterialDesignExtensions >= 3.3.0",
       "MaterialDesignThemes >= 4.4.0",
       "Microsoft.Extensions.DependencyInjection >= 6.0.0",
+      "MiniExcel >= 1.24.3",
       "NModbus4.Core >= 1.0.2",
       "OxyPlot.Wpf >= 2.1.0",
       "Prism.DryIoc >= 8.0.0.1909",
@@ -8724,6 +8779,10 @@
           "Microsoft.Extensions.DependencyInjection": {
             "target": "Package",
             "version": "[6.0.0, )"
+          },
+          "MiniExcel": {
+            "target": "Package",
+            "version": "[1.24.3, )"
           },
           "NModbus4.Core": {
             "target": "Package",

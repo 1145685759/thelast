@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "O9jaKIxD+6F6OGVSG1ubery/tRyn2th3b+3tN70RlsMA6fmwmB8m8zlV4nw5mjMFSY/p27sdaI4cVBgMPB1k3w==",
+  "dgSpecHash": "as/U8xia6vROM8AKLDYSpxV7QBv/kD2yAJEMHf2za5hpzxYKabhmb2Uud0Ie2Tv82evkv2ogcEYqdbHTdRzX+g==",
   "success": true,
   "projectFilePath": "E:\\奥克斯项目\\奥克斯项目\\TheLast\\TheLast\\TheLast.csproj",
   "expectedPackageFiles": [
@@ -10,6 +10,7 @@
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\dotnetzip\\1.15.0\\dotnetzip.1.15.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\dryioc.dll\\4.7.0\\dryioc.dll.4.7.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\dryioc.microsoft.dependencyinjection\\5.1.0\\dryioc.microsoft.dependencyinjection.5.1.0.nupkg.sha512",
+    "C:\\Users\\wangzhuhui\\.nuget\\packages\\excelnumberformat\\1.1.0\\excelnumberformat.1.1.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\google.protobuf\\3.6.1\\google.protobuf.3.6.1.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\handycontrol\\3.3.0\\handycontrol.3.3.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\k4os.compression.lz4\\1.1.11\\k4os.compression.lz4.1.1.11.nupkg.sha512",
@@ -39,6 +40,7 @@
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.19\\microsoft.xaml.behaviors.wpf.1.1.19.nupkg.sha512",
+    "C:\\Users\\wangzhuhui\\.nuget\\packages\\miniexcel\\1.24.3\\miniexcel.1.24.3.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\mysql.data\\8.0.21\\mysql.data.8.0.21.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\newtonsoft.json\\10.0.3\\newtonsoft.json.10.0.3.nupkg.sha512",

@@ -14,6 +14,7 @@
           "MaterialDesignExtensions": "3.3.0",
           "MaterialDesignThemes": "4.4.0",
           "Microsoft.Extensions.DependencyInjection": "6.0.0",
+          "MiniExcel": "1.24.3",
           "NModbus4.Core": "1.0.2",
           "OxyPlot.Wpf": "2.1.0",
           "Prism.DryIoc": "8.0.0.1909",
@@ -93,6 +94,14 @@
           "lib/netstandard2.0/DryIoc.Microsoft.DependencyInjection.dll": {
             "assemblyVersion": "5.1.0.0",
             "fileVersion": "5.1.0.0"
+          }
+        }
+      },
+      "ExcelNumberFormat/1.1.0": {
+        "runtime": {
+          "lib/netstandard2.0/ExcelNumberFormat.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
           }
         }
       },
@@ -437,6 +446,17 @@
           "lib/netcoreapp3.0/Microsoft.Xaml.Behaviors.dll": {
             "assemblyVersion": "1.1.0.0",
             "fileVersion": "1.1.19.35512"
+          }
+        }
+      },
+      "MiniExcel/1.24.3": {
+        "dependencies": {
+          "ExcelNumberFormat": "1.1.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/MiniExcel.dll": {
+            "assemblyVersion": "1.24.3.0",
+            "fileVersion": "1.24.3.0"
           }
         }
       },
@@ -1956,6 +1976,13 @@
       "path": "dryioc.microsoft.dependencyinjection/5.1.0",
       "hashPath": "dryioc.microsoft.dependencyinjection.5.1.0.nupkg.sha512"
     },
+    "ExcelNumberFormat/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-R3BVHPs9O+RkExbZYTGT0+9HLbi8ZrNij1Yziyw6znd3J7P3uoIR07uwTLGOogtz1p6+0sna66eBoXu7tBiVQA==",
+      "path": "excelnumberformat/1.1.0",
+      "hashPath": "excelnumberformat.1.1.0.nupkg.sha512"
+    },
     "Google.Protobuf/3.6.1": {
       "type": "package",
       "serviceable": true,
@@ -2158,6 +2185,13 @@
       "sha512": "sha512-5sPWkbqImc2t1aQwIfJcKsUo7tOg1Tr8+6xVzZJB56Nzt4u9NlpcLofgdX/aRYpPKdWDA3U23Akw1KQzU5e82g==",
       "path": "microsoft.xaml.behaviors.wpf/1.1.19",
       "hashPath": "microsoft.xaml.behaviors.wpf.1.1.19.nupkg.sha512"
+    },
+    "MiniExcel/1.24.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Hkbd4wdHl+jEYcu32tNOGN2o8C1rMkwPOBeD7Tu4WioTpANqokoSutkQsvZOTJjBjEwPVOjdA5SbigFlqHNMHQ==",
+      "path": "miniexcel/1.24.3",
+      "hashPath": "miniexcel.1.24.3.nupkg.sha512"
     },
     "MySql.Data/8.0.21": {
       "type": "package",

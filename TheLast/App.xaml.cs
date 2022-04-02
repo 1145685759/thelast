@@ -1,6 +1,7 @@
 ﻿using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using MiniExcelLibs;
 using Modbus.Device;
 using Prism.DryIoc;
 using Prism.Ioc;
@@ -9,6 +10,7 @@ using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -51,6 +53,14 @@ namespace TheLast
         }
         protected override void OnInitialized()
         {
+//            var values = new List<Dictionary<string, object>>()
+//{
+//    new Dictionary<string,object>{{ "Column1", "MiniExcel" }, { "Column2", 1 } },
+//    new Dictionary<string,object>{{ "Column1", "Github" }, { "Column2", 2 } }
+//};
+//            MiniExcel.SaveAs(@"C:\Users\wangzhuhui\Desktop\11.xlsx", values);
+            //var rows = MiniExcel.Query<Dictionary<string, object>>(@"C:\Users\wangzhuhui\Desktop\11.xlsx");
+            // or
             var dialog = Container.Resolve<IDialogService>();
 
             dialog.ShowDialog("LoginView", callback =>

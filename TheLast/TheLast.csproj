@@ -17,6 +17,7 @@
     <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
     <PackageReference Include="MaterialDesignThemes" Version="4.4.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="MiniExcel" Version="1.24.3" />
     <PackageReference Include="NModbus4.Core" Version="1.0.2" />
     <PackageReference Include="OxyPlot.Wpf" Version="2.1.0" />
     <PackageReference Include="Prism.DryIoc" Version="8.0.0.1909" />

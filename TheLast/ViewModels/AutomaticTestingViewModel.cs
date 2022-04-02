@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MiniExcelLibs;
 using Modbus.Device;
 using Prism.Commands;
 using Prism.Events;
@@ -8,6 +9,8 @@ using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -117,11 +120,17 @@ namespace TheLast.ViewModels
                 HandyControl.Controls.Growl.Info("未设置串口");
                 return;
             }
+            var sheets = new Dictionary<string, object>();
+           
+            
+            string name = (await sqlSugarClient.Queryable<Project>().FirstAsync(x => x.Id == CurrentDto.ProjectId)).ProjectName;
             foreach (var item in CurrentModules)
             {
+                CurrentDto = mapper.Map<ModuleDto>(item);
+                ProValue = 0;
+                DataTable x = await sqlSugarClient.Queryable<TestStep>().Where(x => x.ModuleId == item.Id).ToDataTableAsync();
                 var testSteps =await sqlSugarClient.Queryable<TestStep>().Mapper(it=>it.Inits,it=>it.Inits.First().TestStepId).Mapper(it=>it.FeedBacks,it=>it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == item.Id).ToListAsync();
                 CurrentTestStepDtos = new List<TestStepDto>();
-                
                 foreach (var item1 in testSteps)
                 {
                     CurrentTestStepDtos.Add(new TestStepDto 
@@ -143,8 +152,17 @@ namespace TheLast.ViewModels
                     foreach (var init in testStep.Inits)
                     {
                         var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
-                        await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, Convert.ToUInt16(init.WriteValue));
-                       
+                        if (register.RegisterType=="模拟量输出")
+                        {
+                          
+                            ushort[] data = new ushort[] { Convert.ToUInt16(double.Parse(init.WriteValue)*10), (ushort)register.Type, (ushort)register.Caste, register.Address};
+                            await ModbusSerialMaster.WriteMultipleRegistersAsync(register.StationNum, (ushort)register.StartAddress, data);
+                        }
+                        else
+                        {
+                            await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, Convert.ToUInt16(init.WriteValue));
+                        }
+
                     }
                     foreach (var feedback in testStep.FeedBacks)
                     {
@@ -311,9 +329,11 @@ namespace TheLast.ViewModels
                         }
                     }
                     ProValue = (testSteps.IndexOf(testStep) + 1 / testSteps.Count) * 100;
-
                 }
+                sheets.Add($"{item.ModuleName}", x);
             }
+            using (var stream = File.Create($"{name}.xlsx"))
+                MiniExcel.SaveAs(stream, sheets, true);
         }
     }
 }

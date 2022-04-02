@@ -16,6 +16,8 @@ namespace TheLast.Entities
         public bool IsDisplay { get; set; } = false;
         public byte StationNum { get; set; } = 1;
         public bool IsHsData { get; set; } = false;
-
+        public ushort? Type { get; set; }
+        public ushort? Caste { get; set; }
+        public ushort? StartAddress { get; set; }
     }
 }

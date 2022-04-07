@@ -20,7 +20,7 @@ namespace TheLast.ViewModels
     public class MainWindowViewModel : NavigationViewModel, IConfigureService
     {
         private IRegionNavigationJournal journal;
-        private string _title = "Prism Application";
+        private string _title = "AUX自动化测试软件";
         public string Title
         {
             get { return _title; }
@@ -56,6 +56,7 @@ namespace TheLast.ViewModels
                 new SecondLevelNavigationItem() { Label = "个性化", Icon = PackIconKind.Magic },
                 new FirstLevelNavigationItem() { Label = "寄存器配置", Icon = PackIconKind.CashRegister},
                 new SecondLevelNavigationItem() { Label = "基础参数配置", Icon = PackIconKind.Baseball },
+                new SecondLevelNavigationItem() { Label = "20个温度设置", Icon = PackIconKind.Temperature },
                 new SecondLevelNavigationItem() { Label = "内机控制参数配置", Icon = PackIconKind.Allergy },
                 new SecondLevelNavigationItem() { Label = "步进电机脉冲检测", Icon = PackIconKind.ApplicationSettingsOutline },
                 new SecondLevelNavigationItem() { Label = "模拟量输入配置", Icon = PackIconKind.AlphaABox },
@@ -114,9 +115,11 @@ namespace TheLast.ViewModels
                 new Navigation2View{NavigationName="模拟量输入配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="模拟量输出配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="数字量输入配置",View="BasicParameters" },
+                 new Navigation2View{NavigationName="数字量输出配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="内机数据配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="外机数据配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="外机数据配置",View="BasicParameters" },
+                new Navigation2View{NavigationName="20个温度设置",View="BasicParameters" },
                 new Navigation2View{NavigationName="编辑用例",View="ProjectManager" },
                 new Navigation2View{NavigationName="手动测试",View="ManualTest" },
                 new Navigation2View{NavigationName="实时曲线",View="RealTimeCurve" },

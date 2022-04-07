@@ -238,14 +238,32 @@ namespace TheLast.ViewModels
         {
 
             var result = await sqlSugarClient.Queryable<ValueDictionary>().Where(x => x.RegisterId == parameter.Id).ToListAsync();
-            if (result.Count == 0)
+            if (result.Count == 0&& !parameter.RegisterType.Contains("数字量"))
             {
                 IsEditable = true;
             }
             else
             {
-                IsEditable = false;
-                ValueDictionaryDtos = mapper.Map<List<ValueDictionaryDto>>(result);
+                if (result.Count == 0 && parameter.RegisterType.Contains("数字量"))
+                {
+                    ValueDictionaryDtos.Clear(); IsEditable = false;
+                    ValueDictionaryDtos.Add(new ValueDictionaryDto
+                    {
+                        DisplayValue = "断开",
+                        RealValue = "0",
+                    });
+                    ValueDictionaryDtos.Add(new ValueDictionaryDto
+                    {
+                        DisplayValue = "闭合",
+                        RealValue = "1",
+                    });
+                }
+                else
+                {
+                    IsEditable = false;
+                    ValueDictionaryDtos = mapper.Map<List<ValueDictionaryDto>>(result);
+                }
+               
             }
         }
         private DelegateCommand addFeedback;

@@ -84,18 +84,19 @@ namespace TheLast.ViewModels
                 {
                     await App.Current.Dispatcher.BeginInvoke(new Action(async () =>
                     {
-                        foreach (LineSeries item in MyModel.Series)
+                        for (int i = 0; i < MyModel.Series.Count; i++)
                         {
-                            if (item==null)
+                            LineSeries lineSeries= (LineSeries)MyModel.Series[i];
+                            if (lineSeries == null)
                             {
                                 continue;
                             }
-                            var getvaddress = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == item.Title);
-                            var result= await App.ModbusSerialMaster.ReadHoldingRegistersAsync(1,getvaddress.Address, 1);
-                            item.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]));
-                            if (item.Points.Count>3600)
+                            var getvaddress = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == lineSeries.Title);
+                            var result = await App.ModbusSerialMaster.ReadHoldingRegistersAsync(1, getvaddress.Address, 1);
+                            lineSeries.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]));
+                            if (lineSeries.Points.Count > 3600)
                             {
-                                item.Points.RemoveAt(0);
+                                lineSeries.Points.RemoveAt(0);
                             }
                         }
                     }));

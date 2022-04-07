@@ -53,14 +53,6 @@ namespace TheLast
         }
         protected override void OnInitialized()
         {
-//            var values = new List<Dictionary<string, object>>()
-//{
-//    new Dictionary<string,object>{{ "Column1", "MiniExcel" }, { "Column2", 1 } },
-//    new Dictionary<string,object>{{ "Column1", "Github" }, { "Column2", 2 } }
-//};
-//            MiniExcel.SaveAs(@"C:\Users\wangzhuhui\Desktop\11.xlsx", values);
-            //var rows = MiniExcel.Query<Dictionary<string, object>>(@"C:\Users\wangzhuhui\Desktop\11.xlsx");
-            // or
             var dialog = Container.Resolve<IDialogService>();
 
             dialog.ShowDialog("LoginView", callback =>
@@ -104,8 +96,10 @@ namespace TheLast
                 DbType = SqlSugar.DbType.Sqlite,
                 ConnectionString = "Data Source=AuxWtm.db",
                 IsAutoCloseConnection = true,
+                LanguageType=LanguageType.Chinese,
                 ConfigureExternalServices = new ConfigureExternalServices
                 {
+                    
                     EntityService = (c, p) =>
                     {
                         // int?  decimal?这种 isnullable=true

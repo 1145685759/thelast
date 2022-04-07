@@ -13,11 +13,11 @@ namespace TheLast.Entities
         public string Name { get; set; }
         public bool IsEnable { get; set; }
         public string RegisterType { get; set; }
-        public bool IsDisplay { get; set; } = false;
+        public bool IsDisplay { get; set; } 
         public byte StationNum { get; set; } = 1;
-        public bool IsHsData { get; set; } = false;
-        public ushort? Type { get; set; }
-        public ushort? Caste { get; set; }
-        public ushort? StartAddress { get; set; }
+        public bool IsHsData { get; set; }
+        public int? Type { get; set; }
+        public int? Caste { get; set; }
+        public ushort? AccessAddress  { get; set; }
     }
 }

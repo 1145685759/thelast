@@ -45,8 +45,8 @@ namespace TheLast.ViewModels
             get { return currentModule; }
             set { SetProperty(ref currentModule, value); }
         }
-        private int proValue;
-        public int ProValue
+        private double proValue;
+        public double ProValue
         {
             get { return proValue; }
             set { SetProperty(ref proValue, value); }
@@ -152,27 +152,79 @@ namespace TheLast.ViewModels
                     foreach (var init in testStep.Inits)
                     {
                         var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
-                        if (register.RegisterType=="模拟量输出")
+                        if (register.RegisterType=="基础参数"|| register.RegisterType == "内机控制参数"|| register.RegisterType == "模拟量输出")
                         {
-                          
-                            ushort[] data = new ushort[] { Convert.ToUInt16(double.Parse(init.WriteValue)*10), (ushort)register.Type, (ushort)register.Caste, register.Address};
-                            await ModbusSerialMaster.WriteMultipleRegistersAsync(register.StationNum, (ushort)register.StartAddress, data);
+                            try
+                            {
+                                await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, Convert.ToUInt16(init.WriteValue));
+                            }
+                            catch (Exception ex)
+                            {
+
+                               
+                            }
+                            
                         }
-                        else
+
+                        if (register.RegisterType == "数字量输出")
                         {
-                            await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, Convert.ToUInt16(init.WriteValue));
+                            if (init.WriteValue=="1")
+                            {
+                                await ModbusSerialMaster.WriteSingleCoilAsync(register.StationNum, register.Address,true);
+                            }
+                            if (init.WriteValue=="0")
+                            {
+                                await ModbusSerialMaster.WriteSingleCoilAsync(register.StationNum, register.Address, false);
+                            }
+                        }
+                        if (register.RegisterType=="20个温度设置")
+                        {
+                            ushort[] data = new ushort[4] {Convert.ToUInt16(init.WriteValue), (ushort)register.Type, (ushort)register.Caste, (ushort)register.AccessAddress};
+                            await ModbusSerialMaster.WriteMultipleRegistersAsync(register.StationNum, register.Address, data);
                         }
 
                     }
                     foreach (var feedback in testStep.FeedBacks)
                     {
+                        string result = string.Empty;
                         var now = DateTime.Now;
                         var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedback.RegisterId);
                         if (feedback.DelayModeId==1)
                         {
-                           
-                            var result= await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1);
-                            if (result[0].ToString()!=feedback.TagetValue)
+                            
+                            if (register.RegisterType == "基础参数" || register.RegisterType == "内机控制参数" || register.RegisterType == "模拟量输出")
+                            {
+                                 result = (await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                            }
+                            if ( register.RegisterType == "模拟量输入")
+                            {
+                                 result = (await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                            }
+                            if ( register.RegisterType == "数字量输出")
+                            {
+                                 var s = (await ModbusSerialMaster.ReadCoilsAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                if (s=="True")
+                                {
+                                    result = "1";
+                                }
+                                if (s == "False")
+                                {
+                                    result = "0";
+                                }
+                            }
+                            if (register.RegisterType == "数字量输入")
+                            {
+                                var s = (await ModbusSerialMaster.ReadInputsAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                if (s == "True")
+                                {
+                                    result = "1";
+                                }
+                                if (s == "False")
+                                {
+                                    result = "0";
+                                }
+                            }
+                            if (result!=feedback.TagetValue)
                             {
                                 testStep.Result="未通过";
                                 Color =new SolidColorBrush(Colors.Red);
@@ -225,8 +277,24 @@ namespace TheLast.ViewModels
                         {
                             while ((DateTime.Now-now).TotalSeconds<feedback.DelayTime)
                             {
-                                var result= await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1);
-                                if (result[0].ToString() != feedback.TagetValue)
+                                if (register.RegisterType == "基础参数" || register.RegisterType == "内机控制参数" || register.RegisterType == "模拟量输出")
+                                {
+                                    result = (await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                }
+                                if (register.RegisterType == "模拟量输入")
+                                {
+                                    result = (await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                }
+                                if (register.RegisterType == "数字量输出")
+                                {
+                                    result = (await ModbusSerialMaster.ReadCoilsAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                }
+                                if (register.RegisterType == "数字量输入")
+                                {
+                                    result = (await ModbusSerialMaster.ReadInputsAsync(register.StationNum, register.Address, 1))[0].ToString();
+
+                                }
+                                if (result != feedback.TagetValue)
                                 {
                                     testStep.Result = "未通过";
                                     Color = new SolidColorBrush(Colors.Red);
@@ -278,8 +346,24 @@ namespace TheLast.ViewModels
                         if (feedback.DelayModeId==3)
                         {
                             await Task.Delay(feedback.DelayTime * 1000);
-                            var result = await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1);
-                            if (result[0].ToString() != feedback.TagetValue)
+                            if (register.RegisterType == "基础参数" || register.RegisterType == "内机控制参数" || register.RegisterType == "模拟量输出")
+                            {
+                                result = (await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                            }
+                            if (register.RegisterType == "模拟量输入")
+                            {
+                                result = (await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                            }
+                            if (register.RegisterType == "数字量输出")
+                            {
+                                result = (await ModbusSerialMaster.ReadCoilsAsync(register.StationNum, register.Address, 1))[0].ToString();
+                            }
+                            if (register.RegisterType == "数字量输入")
+                            {
+                                result = (await ModbusSerialMaster.ReadInputsAsync(register.StationNum, register.Address, 1))[0].ToString();
+
+                            }
+                            if (result != feedback.TagetValue)
                             {
                                 testStep.Result = "未通过";
                                 Color = new SolidColorBrush(Colors.Red);
@@ -328,7 +412,31 @@ namespace TheLast.ViewModels
                             }
                         }
                     }
-                    ProValue = (testSteps.IndexOf(testStep) + 1 / testSteps.Count) * 100;
+                    if (testStep.FeedBacks.Count==0)
+                    {
+                        testStep.Result = "通过";
+                        await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
+                        var list = await sqlSugarClient.Queryable<TestStep>().Mapper(it => it.Inits, it => it.Inits.First().TestStepId).Mapper(it => it.FeedBacks, it => it.FeedBacks.First().TestStepId).Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
+                        TestStepDtos.Clear();
+                        foreach (var item2 in list)
+                        {
+                            TestStepDtos.Add(new TestStepDto
+                            {
+                                Conditions = item2.Conditions,
+                                FeedBacks = item2.FeedBacks,
+                                Id = item2.Id,
+                                Inits = item2.Inits,
+                                JudgmentContent = item2.JudgmentContent,
+                                ModuleId = item2.ModuleId,
+                                Remark = item2.Remark,
+                                Result = item2.Result,
+                                TestContent = item2.TestContent,
+                                TestProcess = item2.TestProcess
+                            });
+                        }
+                    }
+                    int index = testSteps.IndexOf(testStep);
+                    ProValue = (double)(index+1) /testSteps.Count *100;
                 }
                 sheets.Add($"{item.ModuleName}", x);
             }

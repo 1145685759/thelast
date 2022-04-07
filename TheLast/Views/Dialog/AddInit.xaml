@@ -57,7 +57,37 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
-                    <TextBlock Text="输入值：" VerticalAlignment="Center"/>
+                    <TextBlock Text="传感器类型：" VerticalAlignment="Center"  Visibility="{Binding IsTemperature}"/>
+                    <ComboBox ItemsSource="{Binding SensorTypes}" Visibility="{Binding IsTemperature}" Name="SensorTypeCombox"  Margin="10 0 " MinWidth="50" VerticalAlignment="Center">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction 
+                                                    CommandParameter="{Binding ElementName=SensorTypeCombox, Path=SelectedIndex}"
+                                                    Command="{Binding DataContext.SelectedSensorTypeComboxCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <TextBlock Text="电路电源等级：" VerticalAlignment="Center"  Visibility="{Binding IsTemperature}"/>
+                    <ComboBox ItemsSource="{Binding CircuitPowerlevels}"  Visibility="{Binding IsTemperature}" VerticalAlignment="Center"  Name="CurrentRegister" Margin=" 10 0" MinWidth="50">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction 
+                                                    CommandParameter="{Binding ElementName=CurrentRegister, Path=SelectedIndex}"
+                                                    Command="{Binding DataContext.SelectedCurrentRegisterCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <TextBlock Text="接入设备地址：" VerticalAlignment="Center"  Visibility="{Binding IsTemperature}"/>
+                    <ComboBox ItemsSource="{Binding AllRegisters}" DisplayMemberPath="Name" Visibility="{Binding IsTemperature}" VerticalAlignment="Center"  Name="AllRegisters" Margin=" 10 0" MinWidth="50">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction 
+                                                    CommandParameter="{Binding ElementName=AllRegisters, Path=SelectedItem}"
+                                                    Command="{Binding DataContext.SelectedAllRegistersCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                     <TextBlock Text="输入值：" VerticalAlignment="Center"/>
                     <ComboBox ItemsSource="{Binding ValueDictionaryDtos}" VerticalAlignment="Center" IsEditable="{Binding IsEditable}" SelectedItem="{Binding CurrentValueDictionary}" Text="{Binding InputValue}" DisplayMemberPath="DisplayValue" Margin=" 10 0" MinWidth="50"/>
                     <Button Content="添加" Command="{Binding AddInit}"/>
                 </StackPanel>

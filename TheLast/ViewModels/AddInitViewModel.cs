@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using TheLast.Common;
 using TheLast.Dtos;
 using TheLast.Entities;
@@ -46,6 +47,12 @@ namespace TheLast.ViewModels
             get { return registerDtos; }
             set { SetProperty(ref registerDtos, value); }
         }
+        private List<Register> allRegisters;
+        public List<Register> AllRegisters
+        {
+            get { return allRegisters; }
+            set { SetProperty(ref allRegisters, value); }
+        }
         private TestStepDto currentTestStepDto;
         public TestStepDto CurrentTestStepDto
         {
@@ -56,6 +63,12 @@ namespace TheLast.ViewModels
         {
             get { return registerTypeDtos; }
             set { SetProperty(ref registerTypeDtos, value); }
+        }
+        private Visibility isTemperature;
+        public Visibility IsTemperature
+        {
+            get { return isTemperature; }
+            set { SetProperty(ref isTemperature, value); }
         }
         private string currentRegisterType;
         public string CurrentRegisterType
@@ -81,6 +94,18 @@ namespace TheLast.ViewModels
             get { return addInitDtoList; }
             set { SetProperty(ref addInitDtoList, value); }
         }
+        private int currentSensorType;
+        public int CurrentSensorType
+        {
+            get { return currentSensorType; }
+            set { SetProperty(ref currentSensorType, value); }
+        }
+        private int circuitPowerlevel;
+        public int CircuitPowerlevel
+        {
+            get { return circuitPowerlevel; }
+            set { SetProperty(ref circuitPowerlevel, value); }
+        }
         private byte stationNum;
         public byte StationNum
         {
@@ -99,6 +124,18 @@ namespace TheLast.ViewModels
             get { return currentRegister; }
             set { SetProperty(ref currentRegister, value); }
         }
+        private string[] sensorTypes=new string[2] { "15K传感器", "20K传感器" };
+        public string[] SensorTypes
+        {
+            get { return sensorTypes; }
+            set { SetProperty(ref sensorTypes, value); }
+        }
+        private string[] circuitPowerlevels=new string[2] { "5V电源", "3.3V电源"};
+        public string[] CircuitPowerlevels
+        {
+            get { return circuitPowerlevels; }
+            set { SetProperty(ref circuitPowerlevels, value); }
+        }
         private ValueDictionaryDto currentValueDictionary;
         public ValueDictionaryDto CurrentValueDictionary
         {
@@ -111,6 +148,7 @@ namespace TheLast.ViewModels
             ValueDictionaryDtos = new List<ValueDictionaryDto>();
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+            AllRegisters = new List<Register>();
             AddInitDtoList = new ObservableCollection<InitDto>();
             RegisterDtos = new List<RegisterDto>();
             this.mapper = mapper;
@@ -143,6 +181,7 @@ namespace TheLast.ViewModels
                             TestStepId = item.TestStepId,
                             WriteValue = item.WriteValue,
                             DisplayValue=item.DisplayValue,
+                            
                         }).ExecuteCommandAsync();
                     var register = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId));
                     testStep.TestProcess += $"向 站号【{register.StationNum}】寄存器【{register.Name}】写入值【{item.DisplayValue}】\r\n";
@@ -157,6 +196,7 @@ namespace TheLast.ViewModels
                             TestStepId = item.TestStepId,
                             WriteValue = item.WriteValue,
                             DisplayValue=item.DisplayValue
+                            
                         }).ExecuteCommandAsync();
                     
                     var register = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId));
@@ -181,12 +221,19 @@ namespace TheLast.ViewModels
             CurrentStationNum = (byte)parameter;
             List<string> registerTypes = await sqlSugarClient.Queryable<Register>().Where(it=>it.StationNum==CurrentStationNum).Select(it => it.RegisterType).ToListAsync();
             RegisterTypeDtos = registerTypes.Distinct().ToList();
+            RegisterTypeDtos.Remove("步进电机脉冲检测");
+            RegisterTypeDtos.Remove("外机数据");
+            RegisterTypeDtos.Remove("内机数据");
+            RegisterTypeDtos.Remove("数字量输入");
+            RegisterTypeDtos.Remove("模拟量输入");
         }
         public async void OnDialogOpend(IDialogParameters parameters)
         {
             CurrentTestStepDto = parameters.GetValue<TestStepDto>("Value");
+            AllRegisters = await sqlSugarClient.Queryable<Register>().Where(x => x.Name.Contains("温度")&&x.IsEnable==true).ToListAsync();
             StationNumList = (await sqlSugarClient.Queryable<Register>().Select(it => it.StationNum).ToListAsync()).Distinct().ToList();
             var list = await sqlSugarClient.Queryable<Init>().Where(x => x.TestStepId ==CurrentTestStepDto.Id).ToListAsync();
+            IsTemperature = Visibility.Collapsed;
             AddInitDtoList.Clear();
             foreach (var item in list)
             {
@@ -210,6 +257,10 @@ namespace TheLast.ViewModels
 
         async void ExecuteSelectedCommand(string parameter)
         {
+            if (parameter== "20个温度设置")
+            {
+                IsTemperature = Visibility.Visible;
+            }
             var resulet = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == parameter&&x.StationNum==CurrentStationNum).ToListAsync();
 
             RegisterDtos = mapper.Map<List<RegisterDto>>(resulet);
@@ -225,7 +276,7 @@ namespace TheLast.ViewModels
                 return;
             }
             var result = await sqlSugarClient.Queryable<ValueDictionary>().Where(x => x.RegisterId == parameter.Id).ToListAsync();
-            if (result.Count == 0)
+            if (result.Count == 0&& !parameter.RegisterType.Contains("数字量"))
             {
                 IsEditable = true;
             }
@@ -253,6 +304,45 @@ namespace TheLast.ViewModels
             }
            
         }
+        private DelegateCommand<int?> selectedSensorTypeComboxCommand;
+        public DelegateCommand<int?> SelectedSensorTypeComboxCommand =>
+            selectedSensorTypeComboxCommand ?? (selectedSensorTypeComboxCommand = new DelegateCommand<int?>(ExecuteSelectedSensorTypeComboxCommand));
+
+        async void ExecuteSelectedSensorTypeComboxCommand(int? parameter)
+        {
+            if (parameter!=null)
+            {
+                var entity= await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id);
+                entity.Type = parameter;
+                await sqlSugarClient.Updateable(entity).ExecuteCommandAsync();
+            }
+        }
+        private DelegateCommand<int?> selectedCurrentRegisterCommand;
+        public DelegateCommand<int?> SelectedCurrentRegisterCommand =>
+            selectedCurrentRegisterCommand ?? (selectedCurrentRegisterCommand = new DelegateCommand<int?>(ExecuteSelectedCurrentRegisterCommand));
+
+        async void ExecuteSelectedCurrentRegisterCommand(int? parameter)
+        {
+            if (parameter!=null)
+            {
+                var entity = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id);
+                entity.Caste = parameter;
+                await sqlSugarClient.Updateable(entity).ExecuteCommandAsync();
+            }
+        }
+        private DelegateCommand<Register> selectedAllRegistersCommand;
+        public DelegateCommand<Register> SelectedAllRegistersCommand =>
+            selectedAllRegistersCommand ?? (selectedAllRegistersCommand = new DelegateCommand<Register>(ExecuteSelectedAllRegistersCommand));
+
+        async void ExecuteSelectedAllRegistersCommand(Register parameter)
+        {
+            if (parameter!=null)
+            {
+                var entity = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id);
+                entity.AccessAddress = parameter.Address;
+                await sqlSugarClient.Updateable(entity).ExecuteCommandAsync();
+            }
+        }   
         private DelegateCommand addInit;
         public DelegateCommand AddInit =>
             addInit ?? (addInit = new DelegateCommand(ExecuteAddInit));

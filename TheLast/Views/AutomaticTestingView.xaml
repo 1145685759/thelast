@@ -40,7 +40,6 @@
                     </StackPanel>
                 </StackPanel>
                 <DockPanel>
-                    <Button Content="导出测试报告" Width="200" DockPanel.Dock="Right" Command="{Binding Export}" Cursor="Hand"/>
                     <Button Content="开始运行" Command="{Binding StartRun}" Width="200" HorizontalAlignment="Right" Margin="0 0 10 0" Cursor="Hand"/>
 
                 </DockPanel>

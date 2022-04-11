@@ -45,7 +45,7 @@ namespace TheLast.ViewModels
         {
             try
             {
-                var dialogResult = await dialogHost.Question("温馨提示", $"确认删除待办事项:{obj.ModuleName} ?");
+                var dialogResult = await dialogHost.Question("温馨提示", $"确认删除模块:{obj.ModuleName} ?");
                 if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK) return;
 
                 UpdateLoading(true);

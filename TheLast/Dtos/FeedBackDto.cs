@@ -83,5 +83,17 @@ namespace TheLast.Dtos
             get { return stationNum; }
             set { SetProperty(ref stationNum, value); }
         }
+        private bool isJump;
+        public bool IsJump
+        {
+            get { return isJump; }
+            set { SetProperty(ref isJump, value); }
+        }
+        private string operational;
+        public string Operational
+        {
+            get { return operational; }
+            set { SetProperty(ref operational, value); }
+        }
     }
 }

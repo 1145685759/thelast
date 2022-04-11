@@ -11,7 +11,36 @@
              Background="{DynamicResource MaterialDesignPaper}"
              xmlns:local="clr-namespace:TheLast.Views" xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
     <Grid>
-        <ScrollViewer Margin="50">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel  LastChildFill="False" Margin="20 10" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                <TextBlock Text="站号：" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding StationNumList}" SelectedIndex="{Binding StationIndex}"  Name="StationCombox"  Margin="10 0" Width="50" VerticalAlignment="Center" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction 
+                                                    CommandParameter="{Binding ElementName=StationCombox, Path=SelectedItem}"
+                                                    Command="{Binding DataContext.StationSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+                <TextBlock Text="寄存器类型：" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding RegisterTypeDtos}"  SelectedIndex="{Binding TypeIndex}" Name="TypeCombox"  Margin="10 0" MinWidth="50" VerticalAlignment="Center" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction 
+                                                    CommandParameter="{Binding ElementName=TypeCombox, Path=SelectedItem}"
+                                                    Command="{Binding DataContext.SelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+            </StackPanel>
+        </DockPanel>
+        <ScrollViewer Margin="50" Grid.Row="1">
             <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding WriteRegisters}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -31,5 +60,6 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+        <Button Content="批量写入" Grid.Row="2" HorizontalAlignment="Center" Margin="0 0 0 20" Command="{Binding WriteBatch}"/>
     </Grid>
 </UserControl>

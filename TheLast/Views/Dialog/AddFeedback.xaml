@@ -57,6 +57,8 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
+                    <TextBlock Text="运算符：" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding Operationals}" VerticalAlignment="Center"  SelectedItem="{Binding CurrentOperational}"  Margin=" 10 0" Width="50"/>
                     <TextBlock Text="目标值：" VerticalAlignment="Center"/>
                     <ComboBox ItemsSource="{Binding ValueDictionaryDtos}" VerticalAlignment="Center" IsEditable="{Binding IsEditable}" SelectedItem="{Binding CurrentValueDictionary}" Text="{Binding InputValue}" DisplayMemberPath="DisplayValue" Margin=" 10 0" Width="50"/>
                     <TextBlock Text="延时模式：" VerticalAlignment="Center"/>
@@ -65,13 +67,15 @@
                     <TextBox Text="{Binding DelatTime}" VerticalAlignment="Center"   Margin=" 10 0" Width="50"/>
                     <Button Content="添加" Command="{Binding AddFeedback}"/>
                 </StackPanel>
-                <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" Width="700" Margin="0 20" ItemsSource="{Binding AddFeedbackDtoList}">
+                <DataGrid AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" Width="700" Margin="0 20" ItemsSource="{Binding AddFeedbackDtoList}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="站号" Binding="{Binding StationNum}"/>
                         <DataGridTextColumn Header="寄存器" Binding="{Binding Address}"/>
+                        <DataGridTextColumn Header="运算符" Binding="{Binding Operational}"/>
                         <DataGridTextColumn Header="目标值" Binding="{Binding DisplayTagetValue}"/>
                         <DataGridTextColumn Header="延时模式" Binding="{Binding DisplayDelayMode}"/>
                         <DataGridTextColumn Header="延时时间" Binding="{Binding DelayTime}"/>
+                        <DataGridCheckBoxColumn Header="是否跳过判断" Binding="{Binding IsJump}"/>
                         <DataGridTemplateColumn Header="操作">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -90,7 +94,7 @@
             <StackPanel Margin="10" Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
                 <Button Content="取消" Margin="0,0,10,0"
                     Command="{Binding CancelCommand}"
-                    Style="{StaticResource MaterialDesignOutlinedButton}"/>
+                    Style="{StaticResource MaterialDesignOutlinedButton}" Cursor="Hand"/>
                 <Button Content="确定"      Command="{Binding SaveCommand}"/>
             </StackPanel>
         </Grid>

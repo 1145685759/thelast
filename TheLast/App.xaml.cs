@@ -76,6 +76,7 @@ namespace TheLast
             containerRegistry.RegisterForNavigation<AddRegister, AddRegisterViewModel>();
             containerRegistry.RegisterForNavigation<AddInit, AddInitViewModel>();
             containerRegistry.RegisterForNavigation<AddFeedback, AddFeedbackViewModel>();
+            containerRegistry.RegisterForNavigation<JumpConfig, JumpConfigViewModel>();
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();
             containerRegistry.RegisterForNavigation<CheckRegister, CheckRegisterViewModel>();
             containerRegistry.RegisterForNavigation<ProjectManager, ProjectManagerViewModel>();

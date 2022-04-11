@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="TheLast.Views.Dialog.JumpConfig"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TheLast.Views.Dialog"
+             mc:Ignorable="d" 
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             Background="{DynamicResource MaterialDesignPaper}"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             >
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock
+            Padding="20,10"
+            Text="配置跳过判断条件" FontWeight="Bold" FontSize="20" />
+            <DockPanel Grid.Row="1" LastChildFill="False" Margin="20 0">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                    <TextBlock Text="站号：" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding StationNum}"  Name="StationCombox"  Margin="10 0" Width="50" VerticalAlignment="Center" >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction 
+                                                    CommandParameter="{Binding ElementName=StationCombox, Path=SelectedItem}"
+                                                    Command="{Binding DataContext.StationSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <TextBlock Text="寄存器类型：" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding RegisterTypes}"  Name="TypeCombox"  Margin="10 0" MinWidth="50" VerticalAlignment="Center" >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction 
+                                                    CommandParameter="{Binding ElementName=TypeCombox, Path=SelectedItem}"
+                                                    Command="{Binding DataContext.SelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <TextBlock Text="可选寄存器：" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding RegisterNames}"  Name="RegisterCombox"    Margin="10 0 " MinWidth="50" VerticalAlignment="Center">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction 
+                                                    CommandParameter="{Binding ElementName=RegisterCombox, Path=SelectedItem}"
+                                                    Command="{Binding DataContext.SelectedRegisterCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <Button Content="添加" Margin="20 0" Command="{Binding Add}" CommandParameter="{Binding ElementName=RegisterCombox,Path=SelectedItem}"/>
+                </StackPanel>
+            </DockPanel>
+                    <DockPanel Grid.Row="2" LastChildFill="False" Margin="20 10">
+                <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" Width="700" Margin="0 20" ItemsSource="{Binding JumpRegister}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="站号" Binding="{Binding StationNum}"/>
+                        <DataGridTextColumn Header="寄存器" Binding="{Binding Name}"/>
+                        <DataGridTemplateColumn Header="操作">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="删除" CommandParameter="{Binding}"
+                                                Command="{Binding DataContext.Delete, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
+                                        
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+
+            <StackPanel Margin="10" Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right">
+                <Button Content="取消" Margin="0,0,10,0"
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource MaterialDesignOutlinedButton}"/>
+                <Button Content="确定"      Command="{Binding SaveCommand}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

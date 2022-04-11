@@ -34,6 +34,7 @@
             <DockPanel LastChildFill="False">
                 <Button Content="添加步骤" Width="200" Margin="10 0 0 0"  Command="{Binding AddTestStep}" Cursor="Hand" DockPanel.Dock="Right"/>
                 <Button Content="加载测试步骤" Width="200" Margin="10 0 0 0" Command="{Binding LoadTestStep}"  DockPanel.Dock="Right"/>
+                <Button Content="配置跳过条件" Width="200" Margin="10 0 0 0" Command="{Binding JumpConfig}"  DockPanel.Dock="Right"/>
             </DockPanel>
             <DataGrid SelectionUnit="FullRow" Grid.Row="1" SelectedItem="{Binding CurrentItem}" MinHeight="400" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="grid" LoadingRow="DataGrid_LoadingRow" AutoGenerateColumns="False"  CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding TestStepDtos}">
                 <DataGrid.Columns>

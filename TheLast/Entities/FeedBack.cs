@@ -20,5 +20,7 @@ namespace TheLast.Entities
         public DelayModel DelayModel { get; set; }
         public byte StationNum { get; set; } = 1;
         public string DisplayTagetValue { get; set; }
+        public bool IsJump { get; set; } = false;
+        public string Operational { get; set; }
     }
 }

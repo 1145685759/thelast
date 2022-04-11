@@ -312,4 +312,6 @@ E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLa
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLast.dll
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLast.pdb
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLast.genruntimeconfig.cache
+E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\Dialog\JumpConfig.g.cs
+E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\Views\Dialog\JumpConfig.baml
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\obj\Debug\netcoreapp3.1\TheLast.csproj.AssemblyReference.cache

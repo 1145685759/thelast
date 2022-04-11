@@ -10,6 +10,7 @@ namespace TheLast.Dtos
         public string 寄存器写入 { get; set; }
         public string 写入值 { get; set; }
         public string 寄存器判断 { get; set; }
+        public string 运算符 { get; set; }
         public string 目标值 { get; set; }
         public string 备注 { get; set; }
         public string 站号 { get; set; }

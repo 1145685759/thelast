@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "as/U8xia6vROM8AKLDYSpxV7QBv/kD2yAJEMHf2za5hpzxYKabhmb2Uud0Ie2Tv82evkv2ogcEYqdbHTdRzX+g==",
+  "dgSpecHash": "JcxBs/VOvCnCzjUDUN49tFNsUkSZvqyM1OCLAVKHn/nGCfhV75+Jyso/MJIB0Pcvvv4CIzpPEvDlDCDjd4CMcA==",
   "success": true,
   "projectFilePath": "E:\\奥克斯项目\\奥克斯项目\\TheLast\\TheLast\\TheLast.csproj",
   "expectedPackageFiles": [
@@ -170,7 +170,8 @@
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\system.xml.xpath\\4.0.1\\system.xml.xpath.4.0.1.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\system.xml.xpath.xmldocument\\4.0.1\\system.xml.xpath.xmldocument.4.0.1.nupkg.sha512",
-    "C:\\Users\\wangzhuhui\\.nuget\\packages\\unvell.reogridwpf.dll\\3.0.0\\unvell.reogridwpf.dll.3.0.0.nupkg.sha512"
+    "C:\\Users\\wangzhuhui\\.nuget\\packages\\unvell.reogridwpf.dll\\3.0.0\\unvell.reogridwpf.dll.3.0.0.nupkg.sha512",
+    "C:\\Users\\wangzhuhui\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.23\\microsoft.netcore.app.host.win-x64.3.1.23.nupkg.sha512"
   ],
   "logs": []
 }

@@ -55,10 +55,7 @@ namespace TheLast.Views
                     this.WindowState = WindowState.Normal;
             };
 
-            menu.NavigationItemSelected += (s, e) =>
-            {
-                drawerHost.IsLeftDrawerOpen = false;
-            };
+
             this.dialogHostService = dialogHostService;
         }
 

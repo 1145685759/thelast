@@ -91,7 +91,7 @@
                     <ComboBox ItemsSource="{Binding ValueDictionaryDtos}" VerticalAlignment="Center" IsEditable="{Binding IsEditable}" SelectedItem="{Binding CurrentValueDictionary}" Text="{Binding InputValue}" DisplayMemberPath="DisplayValue" Margin=" 10 0" MinWidth="50"/>
                     <Button Content="添加" Command="{Binding AddInit}"/>
                 </StackPanel>
-                <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" Width="545" Margin="0 20" ItemsSource="{Binding AddInitDtoList}">
+                <DataGrid AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" Width="545" Margin="0 20" ItemsSource="{Binding AddInitDtoList}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="站号" Binding="{Binding StationNum}"/>
                         <DataGridTextColumn Header="寄存器" Binding="{Binding Address}"/>

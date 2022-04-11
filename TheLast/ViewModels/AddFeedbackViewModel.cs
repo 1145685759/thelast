@@ -99,6 +99,18 @@ namespace TheLast.ViewModels
             get { return addFeedbackDtoList; }
             set { SetProperty(ref addFeedbackDtoList, value); }
         }
+        private string[] operationals=new string[] { "等于","大于","小于"};
+        public string[] Operationals
+        {
+            get { return operationals; }
+            set { SetProperty(ref operationals, value); }
+        }
+        private string currentOperational;
+        public string CurrentOperational
+        {
+            get { return currentOperational; }
+            set { SetProperty(ref currentOperational, value); }
+        }
         private bool isEditable = false;
         public bool IsEditable
         {
@@ -155,35 +167,40 @@ namespace TheLast.ViewModels
                 {
                     await sqlSugarClient.Insertable(new FeedBack
                     {
+                        Operational=CurrentOperational,
                         RegisterId = item.RegisterId,
                         TestStepId = item.TestStepId,
                         TagetValue = item.TagetValue,
                         DisplayTagetValue = item.DisplayTagetValue,
                         DelayModeId = item.DelayModeId,
                         DelayTime = item.DelayTime,
+                        IsJump=item.IsJump
                     }).ExecuteCommandAsync();
                     var testStep = await sqlSugarClient.Queryable<TestStep>().FirstAsync(x => x.Id == item.TestStepId);
                     var register = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId));
                     testStep.JudgmentContent = string.Empty;
-                    testStep.JudgmentContent += $"站号【{register.StationNum}】 寄存器【{register.Name}】=【{item.DisplayTagetValue}】\r\n";
+                    testStep.JudgmentContent += $"站号【{register.StationNum}】 寄存器【{register.Name}】{item.Operational}【{item.DisplayTagetValue}】\r\n";
                     await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
                 }
                 else
                 {
                     await sqlSugarClient.Updateable(new FeedBack
                     {
+                        Operational = CurrentOperational,
                         Id = item.Id,
                         RegisterId = item.RegisterId,
                         TestStepId = item.TestStepId,
                         TagetValue = item.TagetValue,
                         DelayModeId = item.DelayModeId,
                         DelayTime = item.DelayTime,
+                        IsJump=item.IsJump,
                         DisplayTagetValue=item.DisplayTagetValue
+                        
                     }).ExecuteCommandAsync();
                     var testStep = await sqlSugarClient.Queryable<TestStep>().FirstAsync(x => x.Id == item.TestStepId);
                     var register = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == item.RegisterId));
                     testStep.JudgmentContent = string.Empty;
-                    testStep.JudgmentContent += $"站号【{register.StationNum}】 寄存器【{register.Name}】=【{item.DisplayTagetValue}】\r\n";
+                    testStep.JudgmentContent += $"站号【{register.StationNum}】 寄存器【{register.Name}】{item.Operational}【{item.DisplayTagetValue}】\r\n";
                     await sqlSugarClient.Updateable(testStep).ExecuteCommandAsync();
                 }
             }
@@ -209,12 +226,14 @@ namespace TheLast.ViewModels
                 feedBackDto.StationNum = sqlSugarClient.Queryable<Register>().First(x => x.Id == item.RegisterId).StationNum;
                 feedBackDto.Address = sqlSugarClient.Queryable<Register>().First(x => x.Id == item.RegisterId).Name;
                 feedBackDto.Id = item.Id;
+                feedBackDto.Operational = item.Operational;
                 feedBackDto.RegisterId = item.RegisterId;
                 feedBackDto.TestStepId = item.TestStepId;
                 feedBackDto.TagetValue = item.TagetValue;
                 feedBackDto.DisplayTagetValue = item.DisplayTagetValue;
                 feedBackDto.DelayModeId = item.DelayModeId;
                 feedBackDto.DelayTime = item.DelayTime;
+                feedBackDto.IsJump = item.IsJump;
                 var s= sqlSugarClient.Queryable<DelayModel>().First(x => x.Id == item.DelayModeId);
                 feedBackDto.DisplayDelayMode = s.Mode;
                 AddFeedbackDtoList.Add(feedBackDto);
@@ -280,6 +299,7 @@ namespace TheLast.ViewModels
                 feedBackDto.RegisterId = CurrentRegister.Id;
                 feedBackDto.DisplayDelayMode = (await sqlSugarClient.Queryable<DelayModel>().FirstAsync(x => x.Id == CurrentDelayMode + 1)).Mode;
                 feedBackDto.DelayTime = DelatTime;
+                feedBackDto.Operational = CurrentOperational;
                 feedBackDto.TestStepId = CurrentTestStepDto.Id;
                 feedBackDto.TagetValue = inputValue;
                 feedBackDto.DelayModeId = CurrentDelayMode + 1;
@@ -292,6 +312,7 @@ namespace TheLast.ViewModels
                 feedBackDto.StationNum = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id)).StationNum;
                 feedBackDto.Address = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == CurrentRegister.Id)).Name;
                 feedBackDto.RegisterId = CurrentRegister.Id;
+                feedBackDto.Operational = CurrentOperational;
                 feedBackDto.DisplayDelayMode = (await sqlSugarClient.Queryable<DelayModel>().FirstAsync(x => x.Id == CurrentDelayMode + 1)).Mode;
                 feedBackDto.DelayTime = DelatTime;
                 feedBackDto.TestStepId = CurrentTestStepDto.Id;

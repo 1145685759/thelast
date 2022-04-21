@@ -27,17 +27,6 @@
                         FontSize="20"
                         FontWeight="Bold"
                         Text="添加项目" />
-
-                    <StackPanel
-                        Margin="20"
-                        DockPanel.Dock="Top"
-                        Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center" Text="测试状态：" />
-                        <ComboBox SelectedIndex="{Binding CurrentDto.IsComplete}">
-                            <ComboBoxItem>未测试</ComboBoxItem>
-                            <ComboBoxItem>已完成</ComboBoxItem>
-                        </ComboBox>
-                    </StackPanel>
                     <TextBox Text="{Binding CurrentDto.ProjectName}"
                         Margin="20,0"
                         md:HintAssist.Hint="请输入项目名称"
@@ -50,8 +39,8 @@
                     <Button Command="{Binding ExecuteCommand}"
                             CommandParameter="保存"
                         Margin="20,0"
-                        Content="添加项目"
-                        DockPanel.Dock="Top" />
+                        Content="添加/编辑 项目"
+                        DockPanel.Dock="Top" Cursor="Hand" />
                 </DockPanel>
             </md:DrawerHost.RightDrawerContent>
 
@@ -120,7 +109,7 @@
                                             <i:EventTrigger EventName="MouseLeftButtonUp">
                                                 <i:InvokeCommandAction 
                                                     CommandParameter="{Binding}"
-                                                    Command="{Binding DataContext.SelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                                                    Command="{Binding DataContext.CheckModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
 
@@ -135,9 +124,9 @@
                                                     CommandParameter="{Binding}"
                                                     Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
                                                     />
-                                                <Button Content="查看模块" 
+                                                <Button Content="修改模块" 
                                                     CommandParameter="{Binding}"
-                                                    Command="{Binding DataContext.CheckModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
+                                                    Command="{Binding DataContext.SelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
                                                     />
                                                 <Button Content="自动测试" 
                                                     CommandParameter="{Binding}"

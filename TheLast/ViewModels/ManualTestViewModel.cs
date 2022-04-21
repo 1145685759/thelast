@@ -101,7 +101,24 @@ namespace TheLast.ViewModels
                 HandyControl.Controls.Growl.Info("写入失败：未设置串口");
                 return;
             }
-            await modbusSerialMaster.WriteSingleRegisterAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, parameter.Value);
+            if (parameter.RegisterDto.RegisterType=="数字量输出")
+            {
+                bool value=false;
+                if (parameter.Value==1)
+                {
+                    value = true;
+                }
+                if (parameter.Value==0)
+                {
+                    value = false;
+                }
+                await modbusSerialMaster.WriteSingleCoilAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, value);
+
+            }
+            else
+            {
+                await modbusSerialMaster.WriteSingleRegisterAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, parameter.Value);
+            }
         }
         private DelegateCommand<string?> selectedCommand;
         public DelegateCommand<string?> SelectedCommand =>
@@ -120,22 +137,42 @@ namespace TheLast.ViewModels
             }
            
         }
-        private DelegateCommand writeBatch;
-        public DelegateCommand WriteBatch =>
-            writeBatch ?? (writeBatch = new DelegateCommand(ExecuteWriteBatch));
+        private DelegateCommand<string> writeBatch;
+        public DelegateCommand<string> WriteBatch =>
+            writeBatch ?? (writeBatch = new DelegateCommand<string>(ExecuteWriteBatch));
 
-        async void ExecuteWriteBatch()
+        async void ExecuteWriteBatch(string d)
         {
             if (modbusSerialMaster == null)
             {
                 HandyControl.Controls.Growl.Info("写入失败：未设置串口");
                 return;
             }
-            foreach (var item in WriteRegisters)
+            if (d == "数字量输出")
             {
-                await modbusSerialMaster.WriteSingleRegisterAsync(item.RegisterDto.StationNum, item.RegisterDto.Address, item.Value);
-
+                foreach (var item in WriteRegisters)
+                {
+                    bool value = false;
+                    if (item.Value == 1)
+                    {
+                        value = true;
+                    }
+                    if (item.Value == 0)
+                    {
+                        value = false;
+                    }
+                    await modbusSerialMaster.WriteSingleCoilAsync(item.RegisterDto.StationNum, item.RegisterDto.Address, value);
+                }
             }
+            else
+            {
+                foreach (var item in WriteRegisters)
+                {
+
+                    await modbusSerialMaster.WriteSingleRegisterAsync(item.RegisterDto.StationNum, item.RegisterDto.Address, item.Value);
+                }
+            }
+            
         }
     }
 }

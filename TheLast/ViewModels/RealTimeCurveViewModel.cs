@@ -86,7 +86,7 @@ namespace TheLast.ViewModels
                     {
                         for (int i = 0; i < MyModel.Series.Count; i++)
                         {
-                            LineSeries lineSeries= (LineSeries)MyModel.Series[i];
+                            LineSeries lineSeries = (LineSeries)MyModel.Series[i];
                             if (lineSeries == null)
                             {
                                 continue;
@@ -104,6 +104,7 @@ namespace TheLast.ViewModels
                     await Task.Delay(1000);
                 }
             });
+
         }
         private DelegateCommand<RegisterDto> check;
         public DelegateCommand<RegisterDto> Check =>

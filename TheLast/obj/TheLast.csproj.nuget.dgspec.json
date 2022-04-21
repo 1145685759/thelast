@@ -5,7 +5,7 @@
   },
   "projects": {
     "E:\\奥克斯项目\\奥克斯项目\\TheLast\\TheLast\\TheLast.csproj": {
-      "version": "1.0.0",
+      "version": "1.0.0.2",
       "restore": {
         "projectUniqueName": "E:\\奥克斯项目\\奥克斯项目\\TheLast\\TheLast\\TheLast.csproj",
         "projectName": "TheLast",
@@ -13,8 +13,12 @@
         "packagesPath": "C:\\Users\\wangzhuhui\\.nuget\\packages\\",
         "outputPath": "E:\\奥克斯项目\\奥克斯项目\\TheLast\\TheLast\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
           "C:\\Users\\wangzhuhui\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -43,6 +47,10 @@
             "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
               "version": "[11.0.0, )"
+            },
+            "Autoupdater.NET.Official": {
+              "target": "Package",
+              "version": "[1.7.0, )"
             },
             "DryIoc.Microsoft.DependencyInjection": {
               "target": "Package",
@@ -103,12 +111,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[3.1.23, 3.1.23]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"

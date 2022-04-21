@@ -60,6 +60,6 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Button Content="批量写入" Grid.Row="2" HorizontalAlignment="Center" Margin="0 0 0 20" Command="{Binding WriteBatch}"/>
+        <Button Content="批量写入" Grid.Row="2" HorizontalAlignment="Center" Margin="0 0 0 20" Command="{Binding WriteBatch}" CommandParameter="{Binding ElementName=TypeCombox, Path=SelectedItem}"/>
     </Grid>
 </UserControl>

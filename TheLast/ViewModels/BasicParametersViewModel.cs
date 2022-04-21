@@ -102,6 +102,13 @@ namespace TheLast.ViewModels
             DialogParameters param = new DialogParameters();
             var model = new RegisterDto();
             model.RegisterType =GetType;
+            int count= await sqlSugarClient.Queryable<Register>().CountAsync(x => x.RegisterType == GetType);
+            int maxCount= (await sqlSugarClient.Queryable<RegisterCount>().FirstAsync(x => x.Type == GetType)).Count;
+            if (count>=maxCount)
+            {
+                HandyControl.Controls.Growl.Error("添加失败，该类型寄存器已达上限");
+                return;
+            }
             param.Add("Value", model);
             var dialogResult = await dialog.ShowDialog("AddRegister", param);
             if (dialogResult.Result == ButtonResult.OK)

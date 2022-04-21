@@ -29,6 +29,76 @@
           }
         }
       },
+      "Autoupdater.NET.Official/1.7.0": {
+        "runtime": {
+          "lib/netcoreapp3.1/AutoUpdater.NET.dll": {
+            "assemblyVersion": "1.7.0.0",
+            "fileVersion": "1.7.0.0"
+          }
+        },
+        "resources": {
+          "lib/netcoreapp3.1/ar/AutoUpdater.NET.resources.dll": {
+            "locale": "ar"
+          },
+          "lib/netcoreapp3.1/cs/AutoUpdater.NET.resources.dll": {
+            "locale": "cs"
+          },
+          "lib/netcoreapp3.1/da/AutoUpdater.NET.resources.dll": {
+            "locale": "da"
+          },
+          "lib/netcoreapp3.1/de/AutoUpdater.NET.resources.dll": {
+            "locale": "de"
+          },
+          "lib/netcoreapp3.1/es/AutoUpdater.NET.resources.dll": {
+            "locale": "es"
+          },
+          "lib/netcoreapp3.1/fr/AutoUpdater.NET.resources.dll": {
+            "locale": "fr"
+          },
+          "lib/netcoreapp3.1/it/AutoUpdater.NET.resources.dll": {
+            "locale": "it"
+          },
+          "lib/netcoreapp3.1/ja-JP/AutoUpdater.NET.resources.dll": {
+            "locale": "ja-JP"
+          },
+          "lib/netcoreapp3.1/ko/AutoUpdater.NET.resources.dll": {
+            "locale": "ko"
+          },
+          "lib/netcoreapp3.1/nl/AutoUpdater.NET.resources.dll": {
+            "locale": "nl"
+          },
+          "lib/netcoreapp3.1/pl/AutoUpdater.NET.resources.dll": {
+            "locale": "pl"
+          },
+          "lib/netcoreapp3.1/pt-BR/AutoUpdater.NET.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "lib/netcoreapp3.1/pt/AutoUpdater.NET.resources.dll": {
+            "locale": "pt"
+          },
+          "lib/netcoreapp3.1/ru/AutoUpdater.NET.resources.dll": {
+            "locale": "ru"
+          },
+          "lib/netcoreapp3.1/sk/AutoUpdater.NET.resources.dll": {
+            "locale": "sk"
+          },
+          "lib/netcoreapp3.1/sv/AutoUpdater.NET.resources.dll": {
+            "locale": "sv"
+          },
+          "lib/netcoreapp3.1/th/AutoUpdater.NET.resources.dll": {
+            "locale": "th"
+          },
+          "lib/netcoreapp3.1/tr/AutoUpdater.NET.resources.dll": {
+            "locale": "tr"
+          },
+          "lib/netcoreapp3.1/zh-tw/AutoUpdater.NET.resources.dll": {
+            "locale": "zh-tw"
+          },
+          "lib/netcoreapp3.1/zh/AutoUpdater.NET.resources.dll": {
+            "locale": "zh"
+          }
+        }
+      },
       "BouncyCastle.NetCore/1.8.3": {
         "dependencies": {
           "NETStandard.Library": "1.6.1",
@@ -2461,6 +2531,13 @@
       "sha512": "sha512-0asw5WxdCFh2OTi9Gv+oKyH9SzxwYQSnO8TV5Dd0GggovILzJW4UimP26JAcxc3yB5NnC5urooZ1BBs8ElpiBw==",
       "path": "automapper.extensions.microsoft.dependencyinjection/11.0.0",
       "hashPath": "automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512"
+    },
+    "Autoupdater.NET.Official/1.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gNBNXwaiLc9oNtJ0WWwRvWsmGVpCN8ii2acpHpYtttkKh3xYJjmbLG2uf243r+nXbmo6KVauXGC82Igt2kHhxw==",
+      "path": "autoupdater.net.official/1.7.0",
+      "hashPath": "autoupdater.net.official.1.7.0.nupkg.sha512"
     },
     "BouncyCastle.NetCore/1.8.3": {
       "type": "package",

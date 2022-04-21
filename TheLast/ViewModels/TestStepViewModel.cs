@@ -56,7 +56,7 @@ namespace TheLast.ViewModels
         private readonly IDialogHostService dialog;
         private readonly IMapper mapper;
         private readonly IRegionManager regionManager;
-
+        
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
@@ -91,6 +91,38 @@ namespace TheLast.ViewModels
                     JudgmentContent = feedbackStr,
                     Id = item.Id
                 });
+            }
+        }
+        private DelegateCommand checkRegisters;
+        public DelegateCommand CheckRegisters =>
+            checkRegisters ?? (checkRegisters = new DelegateCommand(ExecuteCheckRegisters));
+
+        async void ExecuteCheckRegisters()
+        {
+            var testSteps= await sqlSugarClient.Queryable<TestStep>().Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
+            foreach (var testStep in testSteps)
+            {
+                var inits = await sqlSugarClient.Queryable<Init>().Where(x => x.TestStepId == testStep.Id).ToListAsync();
+                foreach (var init in inits)
+                {
+                    var re = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
+                    if (!re.IsEnable)
+                    {
+                        HandyControl.Controls.Growl.Error($"{re.Name}未启用，请检查");
+                        return;
+                    } 
+                }
+                var feedbacks = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == testStep.Id).ToListAsync();
+                foreach (var feedback in feedbacks)
+                {
+                    var re = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedback.RegisterId);
+                    if (!re.IsEnable)
+                    {
+                        HandyControl.Controls.Growl.Error($"{re.Name}未启用，请检查");
+                        return;
+                    }
+                }
+                HandyControl.Controls.Growl.Success("检查完毕，无异常！");
             }
         }
         private DelegateCommand<TestStepDto> deleteTestStep;
@@ -308,6 +340,7 @@ namespace TheLast.ViewModels
                     ModuleId = item.ModuleId,
                     Remark = item.Remark,
                     Result = item.Result,
+                    FeedBacks = item.FeedBacks,
                     TestContent = item.TestContent,
                     TestProcess = initStr,
                     JudgmentContent = feedbackStr,

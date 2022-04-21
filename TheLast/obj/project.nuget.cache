@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "JcxBs/VOvCnCzjUDUN49tFNsUkSZvqyM1OCLAVKHn/nGCfhV75+Jyso/MJIB0Pcvvv4CIzpPEvDlDCDjd4CMcA==",
+  "dgSpecHash": "P+Lc0yJNSefhQAbepJm3wZSlPUWE3PVCwrya7ApM5lpTw4tDsFVnWRyiX0cgrI4GumbI/dRgpZ4S1yYe2GO4wQ==",
   "success": true,
   "projectFilePath": "E:\\奥克斯项目\\奥克斯项目\\TheLast\\TheLast\\TheLast.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\automapper\\11.0.0\\automapper.11.0.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",
+    "C:\\Users\\wangzhuhui\\.nuget\\packages\\autoupdater.net.official\\1.7.0\\autoupdater.net.official.1.7.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\bouncycastle.netcore\\1.8.3\\bouncycastle.netcore.1.8.3.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\dotnetzip\\1.15.0\\dotnetzip.1.15.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\dryioc.dll\\4.7.0\\dryioc.dll.4.7.0.nupkg.sha512",
@@ -170,8 +171,7 @@
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\system.xml.xpath\\4.0.1\\system.xml.xpath.4.0.1.nupkg.sha512",
     "C:\\Users\\wangzhuhui\\.nuget\\packages\\system.xml.xpath.xmldocument\\4.0.1\\system.xml.xpath.xmldocument.4.0.1.nupkg.sha512",
-    "C:\\Users\\wangzhuhui\\.nuget\\packages\\unvell.reogridwpf.dll\\3.0.0\\unvell.reogridwpf.dll.3.0.0.nupkg.sha512",
-    "C:\\Users\\wangzhuhui\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.23\\microsoft.netcore.app.host.win-x64.3.1.23.nupkg.sha512"
+    "C:\\Users\\wangzhuhui\\.nuget\\packages\\unvell.reogridwpf.dll\\3.0.0\\unvell.reogridwpf.dll.3.0.0.nupkg.sha512"
   ],
   "logs": []
 }

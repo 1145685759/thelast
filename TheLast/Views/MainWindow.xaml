@@ -17,9 +17,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         xmlns:mde="https://spiegelp.github.io/MaterialDesignExtensions/winfx/xaml"
         Title="{Binding Title}" Height="768" Width="1280" >
-    <md:DialogHost
-        DialogTheme="Inherit"  x:Name="DialogHost"
-        Identifier="Root" >
+    
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -34,6 +32,11 @@
                     Mode="PrimaryMid">
                 <DockPanel LastChildFill="True">
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <md:PopupBox>
+                            <Menu>
+                                <MenuItem Header="检查更新" Click="ButtonCheckForUpdate_Click"/>
+                            </Menu>
+                        </md:PopupBox>
                         <Button
                                 x:Name="btnMin"
                                 Content="—"
@@ -81,12 +84,16 @@
             </md:ColorZone>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="260"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <mde:SideNavigation Items="{Binding NavigationItems}" Foreground="{DynamicResource MaterialDesignBody}" Name="menu"   WillSelectNavigationItemCommand="{Binding WillSelectNavigationItemCommand}"  />
-                <ContentControl Grid.Column="1" prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
-            </Grid>
+                <mde:SideNavigation  Items="{Binding NavigationItems}" Foreground="{DynamicResource MaterialDesignBody}" Name="menu"   WillSelectNavigationItemCommand="{Binding WillSelectNavigationItemCommand}"  />
+            <md:DialogHost  Grid.Column="1" 
+                DialogTheme="Inherit"  x:Name="DialogHost"
+                Identifier="Root" >
+                <ContentControl prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
+            </md:DialogHost>
         </Grid>
-    </md:DialogHost>
+        </Grid>
+   
 </Window>

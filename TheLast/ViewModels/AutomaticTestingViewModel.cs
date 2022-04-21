@@ -220,7 +220,7 @@ namespace TheLast.ViewModels
                             }
                             if ( register.RegisterType == "数字量输出")
                             {
-                                 var s = (await ModbusSerialMaster.ReadCoilsAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                var s = (await ModbusSerialMaster.ReadCoilsAsync(register.StationNum, register.Address, 1))[0].ToString();
                                 if (s=="True")
                                 {
                                     result = "1";

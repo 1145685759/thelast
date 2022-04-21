@@ -1,6 +1,12 @@
-﻿using Prism.Events;
+﻿using AutoUpdaterDotNET;
+using Prism.Events;
+using System;
+using System.Globalization;
+using System.Reflection;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using TheLast.Common;
 using TheLast.Extensions;
 
@@ -16,6 +22,16 @@ namespace TheLast.Views
         public MainWindow(IEventAggregator aggregator, IDialogHostService dialogHostService)
         {
             InitializeComponent();
+            Assembly assembly = Assembly.GetEntryAssembly();
+            Thread.CurrentThread.CurrentCulture =
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("zh");
+            AutoUpdater.LetUserSelectRemindLater = true;
+            AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
+            AutoUpdater.RemindLaterAt = 1;
+            AutoUpdater.ReportErrors = true;
+            DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(2) };//定时去检测更新根据自己业务需求
+            timer.Tick += delegate { AutoUpdater.Start("http://10.12.113.68/Downloads/AutoUpdaterStarter.xml"); };
+            timer.Start();
             aggregator.ResgiterMessage(arg =>
             {
                 Snackbar.MessageQueue.Enqueue(arg);
@@ -57,6 +73,10 @@ namespace TheLast.Views
 
 
             this.dialogHostService = dialogHostService;
+        }
+        private void ButtonCheckForUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            AutoUpdater.Start("http://10.12.113.68/Downloads/AutoUpdaterStarter.xml");
         }
 
     }

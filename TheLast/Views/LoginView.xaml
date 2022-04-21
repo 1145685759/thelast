@@ -108,12 +108,12 @@
                         Margin="0,5"
                         md:HintAssist.Hint="请输入账号"
                         DockPanel.Dock="Top"
-                        Text="{Binding UserDto.UserName}" />
+                        Text="{Binding UserDto.UserName}" Cursor="Arrow" />
 
                     <PasswordBox
                         Margin="0,5"
                         md:HintAssist.Hint="请输入密码"
-                        pass:PassWordExtensions.PassWord="{Binding PassWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        pass:PassWordExtensions.PassWord="{Binding UserDto.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         DockPanel.Dock="Top" Cursor="IBeam">
                         <i:Interaction.Behaviors>
                             <pass:PasswordBehavior />
@@ -123,7 +123,7 @@
                     <PasswordBox
                         Margin="0,5"
                         md:HintAssist.Hint="请再次输入密码"
-                        pass:PassWordExtensions.PassWord="{Binding PassWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        pass:PassWordExtensions.PassWord="{Binding UserDto.NewPassWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         DockPanel.Dock="Top" Cursor="Arrow">
                         <i:Interaction.Behaviors>
                             <pass:PasswordBehavior />

@@ -40,8 +40,8 @@
                     <Button Command="{Binding ExecuteCommand}"
                             CommandParameter="保存"
                         Margin="20,0"
-                        Content="添加模块"
-                        DockPanel.Dock="Top" />
+                        Content="添加/编辑 模块"
+                        DockPanel.Dock="Top" Cursor="Hand" />
                 </DockPanel>
             </md:DrawerHost.RightDrawerContent>
 
@@ -100,7 +100,7 @@
                                             <i:EventTrigger EventName="MouseLeftButtonUp">
                                                 <i:InvokeCommandAction 
                                                     CommandParameter="{Binding}"
-                                                    Command="{Binding DataContext.SelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                                                    Command="{Binding DataContext.CheckTestStepCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
 
@@ -115,9 +115,9 @@
                                                     CommandParameter="{Binding}"
                                                     Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
                                                     />
-                                                <Button Content="查看步骤" 
+                                                <Button Content="修改模块" 
                                                     CommandParameter="{Binding}"
-                                                    Command="{Binding DataContext.CheckTestStepCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
+                                                    Command="{Binding DataContext.SelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
                                                     />
                 
                                             </StackPanel>

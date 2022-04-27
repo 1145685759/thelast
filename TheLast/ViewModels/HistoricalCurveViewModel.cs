@@ -109,7 +109,14 @@ namespace TheLast.ViewModels
                 }
                 foreach (var point in s.Where(x=>x.Register.Name==item.Title))
                 {
-                    item.Points.Add(DateTimeAxis.CreateDataPoint(point.DateTime, point.RealValue));
+                    if (item.Title.Contains("温度"))
+                    {
+                        item.Points.Add(DateTimeAxis.CreateDataPoint(point.DateTime, point.RealValue/10));
+                    }
+                    else
+                    {
+                        item.Points.Add(DateTimeAxis.CreateDataPoint(point.DateTime, point.RealValue));
+                    }
                 }
             }
             MyModel.InvalidatePlot(true);

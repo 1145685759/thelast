@@ -261,6 +261,10 @@ namespace TheLast.ViewModels
             {
                 IsTemperature = Visibility.Visible;
             }
+            else
+            {
+                IsTemperature = Visibility.Collapsed;
+            }
             var resulet = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == parameter&&x.StationNum==CurrentStationNum).ToListAsync();
 
             RegisterDtos = mapper.Map<List<RegisterDto>>(resulet);

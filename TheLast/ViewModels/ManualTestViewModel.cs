@@ -88,6 +88,22 @@ namespace TheLast.ViewModels
             if (parameter!=null)
             {
                 RegisterTypeDtos = Registers.Where(x => x.StationNum == parameter).Select(x => x.RegisterType).Distinct().ToList();
+                if (RegisterTypeDtos.Contains("外机数据"))
+                {
+                    RegisterTypeDtos.Remove("外机数据");
+                }
+                if (RegisterTypeDtos.Contains("内机数据"))
+                {
+                    RegisterTypeDtos.Remove("内机数据");
+                }
+                if (RegisterTypeDtos.Contains("步进电机脉冲检测"))
+                {
+                    RegisterTypeDtos.Remove("步进电机脉冲检测");
+                }
+                if (RegisterTypeDtos.Contains("数字量输入"))
+                {
+                    RegisterTypeDtos.Remove("数字量输入");
+                }
             }
         }
         private DelegateCommand<WriteRegister> lostFocusCommand;
@@ -117,7 +133,14 @@ namespace TheLast.ViewModels
             }
             else
             {
-                await modbusSerialMaster.WriteSingleRegisterAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, parameter.Value);
+                if (parameter.RegisterDto.Name.Contains("温度"))
+                {
+                    await modbusSerialMaster.WriteSingleRegisterAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, (ushort)(parameter.Value*10));
+                }
+                else
+                {
+                    await modbusSerialMaster.WriteSingleRegisterAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, parameter.Value);
+                }
             }
         }
         private DelegateCommand<string?> selectedCommand;
@@ -168,8 +191,14 @@ namespace TheLast.ViewModels
             {
                 foreach (var item in WriteRegisters)
                 {
-
-                    await modbusSerialMaster.WriteSingleRegisterAsync(item.RegisterDto.StationNum, item.RegisterDto.Address, item.Value);
+                    if (item.RegisterDto.Name.Contains("温度"))
+                    {
+                        await modbusSerialMaster.WriteSingleRegisterAsync(item.RegisterDto.StationNum, item.RegisterDto.Address, (ushort)(item.Value*10));
+                    }
+                    else
+                    {
+                        await modbusSerialMaster.WriteSingleRegisterAsync(item.RegisterDto.StationNum, item.RegisterDto.Address, item.Value);
+                    }
                 }
             }
             

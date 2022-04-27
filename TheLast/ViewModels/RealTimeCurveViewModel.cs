@@ -84,20 +84,64 @@ namespace TheLast.ViewModels
                 {
                     await App.Current.Dispatcher.BeginInvoke(new Action(async () =>
                     {
-                        for (int i = 0; i < MyModel.Series.Count; i++)
+                        for (int i = 0; i < registerList.Count; i++)
                         {
                             LineSeries lineSeries = (LineSeries)MyModel.Series[i];
                             if (lineSeries == null)
                             {
                                 continue;
                             }
-                            var getvaddress = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == lineSeries.Title);
-                            var result = await App.ModbusSerialMaster.ReadHoldingRegistersAsync(1, getvaddress.Address, 1);
-                            lineSeries.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]));
-                            if (lineSeries.Points.Count > 3600)
+                            if (registerList[i].RegisterType == "内机数据" || registerList[i].RegisterType == "步进电机脉冲检测" || registerList[i].RegisterType == "外机数据")
                             {
-                                lineSeries.Points.RemoveAt(0);
+                                var result = await App.ModbusSerialMaster.ReadInputRegistersAsync(1, registerList[i].Address, 1);
+                                if (registerList[i].Name.Contains("温度"))
+                                {
+                                    lineSeries.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]/10));
+                                }
+                                else
+                                {
+                                    lineSeries.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]));
+                                }
+                                if (lineSeries.Points.Count > 3600)
+                                {
+                                    lineSeries.Points.RemoveAt(0);
+                                }
                             }
+                            else if (registerList[i].RegisterType == "基础参数"|| registerList[i].RegisterType == "内机控制参数" || registerList[i].RegisterType == "20个温度设置")
+                            {
+                                var result = await App.ModbusSerialMaster.ReadHoldingRegistersAsync(1, registerList[i].Address, 1);
+                                if (registerList[i].Name.Contains("温度"))
+                                {
+                                    lineSeries.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]/10));
+                                }
+                                else
+                                {
+                                    lineSeries.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]));
+                                }
+                                if (lineSeries.Points.Count > 3600)
+                                {
+                                    lineSeries.Points.RemoveAt(0);
+                                }
+                            }
+                            else if (registerList[i].RegisterType == "数字量输入")
+                            {
+                                var result = await App.ModbusSerialMaster.ReadInputsAsync(1, registerList[i].Address, 1);
+                                lineSeries.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now,Convert.ToUInt16(result[0])));
+                                if (lineSeries.Points.Count > 3600)
+                                {
+                                    lineSeries.Points.RemoveAt(0);
+                                }
+                            }
+                            else if (registerList[i].RegisterType == "数字量输出")
+                            {
+                                var result = await App.ModbusSerialMaster.ReadCoilsAsync(1, registerList[i].Address, 1);
+                                lineSeries.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, Convert.ToUInt16(result[0])));
+                                if (lineSeries.Points.Count > 3600)
+                                {
+                                    lineSeries.Points.RemoveAt(0);
+                                }
+                            }
+
                         }
                     }));
                     MyModel.InvalidatePlot(true);

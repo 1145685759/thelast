@@ -154,7 +154,14 @@ namespace TheLast.ViewModels
                         var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
                         if (register.RegisterType=="基础参数"|| register.RegisterType == "内机控制参数"|| register.RegisterType == "模拟量输出")
                         {
-                             await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, Convert.ToUInt16(init.WriteValue));
+                            if (register.Name.Contains("温度"))
+                            {
+                                await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, (ushort)(Convert.ToDouble(init.WriteValue)*10));
+                            }
+                            else
+                            {
+                                await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, Convert.ToUInt16(init.WriteValue));
+                            }
                         }
 
                         if (register.RegisterType == "数字量输出")
@@ -170,8 +177,11 @@ namespace TheLast.ViewModels
                         }
                         if (register.RegisterType=="20个温度设置")
                         {
-                            ushort[] data = new ushort[4] {Convert.ToUInt16(init.WriteValue), (ushort)register.Type, (ushort)register.Caste, (ushort)register.AccessAddress};
-                            await ModbusSerialMaster.WriteMultipleRegistersAsync(register.StationNum, register.Address, data);
+                            ushort[] data = new ushort[4] { (ushort)(Convert.ToDouble(init.WriteValue)*10), (ushort)register.Type, (ushort)register.Caste, (ushort)register.AccessAddress};
+                            for (int i = 0; i < data.Length; i++)
+                            {
+                                await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum,(ushort)(register.Address+i),data[i]);
+                            }
                         }
 
                     }
@@ -212,11 +222,27 @@ namespace TheLast.ViewModels
                             
                             if (register.RegisterType == "基础参数" || register.RegisterType == "内机控制参数" || register.RegisterType == "模拟量输出")
                             {
-                                 result = (await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                
+                                if (register.Name.Contains("温度"))
+                                {
+                                    
+                                    result = ((await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1))[0]/10.0).ToString();
+                                }
+                                else
+                                {
+                                    result = (await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                }
                             }
                             if ( register.RegisterType == "模拟量输入")
                             {
-                                 result = (await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                if (register.Name.Contains("温度"))
+                                {
+                                    result = ((await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0]/10).ToString();
+                                }
+                                else
+                                {
+                                    result = (await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                }
                             }
                             if ( register.RegisterType == "数字量输出")
                             {
@@ -240,6 +266,17 @@ namespace TheLast.ViewModels
                                 if (s == "False")
                                 {
                                     result = "0";
+                                }
+                            }
+                            if (register.RegisterType=="内机数据"||register.RegisterType=="外机数据" || register.RegisterType == "步进电机脉冲检测")
+                            {
+                                if (register.Name.Contains("温度")||register.Name.Contains("频率") || register.Name.Contains("电流") || register.Name.Contains("功率") || register.Name.Contains("容量"))
+                                {
+                                    result = ((await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0] / 10.0).ToString();
+                                }
+                                else
+                                {
+                                    result = (await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
                                 }
                             }
                             if (feedback.Operational=="等于")
@@ -400,11 +437,25 @@ namespace TheLast.ViewModels
                             {
                                 if (register.RegisterType == "基础参数" || register.RegisterType == "内机控制参数" || register.RegisterType == "模拟量输出")
                                 {
-                                    result = (await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                    if (register.Name.Contains("温度"))
+                                    {
+                                        result = ((await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1))[0]/10.0).ToString();
+                                    }
+                                    else
+                                    {
+                                        result = (await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                    }
                                 }
                                 if (register.RegisterType == "模拟量输入")
                                 {
-                                    result = (await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                    if (register.Name.Contains("温度"))
+                                    {
+                                        result = ((await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0]/10).ToString();
+                                    }
+                                    else
+                                    {
+                                        result = (await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                    }
                                 }
                                 if (register.RegisterType == "数字量输出")
                                 {
@@ -414,6 +465,17 @@ namespace TheLast.ViewModels
                                 {
                                     result = (await ModbusSerialMaster.ReadInputsAsync(register.StationNum, register.Address, 1))[0].ToString();
 
+                                }
+                                if (register.RegisterType == "内机数据" || register.RegisterType == "外机数据" || register.RegisterType == "步进电机脉冲检测")
+                                {
+                                    if (register.Name.Contains("温度") || register.Name.Contains("频率") || register.Name.Contains("电流") || register.Name.Contains("功率") || register.Name.Contains("容量"))
+                                    {
+                                        result = ((await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0] / 10.0).ToString();
+                                    }
+                                    else
+                                    {
+                                        result = (await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                    }
                                 }
                                 if (feedback.Operational == "等于")
                                 {
@@ -572,11 +634,25 @@ namespace TheLast.ViewModels
                             await Task.Delay(feedback.DelayTime * 1000);
                             if (register.RegisterType == "基础参数" || register.RegisterType == "内机控制参数" || register.RegisterType == "模拟量输出")
                             {
-                                result = (await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                if (register.Name.Contains("温度"))
+                                {
+                                    result = ((await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1))[0]/10).ToString();
+                                }
+                                else
+                                {
+                                    result = (await ModbusSerialMaster.ReadHoldingRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                }
                             }
                             if (register.RegisterType == "模拟量输入")
                             {
-                                result = (await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                if (register.Name.Contains("温度"))
+                                {
+                                    result = ((await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0]/10).ToString();
+                                }
+                                else
+                                {
+                                    result = (await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                }
                             }
                             if (register.RegisterType == "数字量输出")
                             {
@@ -586,6 +662,17 @@ namespace TheLast.ViewModels
                             {
                                 result = (await ModbusSerialMaster.ReadInputsAsync(register.StationNum, register.Address, 1))[0].ToString();
 
+                            }
+                            if (register.RegisterType == "内机数据" || register.RegisterType == "外机数据" || register.RegisterType == "步进电机脉冲检测")
+                            {
+                                if (register.Name.Contains("温度") || register.Name.Contains("频率") || register.Name.Contains("电流") || register.Name.Contains("功率") || register.Name.Contains("容量"))
+                                {
+                                    result = ((await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0] / 10.0).ToString();
+                                }
+                                else
+                                {
+                                    result = (await ModbusSerialMaster.ReadInputRegistersAsync(register.StationNum, register.Address, 1))[0].ToString();
+                                }
                             }
                             if (feedback.Operational == "等于")
                             {

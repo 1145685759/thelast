@@ -5,6 +5,9 @@ using System.Text;
 
 namespace TheLast.Entities
 {
+    /// <summary>
+    /// 寄存器表
+    /// </summary>
     public class Register
     {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]

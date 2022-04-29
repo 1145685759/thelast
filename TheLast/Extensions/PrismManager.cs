@@ -4,6 +4,9 @@ using System.Text;
 
 namespace TheLast.Extensions
 {
+    /// <summary>
+    /// 导航管理
+    /// </summary>
     public static class PrismManager
     {
         /// <summary>

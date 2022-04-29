@@ -6,6 +6,9 @@ using TheLast.Entities;
 
 namespace TheLast.Dtos
 {
+    /// <summary>
+    /// 寄存器DTO
+    /// </summary>
     public class RegisterDto: BindableBase
     {
         private string name;

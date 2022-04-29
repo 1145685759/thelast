@@ -22,6 +22,7 @@ namespace TheLast.ViewModels
 {
     public class BasicParametersViewModel: NavigationViewModel
     {
+
         private readonly IDialogHostService dialog;
         private string GetType;
         private ObservableCollection<RegisterDto> registerDtos;
@@ -36,20 +37,48 @@ namespace TheLast.ViewModels
             get { return searchString; }
             set { SetProperty(ref searchString, value); }
         }
+        private Visibility isIndoor;
+        public Visibility IsIndoor
+        {
+            get { return isIndoor; }
+            set { SetProperty(ref isIndoor, value); }
+        }
+        private Visibility isOutdoor;
+        public Visibility IsOutdoor
+        {
+            get { return isOutdoor; }
+            set { SetProperty(ref isOutdoor, value); }
+        }
         private bool open;
         public bool Open
         {
             get { return open; }
             set { SetProperty(ref open, value); }
         }
-
+        private List<int> indoors;
+        public List<int> Indoors
+        {
+            get { return indoors; }
+            set { SetProperty(ref indoors, value); }
+        }
+        private List<int> outdoors;
+        public List<int> Outdoors
+        {
+            get { return outdoors; }
+            set { SetProperty(ref outdoors, value); }
+        }
         public BasicParametersViewModel(ISqlSugarClient sqlSugarClient,IMapper mapper, IDialogHostService dialog, IContainerProvider provider) : base(provider)
         {
             RegisterDtos = new ObservableCollection<RegisterDto>();
             this.sqlSugarClient = sqlSugarClient;
             this.mapper = mapper;
             this.dialog = dialog;
+            Indoors=new List<int>();
+            Outdoors = new List<int>();
+
+
         }
+        
         private DelegateCommand search;
         private readonly ISqlSugarClient sqlSugarClient;
         private readonly IMapper mapper;
@@ -60,14 +89,40 @@ namespace TheLast.ViewModels
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
-            GetType=navigationContext.Parameters.GetValue<string>("Type");
+            Indoors.Clear();
+            Outdoors.Clear();
+            for (int i = 1; i <= App.IndoorCount; i++)
+            {
+                Indoors.Add(i);
+            }
+            for (int i = 1; i <= App.OutdoorCount; i++)
+            {
+                Outdoors.Add(i);
+            }
+            GetType =navigationContext.Parameters.GetValue<string>("Type");
             if (GetType.Contains("配置"))
             {
                 GetType = GetType.Replace("配置", "");
             }
-            var registers=await sqlSugarClient.Queryable<Register>().Where(x => x.RegisterType == GetType).ToListAsync();
-            RegisterDtos.Clear();
-            RegisterDtos.AddRange(mapper.Map<List<RegisterDto>>(registers));
+            if (GetType=="内机数据")
+            {
+                IsIndoor = Visibility.Visible;
+                IsOutdoor = Visibility.Collapsed;
+            }
+            else if (GetType == "外机数据")
+            {
+                IsIndoor = Visibility.Collapsed;
+                IsOutdoor = Visibility.Visible;
+            }
+            else
+            {
+                IsOutdoor=Visibility.Collapsed;
+                IsIndoor = Visibility.Collapsed;
+                var registers = await sqlSugarClient.Queryable<Register>().Where(x => x.RegisterType == GetType).ToListAsync();
+                RegisterDtos.Clear();
+                RegisterDtos.AddRange(mapper.Map<List<RegisterDto>>(registers));
+            }
+           
         }
 
         async void ExecuteSearch( )
@@ -93,6 +148,47 @@ namespace TheLast.ViewModels
             }
             UpdateLoading(false);
         }
+        private DelegateCommand<int?> selectedIndoorCommand;
+        public DelegateCommand<int?> SelectedIndoorCommand =>
+            selectedIndoorCommand ?? (selectedIndoorCommand = new DelegateCommand<int?>(ExecuteSelectedIndoorCommand));
+
+        async void ExecuteSelectedIndoorCommand(int? num)
+        {
+            var registers= await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == "内机数据" && x.Name.Contains($"-{num}")).ToListAsync();
+            for (int i = 0; i < registers.Count; i++)
+            {
+                var d = int.Parse(registers[i].Name.Substring(registers[i].Name.IndexOf("-") + 1));
+                if (d != num)
+                {
+                    registers.Remove(registers[i]);
+                }
+
+            }
+            RegisterDtos.Clear();
+            RegisterDtos.AddRange(mapper.Map<List<RegisterDto>>(registers));
+        }
+
+        private DelegateCommand<int?> selectedOutdoorCommand;
+        public DelegateCommand<int?> SelectedOutdoorCommand =>
+            selectedOutdoorCommand ?? (selectedOutdoorCommand = new DelegateCommand<int?>(ExecuteSelectedOutdoorCommand));
+
+        async void ExecuteSelectedOutdoorCommand(int? num)
+        {
+            var registers = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == "外机数据" && x.Name.Contains($"-{num}")).ToListAsync();
+            for (int i = 0; i < registers.Count; i++)
+            {
+                var d = int.Parse(registers[i].Name.Substring(registers[i].Name.IndexOf("-") + 1));
+                if (d != num)
+                {
+                    registers.Remove(registers[i]);
+                }
+
+            }
+            RegisterDtos.Clear();
+            RegisterDtos.AddRange(mapper.Map<List<RegisterDto>>(registers));
+        }
+
+
         private DelegateCommand addRegister;
         public DelegateCommand AddRegister =>
             addRegister ?? (addRegister = new DelegateCommand(ExecuteAddRegisterAsync));

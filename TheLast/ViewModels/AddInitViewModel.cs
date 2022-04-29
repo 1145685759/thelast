@@ -88,6 +88,9 @@ namespace TheLast.ViewModels
             get { return currentId; }
             set { SetProperty(ref currentId, value); }
         }
+      
+      
+        
         private ObservableCollection<InitDto> addInitDtoList;
         public ObservableCollection<InitDto> AddInitDtoList
         {
@@ -118,6 +121,8 @@ namespace TheLast.ViewModels
             get { return isEditable; }
             set { SetProperty(ref isEditable, value); }
         }
+       
+        
         private RegisterDto currentRegister;
         public RegisterDto CurrentRegister
         {
@@ -149,6 +154,7 @@ namespace TheLast.ViewModels
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
             AllRegisters = new List<Register>();
+           
             AddInitDtoList = new ObservableCollection<InitDto>();
             RegisterDtos = new List<RegisterDto>();
             this.mapper = mapper;
@@ -229,11 +235,13 @@ namespace TheLast.ViewModels
         }
         public async void OnDialogOpend(IDialogParameters parameters)
         {
+            
             CurrentTestStepDto = parameters.GetValue<TestStepDto>("Value");
-            AllRegisters = await sqlSugarClient.Queryable<Register>().Where(x => x.Name.Contains("温度")&&x.IsEnable==true).ToListAsync();
+            AllRegisters = await sqlSugarClient.Queryable<Register>().Where(x => x.Name.Contains("温度")&&x.RegisterType=="内机控制参数"&&x.IsEnable==true).ToListAsync();
             StationNumList = (await sqlSugarClient.Queryable<Register>().Select(it => it.StationNum).ToListAsync()).Distinct().ToList();
             var list = await sqlSugarClient.Queryable<Init>().Where(x => x.TestStepId ==CurrentTestStepDto.Id).ToListAsync();
             IsTemperature = Visibility.Collapsed;
+           
             AddInitDtoList.Clear();
             foreach (var item in list)
             {
@@ -257,17 +265,29 @@ namespace TheLast.ViewModels
 
         async void ExecuteSelectedCommand(string parameter)
         {
+            List<Register> registers = new List<Register>();
             if (parameter== "20个温度设置")
             {
                 IsTemperature = Visibility.Visible;
             }
+           
             else
             {
+                
                 IsTemperature = Visibility.Collapsed;
+                registers = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == parameter && x.StationNum == CurrentStationNum).ToListAsync();
             }
-            var resulet = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == parameter&&x.StationNum==CurrentStationNum).ToListAsync();
+           
 
-            RegisterDtos = mapper.Map<List<RegisterDto>>(resulet);
+            RegisterDtos = mapper.Map<List<RegisterDto>>(registers);
+        }
+        private DelegateCommand selectedIndoorCommand;
+        public DelegateCommand SelectedIndoorCommand =>
+            selectedIndoorCommand ?? (selectedIndoorCommand = new DelegateCommand(ExecuteSelectedIndoorCommand));
+
+        private void ExecuteSelectedIndoorCommand()
+        {
+
         }
         private DelegateCommand<RegisterDto> selectedRegisterCommand;
         public DelegateCommand<RegisterDto> SelectedRegisterCommand =>

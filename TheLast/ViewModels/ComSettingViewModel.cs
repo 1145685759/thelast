@@ -21,6 +21,19 @@ namespace TheLast.ViewModels
     public class ComSettingViewModel : BindableBase
     {
         SerialPort serialPort;
+        private int indoorCount;
+        public int IndoorCount
+        {
+            get { return indoorCount; }
+            set { SetProperty(ref indoorCount, value); }
+        }
+
+        private int outdoorCount;
+        public int OutdoorCount
+        {
+            get { return outdoorCount; }
+            set { SetProperty(ref outdoorCount, value); }
+        }
         private string currentComPort;
         public string CurrentComPort
         {
@@ -64,6 +77,8 @@ namespace TheLast.ViewModels
                 HandyControl.Controls.Growl.Error("请先选择串口！");
                 return;
             }
+            App.IndoorCount = IndoorCount;
+            App.OutdoorCount = OutdoorCount;
             if (serialPort==null)
             {
                 serialPort = new SerialPort();

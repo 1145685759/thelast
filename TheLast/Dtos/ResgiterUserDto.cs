@@ -5,6 +5,9 @@ using System.Text;
 
 namespace TheLast.Dtos
 {
+    /// <summary>
+    /// 用户注册DTO
+    /// </summary>
     public class ResgiterUserDto: BindableBase
     {
         private int id;

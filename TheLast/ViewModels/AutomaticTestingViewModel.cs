@@ -158,9 +158,15 @@ namespace TheLast.ViewModels
                             {
                                 await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, (ushort)(Convert.ToDouble(init.WriteValue)*10));
                             }
+                            else if (register.Name.Contains("电压"))
+                            {
+                                var value = float.Parse(init.WriteValue)*10;
+                                await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, Convert.ToUInt16(value));
+
+                            }
                             else
                             {
-                                await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, Convert.ToUInt16(init.WriteValue));
+                                await ModbusSerialMaster.WriteSingleRegisterAsync(register.StationNum, register.Address, Convert.ToUInt16( init.WriteValue));
                             }
                         }
 

@@ -9,6 +9,9 @@ using TheLast.Events;
 
 namespace TheLast.Extensions
 {
+    /// <summary>
+    /// 对话框拓展
+    /// </summary>
     public static class DialogExtensions
     {
         /// <summary>

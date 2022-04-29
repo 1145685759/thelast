@@ -5,6 +5,9 @@ using System.Text;
 
 namespace TheLast.Entities
 {
+    /// <summary>
+    /// 测试步骤表
+    /// </summary>
     public class TestStep
     {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]

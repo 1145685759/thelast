@@ -232,28 +232,28 @@ namespace TheLast.ViewModels
             {
                 Status = 0;
             }
-            if (string.IsNullOrEmpty(Search)&&Status==0)
-            {
-                var list= await sqlSugarClient.Queryable<Project>().Where(x=>x.IsComplete==Status).ToListAsync();
-                ProjectDtos.Clear();
-                foreach (var item in list)
-                {
-                    ProjectDto projectDto = mapper.Map<ProjectDto>(item);
-                    projectDto.ModuleCount = (await sqlSugarClient.Queryable<Module>().Where(x => x.ProjectId == item.Id).ToListAsync()).Count;
-                    ProjectDtos.Add(projectDto);
-                }
-            }
-            if (string.IsNullOrEmpty(Search) && Status==1)
-            {
-                var list = await sqlSugarClient.Queryable<Project>().Where(x=>x.IsComplete==Status).ToListAsync();
-                ProjectDtos.Clear();
-                foreach (var item in list)
-                {
-                    ProjectDto projectDto = mapper.Map<ProjectDto>(item);
-                    projectDto.ModuleCount = (await sqlSugarClient.Queryable<Module>().Where(x => x.ProjectId == item.Id).ToListAsync()).Count;
-                    ProjectDtos.Add(projectDto);
-                }
-            }
+            //if (string.IsNullOrEmpty(Search)&&Status==0)
+            //{
+            //    var list= await sqlSugarClient.Queryable<Project>().Where(x=>x.IsComplete==Status).ToListAsync();
+            //    ProjectDtos.Clear();
+            //    foreach (var item in list)
+            //    {
+            //        ProjectDto projectDto = mapper.Map<ProjectDto>(item);
+            //        projectDto.ModuleCount = (await sqlSugarClient.Queryable<Module>().Where(x => x.ProjectId == item.Id).ToListAsync()).Count;
+            //        ProjectDtos.Add(projectDto);
+            //    }
+            //}
+            //if (string.IsNullOrEmpty(Search) && Status==1)
+            //{
+            //    var list = await sqlSugarClient.Queryable<Project>().Where(x=>x.IsComplete==Status).ToListAsync();
+            //    ProjectDtos.Clear();
+            //    foreach (var item in list)
+            //    {
+            //        ProjectDto projectDto = mapper.Map<ProjectDto>(item);
+            //        projectDto.ModuleCount = (await sqlSugarClient.Queryable<Module>().Where(x => x.ProjectId == item.Id).ToListAsync()).Count;
+            //        ProjectDtos.Add(projectDto);
+            //    }
+            //}
             if (!string.IsNullOrEmpty(Search)&&Status==null)
             {
                 var list = await sqlSugarClient.Queryable<Project>().Where(x => x.ProjectName.Contains(Search)).ToListAsync();
@@ -282,7 +282,7 @@ namespace TheLast.ViewModels
             }
             if (!string.IsNullOrEmpty(Search)&&Status!=null)
             {
-                var list = await sqlSugarClient.Queryable<Project>().Where(x => x.ProjectName.Contains(Search)&&x.IsComplete==Status).ToListAsync();
+                var list = await sqlSugarClient.Queryable<Project>().Where(x => x.ProjectName.Contains(Search)).ToListAsync();
                 ProjectDtos.Clear();
                 foreach (var item in list)
                 {

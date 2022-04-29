@@ -5,6 +5,9 @@ using System.Text;
 
 namespace TheLast.Entities
 {
+    /// <summary>
+    /// 反馈表
+    /// </summary>
     public class FeedBack
     {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]

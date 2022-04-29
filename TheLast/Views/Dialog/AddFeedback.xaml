@@ -47,6 +47,34 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
+                    
+                    <Grid  Margin="5 0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="外机号：" VerticalAlignment="Center" Visibility="{Binding IsOutdoor}"/>
+                            <ComboBox ItemsSource="{Binding OutdoorNums}" SelectedValue="{Binding OutdoorNum}" Name="Outdoor" MinWidth="50" Visibility="{Binding IsOutdoor}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction 
+                                            CommandParameter="{Binding ElementName=Outdoor, Path=SelectedValue}"
+                                                    Command="{Binding DataContext.SelectedOutdoorCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="内机号：" VerticalAlignment="Center" Visibility="{Binding IsIndoor}"/>
+                            <ComboBox ItemsSource="{Binding IndoorNums}" Name="Indoor" SelectedValue="{Binding IndoorNum}" MinWidth="50" Visibility="{Binding IsIndoor}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction 
+                                            CommandParameter="{Binding ElementName=Indoor, Path=SelectedValue}"
+                                                    Command="{Binding DataContext.SelectedIndoorCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+                    
                     <TextBlock Text="可选寄存器：" VerticalAlignment="Center"/>
                     <ComboBox ItemsSource="{Binding RegisterDtos}" SelectedItem="{Binding CurrentRegister}" Name="RegisterCombox"  DisplayMemberPath="Name"  Margin="10 0" MinWidth="50" VerticalAlignment="Center">
                         <i:Interaction.Triggers>

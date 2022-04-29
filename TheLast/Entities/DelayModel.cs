@@ -5,6 +5,9 @@ using System.Text;
 
 namespace TheLast.Entities
 {
+    /// <summary>
+    /// 延时模型表
+    /// </summary>
     public class DelayModel
     {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]

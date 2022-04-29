@@ -4,6 +4,9 @@ using System.Text;
 
 namespace TheLast.Dtos
 {
+    /// <summary>
+    /// EXCEL模型
+    /// </summary>
     public class ExcelModel
     {
         public string 应用条件 { get; set; }

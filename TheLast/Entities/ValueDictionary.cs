@@ -5,6 +5,9 @@ using System.Text;
 
 namespace TheLast.Entities
 {
+    /// <summary>
+    /// 值字典
+    /// </summary>
     public class ValueDictionary
     {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]

@@ -7,7 +7,7 @@ using SqlSugar;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
+using System.Windows;
 using TheLast.Common;
 using TheLast.Dtos;
 using TheLast.Entities;
@@ -16,30 +16,85 @@ namespace TheLast.ViewModels
 {
     public class AddFeedbackViewModel : BindableBase, IDialogHostAware
     {
+        private List<int> indoorNums;
+        public List<int> IndoorNums
+        {
+            get { return indoorNums; }
+            set { SetProperty(ref indoorNums, value); }
+        }
+        private List<int> outdoorNums;
+        public List<int> OutdoorNums
+        {
+            get { return outdoorNums; }
+            set { SetProperty(ref outdoorNums, value); }
+        }
+        private int indoorNum;
+        public int IndoorNum
+        {
+            get { return indoorNum; }
+            set { SetProperty(ref indoorNum, value); }
+        }
+        private int outdoorNum;
+        public int OutdoorNum
+        {
+            get { return outdoorNum; }
+            set { SetProperty(ref outdoorNum, value); }
+        }
+        private Visibility isIndoor;
+        public Visibility IsIndoor
+        {
+            get { return isIndoor; }
+            set { SetProperty(ref isIndoor, value); }
+        }
+        private Visibility isOutdoor;
+        public Visibility IsOutdoor
+        {
+            get { return isOutdoor; }
+            set { SetProperty(ref isOutdoor, value); }
+        }
+        /// <summary>
+        /// 站号列表
+        /// </summary>
         private List<byte> stationNumList;
         public List<byte> StationNumList
         {
             get { return stationNumList; }
             set { SetProperty(ref stationNumList, value); }
         }
+
+        /// <summary>
+        /// 站号
+        /// </summary>
         private byte stationNum;
         public byte StationNum
         {
             get { return stationNum; }
             set { SetProperty(ref stationNum, value); }
         }
+
+        /// <summary>
+        /// 当前延时模型
+        /// </summary>
         private int currentDelayMode;
         public int CurrentDelayMode
         {
             get { return currentDelayMode; }
             set { SetProperty(ref currentDelayMode, value); }
         }
+
+        /// <summary>
+        /// 延时时间
+        /// </summary>
         private int delatTime;
         public int DelatTime
         {
             get { return delatTime; }
             set { SetProperty(ref delatTime, value); }
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         private byte currentStationNum;
         public byte CurrentStationNum
         {
@@ -131,6 +186,8 @@ namespace TheLast.ViewModels
         }
         public AddFeedbackViewModel(IMapper mapper, ISqlSugarClient sqlSugarClient)
         {
+            IndoorNums = new List<int>();
+            OutdoorNums = new List<int>();
             StationNumList = new List<byte>();
             DelayModeList = new List<DelayModelDto>();
             RegisterTypeDtos = new List<string>();
@@ -214,6 +271,16 @@ namespace TheLast.ViewModels
 
         public async void OnDialogOpend(IDialogParameters parameters)
         {
+            for (int i = 1; i < App.IndoorCount + 1; i++)
+            {
+                IndoorNums.Add(i);
+            }
+            for (int i = 1; i < App.OutdoorCount + 1; i++)
+            {
+                OutdoorNums.Add(i);
+            }
+            IsIndoor = Visibility.Collapsed;
+            IsOutdoor = Visibility.Collapsed;
             StationNumList = (await sqlSugarClient.Queryable<Register>().Select(it => it.StationNum).ToListAsync()).Distinct().ToList();
             CurrentTestStepDto = parameters.GetValue<TestStepDto>("Value");
             var delayList = await sqlSugarClient.Queryable<DelayModel>().ToListAsync();
@@ -245,9 +312,62 @@ namespace TheLast.ViewModels
 
         async void ExecuteSelectedCommand(string parameter)
         {
-            var resulet = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == parameter && x.StationNum == CurrentStationNum).ToListAsync();
+            List<Register> registers = new List<Register>();
+            if (parameter == "内机数据")
+            {
+                IsIndoor = Visibility.Visible;
+                IsOutdoor = Visibility.Collapsed;
+            }
+            else if (parameter == "外机数据")
+            {
+                IsIndoor = Visibility.Collapsed;
+                IsOutdoor = Visibility.Visible;
+            }
+            else
+            {
+                IsIndoor = Visibility.Collapsed;
+                IsOutdoor = Visibility.Collapsed;
+                registers = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == parameter && x.StationNum == CurrentStationNum).ToListAsync();
+                RegisterDtos = mapper.Map<List<RegisterDto>>(registers);
+            }
 
-            RegisterDtos = mapper.Map<List<RegisterDto>>(resulet);
+            
+        }
+        private DelegateCommand<int?> selectedIndoorCommand;
+        public DelegateCommand<int?> SelectedIndoorCommand =>
+            selectedIndoorCommand ?? (selectedIndoorCommand = new DelegateCommand<int?>(ExecuteSelectedIndoorCommand));
+
+        async void ExecuteSelectedIndoorCommand(int? parameter)
+        {
+            List<Register> registers = new List<Register>();
+            registers = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == "内机数据" && x.StationNum == CurrentStationNum && x.Name.Contains($"-{parameter}")).ToListAsync();
+            for (int i = 0; i < registers.Count; i++)
+            {
+                var d = int.Parse(registers[i].Name.Substring(registers[i].Name.IndexOf("-") + 1));
+                if (d != parameter)
+                {
+                    registers.Remove(registers[i]);
+                }
+            }
+            RegisterDtos = mapper.Map<List<RegisterDto>>(registers);
+        }
+        private DelegateCommand<int?> selectedOutdoorCommand;
+        public DelegateCommand<int?> SelectedOutdoorCommand =>
+            selectedOutdoorCommand ?? (selectedOutdoorCommand = new DelegateCommand<int?>(ExecuteSelectedOutdoorCommand));
+
+        async void ExecuteSelectedOutdoorCommand(int? parameter)
+        {
+            List<Register> registers = new List<Register>();
+            registers = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == "外机数据" && x.StationNum == CurrentStationNum && x.Name.Contains($"-{parameter}")).ToListAsync();
+            for (int i = 0; i < registers.Count; i++)
+            {
+                var d = int.Parse(registers[i].Name.Substring(registers[i].Name.IndexOf("-") + 1));
+                if (d != parameter)
+                {
+                    registers.Remove(registers[i]);
+                }
+            }
+            RegisterDtos = mapper.Map<List<RegisterDto>>(registers);
         }
         private DelegateCommand<RegisterDto> selectedRegisterCommand;
         public DelegateCommand<RegisterDto> SelectedRegisterCommand =>
@@ -255,7 +375,11 @@ namespace TheLast.ViewModels
 
         async void ExecuteSelectedRegisterCommand(RegisterDto parameter)
         {
-
+            if (parameter==null)
+            {
+                return;
+            }
+            ValueDictionaryDtos.Clear();
             var result = await sqlSugarClient.Queryable<ValueDictionary>().Where(x => x.RegisterId == parameter.Id).ToListAsync();
             if (result.Count == 0&& !parameter.RegisterType.Contains("数字量"))
             {

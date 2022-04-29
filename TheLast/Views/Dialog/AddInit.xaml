@@ -47,6 +47,7 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
+                
                     <TextBlock Text="可选寄存器：" VerticalAlignment="Center"/>
                     <ComboBox ItemsSource="{Binding RegisterDtos}" SelectedItem="{Binding CurrentRegister}" Name="RegisterCombox"  DisplayMemberPath="Name"  Margin="10 0 " MinWidth="50" VerticalAlignment="Center">
                         <i:Interaction.Triggers>

@@ -25,13 +25,13 @@ namespace TheLast.Views
             Assembly assembly = Assembly.GetEntryAssembly();
             Thread.CurrentThread.CurrentCulture =
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("zh");
-            AutoUpdater.LetUserSelectRemindLater = true;
-            AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
-            AutoUpdater.RemindLaterAt = 1;
-            AutoUpdater.ReportErrors = true;
-            DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(2) };//定时去检测更新根据自己业务需求
-            timer.Tick += delegate { AutoUpdater.Start("http://10.12.113.68/Downloads/AutoUpdaterStarter.xml"); };
-            timer.Start();
+            //AutoUpdater.LetUserSelectRemindLater = true;
+            //AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
+            //AutoUpdater.RemindLaterAt = 1;
+            //AutoUpdater.ReportErrors = true;
+            //DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(2) };//定时去检测更新根据自己业务需求
+            //timer.Tick += delegate { AutoUpdater.Start("http://10.12.113.68/Downloads/AutoUpdaterStarter.xml"); };
+            //timer.Start();
             aggregator.ResgiterMessage(arg =>
             {
                 Snackbar.MessageQueue.Enqueue(arg);

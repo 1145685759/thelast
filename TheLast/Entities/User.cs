@@ -5,6 +5,9 @@ using System.Text;
 
 namespace TheLast.Entities
 {
+    /// <summary>
+    /// 用户表
+    /// </summary>
     public class User
     {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]

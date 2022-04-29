@@ -3,6 +3,9 @@ using TheLast.Entities;
 
 namespace TheLast.Dtos
 {
+    /// <summary>
+    /// 反馈DTO
+    /// </summary>
     public class FeedBackDto: BindableBase
     {
         private int id;

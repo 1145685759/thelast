@@ -5,6 +5,9 @@ using System.Windows.Media;
 
 namespace TheLast.Common.Converters
 {
+    /// <summary>
+    /// 颜色画刷值转换器
+    /// </summary>
     [ValueConversion(typeof(Color), typeof(Brush))]
     public class ColorToBrushConverter : IValueConverter
     {

@@ -33,7 +33,7 @@
             </Grid.RowDefinitions>
             <DockPanel LastChildFill="False">
                 <Button Content="添加步骤" Width="100" Margin="10 0 0 0"  Command="{Binding AddTestStep}" Cursor="Hand" DockPanel.Dock="Right"/>
-                <Button Content="加载测试步骤" Width="100" Margin="10 0 0 0" Command="{Binding LoadTestStep}"  DockPanel.Dock="Right"/>
+                <Button Content="加载测试步骤" Width="120" Margin="10 0 0 0" Command="{Binding LoadTestStep}"  DockPanel.Dock="Right"/>
                 <Button Content="配置寄存器例外条件" Width="200" Margin="10 0 0 0" Command="{Binding JumpConfig}"  DockPanel.Dock="Right" Cursor="Hand"/>
                 <Button Content="检查寄存器" Width="100" Margin="10 0 0 0" Command="{Binding CheckRegisters}" DockPanel.Dock="Right"/>
             </DockPanel>

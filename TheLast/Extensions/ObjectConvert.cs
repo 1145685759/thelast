@@ -6,6 +6,9 @@ using System.Windows.Data;
 
 namespace TheLast.Extensions
 {
+    /// <summary>
+    /// 多值转换器
+    /// </summary>
     public class ObjectConvert : IMultiValueConverter
     {
         #region IMultiValueConverter Members

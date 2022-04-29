@@ -4,6 +4,9 @@ using TheLast.Entities;
 
 namespace TheLast.Dtos
 {
+    /// <summary>
+    /// 初始化DTO
+    /// </summary>
     public class InitDto: BindableBase
     {
         private int id;

@@ -6,6 +6,9 @@ using TheLast.Entities;
 
 namespace TheLast.Dtos
 {
+    /// <summary>
+    /// 测试步骤DTO
+    /// </summary>
     public class TestStepDto: BindableBase
     {
         private int id;

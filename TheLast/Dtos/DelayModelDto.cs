@@ -5,6 +5,9 @@ using System.Text;
 
 namespace TheLast.Dtos
 {
+    /// <summary>
+    /// 延时模式DTO
+    /// </summary>
     public class DelayModelDto: BindableBase
     {
         private int id;

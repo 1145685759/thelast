@@ -7,6 +7,9 @@ using System.Windows.Data;
 
 namespace TheLast.Common.Converters
 {
+    /// <summary>
+    /// Int转可见类型值转换器
+    /// </summary>
     public class IntToVisibilityConveter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

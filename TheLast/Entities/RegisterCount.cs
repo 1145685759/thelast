@@ -5,6 +5,9 @@ using System.Text;
 
 namespace TheLast.Entities
 {
+    /// <summary>
+    /// 寄存器数量限制表
+    /// </summary>
     public class RegisterCount
     {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]

@@ -9,6 +9,9 @@ using System.Windows.Controls;
 
 namespace TheLast.Extensions
 {
+    /// <summary>
+    /// 密码框扩展
+    /// </summary>
     public class PassWordExtensions
     {
         public static string GetPassWord(DependencyObject obj)

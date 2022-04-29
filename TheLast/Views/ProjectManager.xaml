@@ -62,15 +62,6 @@
                                         CommandParameter="查询"  />
                         </TextBox.InputBindings>
                     </TextBox>
-                    <TextBlock
-                        Margin="10,0"
-                        VerticalAlignment="Center"
-                        Text="筛选：" />
-                    <ComboBox SelectedIndex="{Binding SelectedIndex}" VerticalAlignment="Center">
-                        <ComboBoxItem>全部</ComboBoxItem>
-                        <ComboBoxItem>待测试</ComboBoxItem>
-                        <ComboBoxItem>已完成</ComboBoxItem>
-                    </ComboBox>
                 </StackPanel>
 
                 <Button

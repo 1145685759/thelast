@@ -6,8 +6,11 @@ using System.Text;
 
 namespace TheLast.Entities
 {
-public class Init
-{
+    /// <summary>
+    /// 初始化表
+    /// </summary>
+    public class Init
+    {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
         public int Id { get; set; }
         public int RegisterId { get; set; }

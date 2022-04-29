@@ -5,6 +5,9 @@ using System.Text;
 
 namespace TheLast.Dtos
 {
+    /// <summary>
+    /// 项目DTO
+    /// </summary>
     public class ProjectDto: BindableBase
     {
         private int id;

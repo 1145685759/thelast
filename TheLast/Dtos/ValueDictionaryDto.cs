@@ -6,6 +6,9 @@ using TheLast.Entities;
 
 namespace TheLast.Dtos
 {
+    /// <summary>
+    /// 值字典DTO
+    /// </summary>
     public class ValueDictionaryDto: BindableBase
     {
         private int id;

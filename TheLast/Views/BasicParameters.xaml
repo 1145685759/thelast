@@ -14,7 +14,7 @@
              TextOptions.TextFormattingMode="Ideal" 
              TextOptions.TextRenderingMode="Auto"        
              Background="{DynamicResource MaterialDesignPaper}"
-             xmlns:mde="https://spiegelp.github.io/MaterialDesignExtensions/winfx/xaml" >
+             xmlns:mde="https://spiegelp.github.io/MaterialDesignExtensions/winfx/xaml" xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
     <Grid Margin="50 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -25,11 +25,39 @@
                         Width="250" Text="{Binding SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                         VerticalAlignment="Center"
                         md:HintAssist.Hint="查找寄存器..."
-                        md:TextFieldAssist.HasClearButton="True" >
+                        md:TextFieldAssist.HasClearButton="True" Cursor="Arrow" >
                 <TextBox.InputBindings>
                     <KeyBinding Key="Enter" Command="{Binding Search}"/>
                 </TextBox.InputBindings>
             </TextBox>
+            <Grid>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="内机号：" VerticalAlignment="Center" Margin="20" Visibility="{Binding IsIndoor}"/>
+                    <ComboBox ItemsSource="{Binding Indoors}" VerticalAlignment="Center" Name="IndoorNum" MinWidth="50" Visibility="{Binding IsIndoor}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction 
+                            CommandParameter="{Binding ElementName=IndoorNum, Path=SelectedValue}"
+                                                    Command="{Binding DataContext.SelectedIndoorCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="外机号：" VerticalAlignment="Center" Margin="20" Visibility="{Binding IsOutdoor}"/>
+                    <ComboBox ItemsSource="{Binding Outdoors}" VerticalAlignment="Center" Name="OutdoorNum" MinWidth="50" Visibility="{Binding IsOutdoor}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction 
+                            CommandParameter="{Binding ElementName=OutdoorNum, Path=SelectedValue}"
+                                                    Command="{Binding DataContext.SelectedOutdoorCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+            
+            
             <Button Content="添 加 寄 存 器" Margin="20"  VerticalAlignment="Center" Cursor="Hand" DockPanel.Dock="Right" Command="{Binding AddRegister}"/>
         </DockPanel>
         <DataGrid Grid.Row="1" IsReadOnly="True" Name="RegisterDataGrid" LoadingRow="DataGrid_LoadingRow" ItemsSource="{Binding RegisterDtos}" AutoGenerateColumns="False" CanUserAddRows="False">

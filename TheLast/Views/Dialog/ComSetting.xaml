@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             Width="450" Height="280"
+             Width="450" Height="310"
              TextOptions.TextFormattingMode="Ideal" 
              TextOptions.TextRenderingMode="Auto"        
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -21,18 +21,30 @@
             <TextBlock
             Padding="20,10"
             Text="系统设置" FontWeight="Bold" FontSize="20" />
-            <StackPanel Grid.Row="1" VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <TextBlock Text="内机数量：" VerticalAlignment="Center" />
                     <TextBox Text="{Binding IndoorCount}" VerticalAlignment="Center" Width="200"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 5">
                     <TextBlock Text="外机数量：" VerticalAlignment="Center" />
                     <TextBox Text="{Binding OutdoorCount}" VerticalAlignment="Center" Width="200"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left" >
+                    <TextBlock Text="内机控制方式：" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding IMCMS}" SelectedIndex="{Binding IMCM}" DisplayMemberPath="DisplayValue" VerticalContentAlignment="Center" Width="175"  />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left" Margin="0 5" >
+                    <TextBlock Text="机组控制方式：" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding UCMS}" SelectedIndex="{Binding UCM}" DisplayMemberPath="DisplayValue" VerticalContentAlignment="Center" Width="175"  />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left"  >
+                    <TextBlock Text="风速挡位：" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding WSGS}" SelectedIndex="{Binding WSG}" DisplayMemberPath="DisplayValue" VerticalContentAlignment="Center" Width="200" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left" Margin="0 5">
                     <TextBlock Text="端口号：" VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding ComPorts}" SelectedItem="{Binding CurrentComPort}" VerticalContentAlignment="Center" Width="200"  Height="30"/>
+                    <ComboBox ItemsSource="{Binding ComPorts}" SelectedItem="{Binding CurrentComPort}" VerticalContentAlignment="Center" Width="215" />
                 </StackPanel>
             </StackPanel>
             

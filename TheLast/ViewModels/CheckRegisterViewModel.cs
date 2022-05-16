@@ -80,7 +80,7 @@ namespace TheLast.ViewModels
         public void OnDialogOpend(IDialogParameters parameters)
         {
             Model = parameters.GetValue<RegisterDto>("Value");
-            if (Model.RegisterType == "模拟量输出")
+            if (Model.RegisterType == "20个温度设置")
             {
                 Visibility = Visibility.Visible;
             }

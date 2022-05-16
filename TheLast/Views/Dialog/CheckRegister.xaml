@@ -51,13 +51,13 @@
                       IsChecked="{Binding Model.IsDisplay}"
                       VerticalAlignment="Center" Content="是/否 显示" />
                 <StackPanel Orientation="Horizontal" Margin="20,10" DockPanel.Dock="Top" Visibility="{Binding Visibility}">
-                    <TextBlock Text="起始地址：" VerticalAlignment="Center"/>
+                    <TextBlock Text="接入设备地址：" VerticalAlignment="Center"/>
                     <TextBox  Margin="10 0"
-                     Text="{Binding Model.StartAddress}"
+                     Text="{Binding Model.AccessAddress}"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
                      VerticalAlignment="Center"
-                     md:HintAssist.Hint="请输入起始地址" DockPanel.Dock="Top" Cursor="IBeam"/>
+                     md:HintAssist.Hint="接入设备地址" DockPanel.Dock="Top" Cursor="IBeam"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="20,10" DockPanel.Dock="Top" Visibility="{Binding Visibility}">
                     <TextBlock Text="传感器类型：" VerticalAlignment="Center" />

@@ -106,8 +106,9 @@ namespace TheLast.ViewModels
             }
             if (GetType=="内机数据")
             {
-                IsIndoor = Visibility.Visible;
+                
                 IsOutdoor = Visibility.Collapsed;
+                IsIndoor = Visibility.Visible;
             }
             else if (GetType == "外机数据")
             {

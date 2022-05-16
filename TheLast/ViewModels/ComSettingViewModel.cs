@@ -27,7 +27,48 @@ namespace TheLast.ViewModels
             get { return indoorCount; }
             set { SetProperty(ref indoorCount, value); }
         }
-
+        private float vREF;
+        public float VREF
+        {
+            get { return vREF; }
+            set { SetProperty(ref vREF, value); }
+        }
+        private List<ValueDictionary> iMCMS;
+        public List<ValueDictionary> IMCMS
+        {
+            get { return iMCMS; }
+            set { SetProperty(ref iMCMS, value); }
+        }
+        private int iMCM;
+        public int IMCM
+        {
+            get { return iMCM; }
+            set { SetProperty(ref iMCM, value); }
+        }
+        private List<ValueDictionary> uCMS;
+        public List<ValueDictionary> UCMS
+        {
+            get { return uCMS; }
+            set { SetProperty(ref uCMS, value); }
+        }
+        private int uCM;
+        public int UCM
+        {
+            get { return uCM; }
+            set { SetProperty(ref uCM, value); }
+        }
+        private List<ValueDictionary> wSGS;
+        public List<ValueDictionary> WSGS
+        {
+            get { return wSGS; }
+            set { SetProperty(ref wSGS, value); }
+        }
+        private int wSG;
+        public int WSG
+        {
+            get { return wSG; }
+            set { SetProperty(ref wSG, value); }
+        }
         private int outdoorCount;
         public int OutdoorCount
         {
@@ -63,20 +104,27 @@ namespace TheLast.ViewModels
         public ComSettingViewModel(IEventAggregator eventAggregator,ISqlSugarClient sqlSugarClient,IRegionManager regionManager)
         {
             hsDatas = new List<HsData>();
+            IMCMS = new List<ValueDictionary>();
+            UCMS = new List<ValueDictionary>();
+            WSGS = new List<ValueDictionary>();
             this.eventAggregator = eventAggregator;
             this.sqlSugarClient = sqlSugarClient;
             this.regionManager = regionManager;
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+            IMCMS=sqlSugarClient.Queryable<ValueDictionary>().Where(x => x.RegisterId == 2).ToList();
+            UCMS = sqlSugarClient.Queryable<ValueDictionary>().Where(x => x.RegisterId == 3).ToList();
+            WSGS = sqlSugarClient.Queryable<ValueDictionary>().Where(x => x.RegisterId == 4).ToList();
         }
 
-        private  void Save()
+        private async void Save()
         {
             if (string.IsNullOrEmpty(CurrentComPort))
             {
                 HandyControl.Controls.Growl.Error("请先选择串口！");
                 return;
             }
+           
             App.IndoorCount = IndoorCount;
             App.OutdoorCount = OutdoorCount;
             if (serialPort==null)
@@ -94,13 +142,21 @@ namespace TheLast.ViewModels
                         serialPort.Open();
                         App.ModbusSerialMaster = ModbusSerialMaster.CreateRtu(serialPort);
                         HandyControl.Controls.Growl.Success("串口连接成功");
+                        await App.ModbusSerialMaster.WriteSingleRegisterAsync(1, 0, Convert.ToUInt16(VREF * 10));
+                        await App.ModbusSerialMaster.WriteSingleRegisterAsync(1, 1, Convert.ToUInt16(IMCM));
+                        await App.ModbusSerialMaster.WriteSingleRegisterAsync(1, 2, Convert.ToUInt16(UCM));
+                        await App.ModbusSerialMaster.WriteSingleRegisterAsync(1, 3, Convert.ToUInt16(WSG));
                     }
                     else
                     {
                         App.ModbusSerialMaster = ModbusSerialMaster.CreateRtu(serialPort);
                         HandyControl.Controls.Growl.Success("串口连接成功");
+                        await App.ModbusSerialMaster.WriteSingleRegisterAsync(1, 0, Convert.ToUInt16(VREF * 10));
+                        await App.ModbusSerialMaster.WriteSingleRegisterAsync(1, 1, Convert.ToUInt16(IMCM));
+                        await App.ModbusSerialMaster.WriteSingleRegisterAsync(1, 2, Convert.ToUInt16(UCM));
+                        await App.ModbusSerialMaster.WriteSingleRegisterAsync(1, 3, Convert.ToUInt16(WSG));
                     }
-                    Task.Run(async () =>
+                   await Task.Run(async () =>
                     {
                         while (true)
                         {

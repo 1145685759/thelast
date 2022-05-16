@@ -96,7 +96,7 @@ namespace TheLast.ViewModels
                                 var result = await App.ModbusSerialMaster.ReadInputRegistersAsync(1, registerList[i].Address, 1);
                                 if (registerList[i].Name.Contains("温度"))
                                 {
-                                    lineSeries.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]/10));
+                                    lineSeries.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]/10.0));
                                 }
                                 else
                                 {
@@ -112,7 +112,7 @@ namespace TheLast.ViewModels
                                 var result = await App.ModbusSerialMaster.ReadHoldingRegistersAsync(1, registerList[i].Address, 1);
                                 if (registerList[i].Name.Contains("温度"))
                                 {
-                                    lineSeries.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]/10));
+                                    lineSeries.Points.Add(DateTimeAxis.CreateDataPoint(DateTime.Now, result[0]/10.0));
                                 }
                                 else
                                 {

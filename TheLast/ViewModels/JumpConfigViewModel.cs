@@ -120,7 +120,12 @@ namespace TheLast.ViewModels
                 {
                     if (s.Count==0)
                     {
-                        s.Add((await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == RegistersId.RegisterId)).Id);
+                        var id = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == RegistersId.RegisterId);
+                        if (!s.Contains(id.Id))
+                        {
+                            s.Add(id.Id);
+                        }
+                        
                     }
                     else
                     {
@@ -128,7 +133,11 @@ namespace TheLast.ViewModels
                         {
                             if (s[i]!= (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == RegistersId.RegisterId)).Id)
                             {
-                                s.Add((await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == RegistersId.RegisterId)).Id);
+                                var id = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == RegistersId.RegisterId);
+                                if (!s.Contains(id.Id))
+                                {
+                                    s.Add(id.Id);
+                                }
                             }
                         }
                     }
@@ -221,13 +230,12 @@ namespace TheLast.ViewModels
                             {
                                 if (RegisterTypes[i]== (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == register)).RegisterType)
                                 {
-                                    return;
+                                    continue;
                                 }
                                 RegisterTypes.Add((await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == register)).RegisterType);
-
-
                             }
                         }
+                        RegisterTypes=RegisterTypes.Distinct().ToList();
                         
                     }
                 }

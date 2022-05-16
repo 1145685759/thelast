@@ -107,7 +107,9 @@ namespace TheLast.ViewModels
 
             if (result != null)
             {
-                RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
+                IDialogParameters dialogParameters = new DialogParameters();
+                dialogParameters.Add("user", result);
+                RequestClose?.Invoke(new DialogResult(ButtonResult.OK, dialogParameters));
             }
             else
             {

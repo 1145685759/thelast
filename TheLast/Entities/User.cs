@@ -15,6 +15,6 @@ namespace TheLast.Entities
         public string Account { get; set; }
         public string Password { get; set; }
         public string UserName { get; set; }
-        public string RoleName { get; set; }
+        public string RoleName { get; set; } = "普通用户";
     }
 }

@@ -381,7 +381,11 @@ namespace TheLast.ViewModels
             }
             ValueDictionaryDtos.Clear();
             var result = await sqlSugarClient.Queryable<ValueDictionary>().Where(x => x.RegisterId == parameter.Id).ToListAsync();
-            if (result.Count == 0&& !parameter.RegisterType.Contains("数字量"))
+            if (result.Count == 0 && !parameter.RegisterType.Contains("数字量"))
+            {
+                IsEditable = true;
+            }
+            else if (result[0].DisplayValue == "空"&& !parameter.RegisterType.Contains("数字量"))
             {
                 IsEditable = true;
             }

@@ -183,6 +183,11 @@ namespace TheLast.ViewModels
                         }
                         if (register.RegisterType=="20个温度设置")
                         {
+                            if (register.AccessAddress==null)
+                            {
+                                HandyControl.Controls.Growl.Error(register.Name + "接入寄存器地址未配置");
+                                return;
+                            }
                             ushort[] data = new ushort[4] { (ushort)(Convert.ToDouble(init.WriteValue)*10), (ushort)register.Type, (ushort)register.Caste, (ushort)register.AccessAddress};
                             for (int i = 0; i < data.Length; i++)
                             {
@@ -861,8 +866,16 @@ namespace TheLast.ViewModels
                 DataTable x = await sqlSugarClient.Queryable<TestStep>().Where(x => x.ModuleId == item.Id).ToDataTableAsync();
                 sheets.Add($"{item.ModuleName}", x);
             }
-            using (var stream = File.Create($"{name}.xlsx"))
-                MiniExcel.SaveAs(stream, sheets, true);
+            try
+            {
+                using (var stream = File.Create($"{name}.xlsx"))
+                    MiniExcel.SaveAs(stream, sheets, true);
+            }
+            catch (Exception ex)
+            {
+                HandyControl.Controls.Growl.Error(ex.Message);
+            }
+          
         }
     }
 }

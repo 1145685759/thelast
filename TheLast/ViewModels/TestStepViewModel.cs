@@ -11,7 +11,10 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using TheLast.Common;
 using TheLast.Dtos;
 using TheLast.Entities;
@@ -65,19 +68,19 @@ namespace TheLast.ViewModels
             TestStepDtos.Clear();
             foreach (var item in list)
             {
-                string initStr = string.Empty;
-                string feedbackStr = string.Empty;
+                StringBuilder initStr = new StringBuilder();
+                StringBuilder feedbackStr = new StringBuilder();
                 var listInit = await sqlSugarClient.Queryable<Init>().Where(x => x.TestStepId == item.Id).ToListAsync();
                 foreach (var init in listInit)
                 {
                     var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
-                    initStr += $"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
+                    initStr.Append($"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n");
                 }
                 var feedbackList = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == item.Id).ToListAsync();
                 foreach (var feedBack in feedbackList)
                 {
                     var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedBack.RegisterId);
-                    feedbackStr += $"站号【{register.StationNum}】 寄存器【{register.Name}】{feedBack.Operational}【{feedBack.TagetValue}】\r\n";
+                    feedbackStr.Append($"站号【{register.StationNum}】 寄存器【{register.Name}】{feedBack.Operational}【{feedBack.TagetValue}】\r\n");
                 }
                 TestStepDtos.Add(new TestStepDto
                 {
@@ -87,8 +90,8 @@ namespace TheLast.ViewModels
                     Remark = item.Remark,
                     Result = item.Result,
                     TestContent = item.TestContent,
-                    TestProcess = initStr,
-                    JudgmentContent = feedbackStr,
+                    TestProcess = initStr.ToString(),
+                    JudgmentContent = feedbackStr.ToString(),
                     Id = item.Id
                 });
             }
@@ -122,8 +125,9 @@ namespace TheLast.ViewModels
                         return;
                     }
                 }
-                HandyControl.Controls.Growl.Success("检查完毕，无异常！");
+                
             }
+            HandyControl.Controls.Growl.Success("检查完毕，无异常！");
         }
         private DelegateCommand<TestStepDto> deleteTestStep;
         public DelegateCommand<TestStepDto> DeleteTestStep =>
@@ -136,9 +140,9 @@ namespace TheLast.ViewModels
         }
         private DelegateCommand loadTestStep;
         public DelegateCommand LoadTestStep =>
-            loadTestStep ?? (loadTestStep = new DelegateCommand(ExecuteLoadTestStep));
+            loadTestStep ?? (loadTestStep = new DelegateCommand(ExecuteLoadTestStepAsync));
 
-        async void ExecuteLoadTestStep()
+        async void ExecuteLoadTestStepAsync()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "ExceL文件|*.xlsx";
@@ -152,8 +156,50 @@ namespace TheLast.ViewModels
             {
                 return;
             }
-
             var rows = MiniExcel.Query<ExcelModel>(path).ToList();
+            UpdateLoading(true);
+            Task thread = Task.Factory.StartNew(async ()=>await load(rows));
+            await Task.Delay(15000);
+            var list = await sqlSugarClient.Queryable<TestStep>().Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
+            TestStepDtos.Clear();
+            foreach (var item in list)
+            {
+                string initStr = string.Empty;
+                string feedbackStr = string.Empty;
+                var listInit = await sqlSugarClient.Queryable<Init>().Where(x => x.TestStepId == item.Id).ToListAsync();
+                StringBuilder initStrbuild = new StringBuilder();
+                StringBuilder feedbackStrbuild = new StringBuilder();
+                foreach (var init in listInit)
+                {
+                    var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
+
+                    initStrbuild.Append($"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n");
+                    
+                }
+                var feedbackList = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == item.Id).ToListAsync();
+                foreach (var feedBack in feedbackList)
+                {
+                    var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedBack.RegisterId);
+                    feedbackStrbuild.Append ( $"站号【{register.StationNum}】 寄存器【{register.Name}】{feedBack.Operational}【{feedBack.TagetValue}】\r\n");
+                }
+                TestStepDtos.Add(new TestStepDto
+                {
+                    Conditions = item.Conditions,
+                    Inits = item.Inits,
+                    ModuleId = item.ModuleId,
+                    Remark = item.Remark,
+                    Result = item.Result,
+                    TestContent = item.TestContent,
+                    TestProcess = initStrbuild.ToString(),
+                    JudgmentContent = feedbackStrbuild.ToString(),
+                    Id = item.Id
+                });
+            }
+            UpdateLoading(false);
+            
+        }
+        async Task load(List<ExcelModel> rows)
+        {
             foreach (var item in rows)
             {
                 List<string> xieruzhi = new List<string>();
@@ -203,7 +249,7 @@ namespace TheLast.ViewModels
                 List<FeedBack> feedBacks = new List<FeedBack>();
                 for (int i = 0; i < jicunqixieru.Count; i++)
                 {
-                    TestProcess += $"向 站号【{zhanhao[i].Remove(0,2)}】寄存器【{jicunqixieru[i].Remove(0, 2)}】写入值【{xieruzhi[i].Remove(0, 2)}】\r\n";
+                    TestProcess += $"向 站号【{zhanhao[i].Remove(0, 2)}】寄存器【{jicunqixieru[i].Remove(0, 2)}】写入值【{xieruzhi[i].Remove(0, 2)}】\r\n";
                 }
                 for (int i = 0; i < jicunqipanduan.Count; i++)
                 {
@@ -217,7 +263,7 @@ namespace TheLast.ViewModels
                     Remark = item.备注,
                     JudgmentContent = JudgmentContent,
                     TestProcess = TestProcess,
-                    TestContent=item.测试内容
+                    TestContent = item.测试内容
                 };
                 int id = await sqlSugarClient.Insertable(testStep).ExecuteReturnIdentityAsync();
                 for (int i = 0; i < jicunqixieru.Count; i++)
@@ -233,17 +279,27 @@ namespace TheLast.ViewModels
                         init.RegisterId = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == registerName)).Id;
                         init.TestStepId = id;
                         var ValueDictionary = await sqlSugarClient.Queryable<ValueDictionary>().FirstAsync(x => x.DisplayValue == writevalue && x.RegisterId == registerid);
-                        if (ValueDictionary!=null)
+                        if (ValueDictionary != null)
                         {
                             init.WriteValue = ValueDictionary.RealValue;
                         }
+
                         else
                         {
-                            HandyControl.Controls.Growl.Error($"Excel配置格式错误:{rows.IndexOf(item)+2}行写入值错误");
-                            await sqlSugarClient.Deleteable<TestStep>(id).ExecuteCommandAsync();
-                            return;
+                            var ValueDictionaryone = await sqlSugarClient.Queryable<ValueDictionary>().FirstAsync(x => x.RegisterId == registerid);
+                            if (ValueDictionaryone.DisplayValue == "空")
+                            {
+                                init.WriteValue = writevalue;
+                            }
+                            else
+                            {
+                                HandyControl.Controls.Growl.Error($"Excel配置格式错误:{rows.IndexOf(item) + 2}行写入值错误");
+                                await sqlSugarClient.Deleteable<TestStep>(id).ExecuteCommandAsync();
+                                return;
+                            }
+
                         }
-                        
+
                         inits.Add(init);
                     }
                     else
@@ -269,7 +325,7 @@ namespace TheLast.ViewModels
                     {
                         try
                         {
-                            var tagetvalues= await sqlSugarClient.Queryable<ValueDictionary>().FirstAsync(x => x.DisplayValue == tagetvalue && x.RegisterId == registerid);
+                            var tagetvalues = await sqlSugarClient.Queryable<ValueDictionary>().FirstAsync(x => x.DisplayValue == tagetvalue && x.RegisterId == registerid);
                             FeedBack feedBack = new FeedBack();
                             feedBack.Operational = yunsuanfuStr;
                             feedBack.DelayModeId = (await sqlSugarClient.Queryable<DelayModel>().FirstAsync(x => x.Mode == delayMode)).Id;
@@ -278,13 +334,13 @@ namespace TheLast.ViewModels
                             feedBack.DisplayTagetValue = tagetvalue;
                             feedBack.RegisterId = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == registerName)).Id;
                             feedBack.TestStepId = id;
-                            if (tagetvalues!=null)
+                            if (tagetvalues != null)
                             {
                                 feedBack.TagetValue = tagetvalues.RealValue;
                             }
                             else
                             {
-                                HandyControl.Controls.Growl.Error($"Excel配置格式错误:{rows.IndexOf(item)+2}行目标值错误");
+                                HandyControl.Controls.Growl.Error($"Excel配置格式错误:{rows.IndexOf(item) + 2}行目标值错误");
                                 await sqlSugarClient.Deleteable<TestStep>(id).ExecuteCommandAsync();
                                 return;
                             }
@@ -294,14 +350,14 @@ namespace TheLast.ViewModels
                         {
                             HandyControl.Controls.Growl.Error($"Excel配置格式错误{ex.Message}");
                         }
-                       
+
 
                     }
                     else
                     {
                         feedBacks.Add(new FeedBack
                         {
-                            Operational=yunsuanfuStr,
+                            Operational = yunsuanfuStr,
                             DelayModeId = (await sqlSugarClient.Queryable<DelayModel>().FirstAsync(x => x.Mode == delayMode)).Id,
                             DelayTime = Convert.ToInt32(yanshishijian[i].Remove(0, 2)),
                             StationNum = Convert.ToByte(zhanhao[i].Remove(0, 2)),
@@ -316,38 +372,24 @@ namespace TheLast.ViewModels
                 await sqlSugarClient.Insertable(feedBacks).ExecuteCommandAsync();
             }
             var list = await sqlSugarClient.Queryable<TestStep>().Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
-            TestStepDtos.Clear();
             foreach (var item in list)
             {
-                string initStr = string.Empty;
-                string feedbackStr = string.Empty;
+                StringBuilder initStr = new StringBuilder();
+                StringBuilder feedbackStr = new StringBuilder();
                 var listInit = await sqlSugarClient.Queryable<Init>().Where(x => x.TestStepId == item.Id).ToListAsync();
                 foreach (var init in listInit)
                 {
                     var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
-                    initStr += $"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
+                    initStr.Append($"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n");
                 }
                 var feedbackList = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == item.Id).ToListAsync();
                 foreach (var feedBack in feedbackList)
                 {
                     var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedBack.RegisterId);
-                    feedbackStr += $"站号【{register.StationNum}】 寄存器【{register.Name}】{feedBack.Operational}【{feedBack.TagetValue}】\r\n";
+                    feedbackStr.Append($"站号【{register.StationNum}】 寄存器【{register.Name}】{feedBack.Operational}【{feedBack.TagetValue}】\r\n");
                 }
-                TestStepDtos.Add(new TestStepDto
-                {
-                    Conditions = item.Conditions,
-                    Inits = item.Inits,
-                    ModuleId = item.ModuleId,
-                    Remark = item.Remark,
-                    Result = item.Result,
-                    FeedBacks = item.FeedBacks,
-                    TestContent = item.TestContent,
-                    TestProcess = initStr,
-                    JudgmentContent = feedbackStr,
-                    Id = item.Id
-                });
-
             }
+          
         }
         private DelegateCommand jumpConfig;
         public DelegateCommand JumpConfig =>
@@ -357,7 +399,10 @@ namespace TheLast.ViewModels
         {
             DialogParameters param = new DialogParameters();
             param.Add("ModuleId", CurrentDto.Id);
+       
             var dialogResult = await dialog.ShowDialog("JumpConfig", param);
+
+
         }
         private DelegateCommand<TestStepDto> configInit;
         public DelegateCommand<TestStepDto> ConfigInit =>
@@ -377,19 +422,19 @@ namespace TheLast.ViewModels
                     TestStepDtos.Clear();
                     foreach (var item in list)
                     {
-                        string initStr = string.Empty;
-                        string feedbackStr = string.Empty;
+                        StringBuilder initStr =new StringBuilder();
+                        StringBuilder feedbackStr = new StringBuilder();
                         var listInit = await sqlSugarClient.Queryable<Init>().Where(x => x.TestStepId == item.Id).ToListAsync();
                         foreach (var init in listInit)
                         {
                             var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
-                            initStr += $"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
+                            initStr.Append($"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n");
                         }
                         var feedbackList = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == item.Id).ToListAsync();
                         foreach (var feedBack in feedbackList)
                         {
                             var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedBack.RegisterId);
-                            feedbackStr += $"站号【{register.StationNum}】 寄存器【{register.Name}】{feedBack.Operational}【{feedBack.TagetValue}】\r\n";
+                            feedbackStr.Append($"站号【{register.StationNum}】 寄存器【{register.Name}】{feedBack.Operational}【{feedBack.TagetValue}】\r\n");
                         }
                         TestStepDtos.Add(new TestStepDto
                         {
@@ -399,8 +444,8 @@ namespace TheLast.ViewModels
                             Remark = item.Remark,
                             Result = item.Result,
                             TestContent = item.TestContent,
-                            TestProcess = initStr,
-                            JudgmentContent = feedbackStr,
+                            TestProcess = initStr.ToString(),
+                            JudgmentContent = feedbackStr.ToString(),
                             Id = item.Id
                         });
                     }
@@ -430,20 +475,20 @@ namespace TheLast.ViewModels
                     TestStepDtos.Clear();
                     foreach (var item in list)
                     {
-                        string initStr = string.Empty;
-                        string feedbackStr = string.Empty;
+                        StringBuilder initStr = new StringBuilder();
+                        StringBuilder feedbackStr = new StringBuilder();
                         var listInit = await sqlSugarClient.Queryable<Init>().Where(x => x.TestStepId == item.Id).ToListAsync();
                         var listFeedback = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == item.Id).ToListAsync();
                         foreach (var init in listInit)
                         {
                             var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
-                            initStr += $"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
+                            initStr.Append($"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n");
                         }
                         var feedbackList = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == item.Id).ToListAsync();
                         foreach (var feedBack in feedbackList)
                         {
                             var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedBack.RegisterId);
-                            feedbackStr += $"站号【{register.StationNum}】 寄存器【{register.Name}】{feedBack.Operational}【{feedBack.TagetValue}】\r\n";
+                            feedbackStr.Append($"站号【{register.StationNum}】 寄存器【{register.Name}】{feedBack.Operational}【{feedBack.TagetValue}】\r\n");
                         }
                         TestStepDtos.Add(new TestStepDto
                         {
@@ -453,8 +498,8 @@ namespace TheLast.ViewModels
                             Remark = item.Remark,
                             Result = item.Result,
                             TestContent = item.TestContent,
-                            TestProcess = initStr,
-                            JudgmentContent = feedbackStr,
+                            TestProcess = initStr.ToString(),
+                            JudgmentContent = feedbackStr.ToString(),
                             Id = item.Id
                         });
                     }
@@ -476,19 +521,19 @@ namespace TheLast.ViewModels
             TestStepDtos.Clear();
             foreach (var item in list)
             {
-                string initStr = string.Empty;
-                string feedbackStr = string.Empty;
+                StringBuilder initStr = new StringBuilder();
+                StringBuilder feedbackStr = new StringBuilder();
                 var listInit = await sqlSugarClient.Queryable<Init>().Where(x => x.TestStepId == item.Id).ToListAsync();
                 foreach (var init in listInit)
                 {
                     var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
-                    initStr += $"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n";
+                    initStr.Append($"向站号【{register.StationNum}】寄存器【{register.Name}】写入值【{init.WriteValue}】\r\n");
                 }
                 var feedbackList = await sqlSugarClient.Queryable<FeedBack>().Where(x => x.TestStepId == item.Id).ToListAsync();
                 foreach (var feedBack in feedbackList)
                 {
                     var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedBack.RegisterId);
-                    feedbackStr += $"站号【{register.StationNum}】 寄存器【{register.Name}】{feedBack.Operational}【{feedBack.TagetValue}】\r\n";
+                    feedbackStr.Append($"站号【{register.StationNum}】 寄存器【{register.Name}】{feedBack.Operational}【{feedBack.TagetValue}】\r\n");
                 }
                 TestStepDtos.Add(new TestStepDto
                 {
@@ -498,8 +543,8 @@ namespace TheLast.ViewModels
                     Remark = item.Remark,
                     Result = item.Result,
                     TestContent = item.TestContent,
-                    TestProcess = initStr,
-                    JudgmentContent = feedbackStr,
+                    TestProcess = initStr.ToString(),
+                    JudgmentContent = feedbackStr.ToString(),
                     Id = item.Id
                 });
             }

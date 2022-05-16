@@ -107,7 +107,7 @@ namespace TheLast.ViewModels
                 {
                     if (item.Title.Contains("温度"))
                     {
-                        item.Points.Add(DateTimeAxis.CreateDataPoint(point.DateTime, point.RealValue/10));
+                        item.Points.Add(DateTimeAxis.CreateDataPoint(point.DateTime, point.RealValue/10.0));
                     }
                     else
                     {

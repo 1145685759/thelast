@@ -269,6 +269,7 @@ namespace TheLast.ViewModels
             if (parameter== "20个温度设置")
             {
                 IsTemperature = Visibility.Visible;
+                registers = await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true && x.RegisterType == parameter && x.StationNum == CurrentStationNum).ToListAsync();
             }
            
             else
@@ -300,7 +301,11 @@ namespace TheLast.ViewModels
                 return;
             }
             var result = await sqlSugarClient.Queryable<ValueDictionary>().Where(x => x.RegisterId == parameter.Id).ToListAsync();
-            if (result.Count == 0&& !parameter.RegisterType.Contains("数字量"))
+            if (result.Count == 0 && !parameter.RegisterType.Contains("数字量"))
+            {
+                IsEditable = true;
+            }
+            else if (result[0].DisplayValue == "空"&& !parameter.RegisterType.Contains("数字量"))
             {
                 IsEditable = true;
             }

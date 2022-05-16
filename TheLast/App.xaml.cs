@@ -30,6 +30,7 @@ namespace TheLast
     public partial class App
     {
         public static ModbusSerialMaster ModbusSerialMaster;
+        public static User User;
         public static int IndoorCount;
         public static int OutdoorCount;
         protected override Window CreateShell()
@@ -53,6 +54,7 @@ namespace TheLast
                 Current.MainWindow.Show();
             });
         }
+        
         protected override void OnInitialized()
         {
             var dialog = Container.Resolve<IDialogService>();
@@ -64,7 +66,7 @@ namespace TheLast
                     Environment.Exit(0);
                     return;
                 }
-
+                User = callback.Parameters.GetValue<User>("user");
                 var service = App.Current.MainWindow.DataContext as IConfigureService;
                 if (service != null)
                     service.Configure();

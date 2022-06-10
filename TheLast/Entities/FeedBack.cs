@@ -16,6 +16,7 @@ namespace TheLast.Entities
         [SugarColumn(IsIgnore = true)]
         public Register Register { get; set; }
         public string TagetValue { get; set; }
+        public int Offset { get; set; }
         public int TestStepId { get; set; }
         public int DelayTime { get; set; }
         public int DelayModeId { get; set; }

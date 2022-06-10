@@ -25,7 +25,7 @@ namespace TheLast.ViewModels
             this.sqlSugarClient = sqlSugarClient;
             this.mapper = mapper;
         }
-        private string[] type= { "15K传感器", "20K传感器" };
+        private string[] type= { "15K传感器10K串联电阻", "20K传感器10K串联电阻","50K传感器5.1K串联电阻","15K传感器20K串联电阻","20K传感器20K串联电阻","50K传感器20K串联电阻" };
         public string[] Types
         {
             get { return type; }

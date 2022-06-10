@@ -21,6 +21,9 @@ namespace TheLast.Entities
         public bool IsHsData { get; set; }
         public int? Type { get; set; }
         public int? Caste { get; set; }
+        public int? FineTuning { get; set; }
+        public ushort AllowableRangeDeviation { get; set; }
         public ushort? AccessAddress  { get; set; }
+        
     }
 }

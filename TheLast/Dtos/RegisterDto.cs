@@ -53,7 +53,7 @@ namespace TheLast.Dtos
             get { return stationNum; }
             set { SetProperty(ref stationNum, value); }
         }
-        private bool isVisible = false;
+        private bool isVisible;
         public bool IsVisible
         {
             get { return isVisible; }
@@ -71,11 +71,23 @@ namespace TheLast.Dtos
             get { return type; }
             set { SetProperty(ref type, value); }
         }
+        private ushort allowableRangeDeviation;
+        public ushort AllowableRangeDeviation
+        {
+            get { return allowableRangeDeviation; }
+            set { SetProperty(ref allowableRangeDeviation, value); }
+        }
         private int caste;
         public int Caste
         {
             get { return caste; }
             set { SetProperty(ref caste, value); }
+        }
+        private int fineTuning;
+        public int FineTuning
+        {
+            get { return fineTuning; }
+            set { SetProperty(ref fineTuning, value); }
         }
         private ushort accessAddress;
         public ushort AccessAddress

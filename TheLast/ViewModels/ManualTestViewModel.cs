@@ -29,8 +29,8 @@ namespace TheLast.ViewModels
             get { return registers; }
             set { SetProperty(ref registers, value); }
         }
-        private List<string> registerTypeDtos;
-        public List<string> RegisterTypeDtos
+        private ObservableCollection<string> registerTypeDtos;
+        public ObservableCollection<string> RegisterTypeDtos
         {
             get { return registerTypeDtos; }
             set { SetProperty(ref registerTypeDtos, value); }
@@ -60,7 +60,7 @@ namespace TheLast.ViewModels
         }
         public ManualTestViewModel(IContainerProvider containerProvider,ISqlSugarClient sqlSugarClient,IMapper mapper) : base(containerProvider)
         {
-            RegisterTypeDtos = new List<string>();
+            RegisterTypeDtos = new ObservableCollection<string>();
             Registers = new ObservableCollection<Register>();
             WriteRegisters = new ObservableCollection<WriteRegister>();
             this.sqlSugarClient = sqlSugarClient;
@@ -72,6 +72,10 @@ namespace TheLast.ViewModels
             StationIndex = -1;
             TypeIndex = -1;
             modbusSerialMaster = App.ModbusSerialMaster;
+            if (modbusSerialMaster==null)
+            {
+                HandyControl.Controls.Growl.Error("串口未连接");
+            }
             Registers.Clear();
             WriteRegisters.Clear();
             Registers = (ObservableCollection<Register>)Registers.AddRange(await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true).ToListAsync());
@@ -84,10 +88,11 @@ namespace TheLast.ViewModels
 
         void ExecuteStationSelectedCommand(byte? parameter)
         {
+            RegisterTypeDtos.Clear();
             WriteRegisters.Clear();
             if (parameter!=null)
             {
-                RegisterTypeDtos = Registers.Where(x => x.StationNum == parameter).Select(x => x.RegisterType).Distinct().ToList();
+                RegisterTypeDtos.AddRange(Registers.Where(x => x.StationNum == parameter).Select(x => x.RegisterType).Distinct().ToList());
                 if (RegisterTypeDtos.Contains("外机数据"))
                 {
                     RegisterTypeDtos.Remove("外机数据");
@@ -104,7 +109,12 @@ namespace TheLast.ViewModels
                 {
                     RegisterTypeDtos.Remove("数字量输入");
                 }
+                if (RegisterTypeDtos.Contains("反馈脉冲数"))
+                {
+                    RegisterTypeDtos.Remove("反馈脉冲数");
+                }
             }
+
         }
         private DelegateCommand<WriteRegister> lostFocusCommand;
         public DelegateCommand<WriteRegister> LostFocusCommand =>
@@ -120,26 +130,84 @@ namespace TheLast.ViewModels
             if (parameter.RegisterDto.RegisterType=="数字量输出")
             {
                 bool value=false;
-                if (parameter.Value==1)
+                if (parameter.Value=="1")
                 {
                     value = true;
                 }
-                if (parameter.Value==0)
+                else if (parameter.Value=="0")
                 {
                     value = false;
                 }
-                await modbusSerialMaster.WriteSingleCoilAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, value);
+                else
+                {
+                    HandyControl.Controls.Growl.Error("写入失败：写入值错误");
+                    return;
+                }
+                try
+                {
+                    await modbusSerialMaster.WriteSingleCoilAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, value);
 
+                }
+                catch (Exception ex)
+                {
+
+                    HandyControl.Controls.Growl.Error($"写入失败：{ex.Message}");
+                }
+
+            }
+            if (parameter.RegisterDto.RegisterType=="20个温度设置")
+            {
+                try
+                {
+                    ushort[] data = new ushort[5] { (ushort)(Convert.ToDouble(parameter.Value) * 10), (ushort)parameter.RegisterDto.Type, (ushort)parameter.RegisterDto.FineTuning, (ushort)parameter.RegisterDto.AccessAddress,parameter.RegisterDto.AllowableRangeDeviation };
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                        try
+                        {
+                            await modbusSerialMaster.WriteSingleRegisterAsync(parameter.RegisterDto.StationNum, (ushort)(parameter.RegisterDto.Address + i), data[i]);
+
+                        }
+                        catch (Exception ex)
+                        {
+
+                            HandyControl.Controls.Growl.Error($"写入失败：{ex.Message}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    HandyControl.Controls.Growl.Error($"写入失败：{ex.Message}");
+                }
+                
             }
             else
             {
-                if (parameter.RegisterDto.Name.Contains("温度"))
+                if (parameter.RegisterDto.Name.Contains("温度")|| parameter.RegisterDto.Name.Contains("感温包"))
                 {
-                    await modbusSerialMaster.WriteSingleRegisterAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, (ushort)(parameter.Value*10));
+                    try
+                    {
+                        await modbusSerialMaster.WriteSingleRegisterAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, (ushort)(Convert.ToDouble(parameter.Value) * 10));
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        HandyControl.Controls.Growl.Error($"写入失败：{ex.Message}");
+                    }
                 }
                 else
                 {
-                    await modbusSerialMaster.WriteSingleRegisterAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, parameter.Value);
+                    try
+                    {
+                        await modbusSerialMaster.WriteSingleRegisterAsync(parameter.RegisterDto.StationNum, parameter.RegisterDto.Address, Convert.ToUInt16(parameter.Value));
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        HandyControl.Controls.Growl.Error($"写入失败：{ex.Message}");
+                    }
                 }
             }
         }
@@ -147,7 +215,7 @@ namespace TheLast.ViewModels
         public DelegateCommand<string?> SelectedCommand =>
             selectedCommand ?? (selectedCommand = new DelegateCommand<string?>(ExecuteSelectedCommand));
 
-        void ExecuteSelectedCommand(string? parameter)
+        async void ExecuteSelectedCommand(string? parameter)
         {
             if (!string.IsNullOrEmpty(parameter))
             {
@@ -158,7 +226,27 @@ namespace TheLast.ViewModels
                     WriteRegisters.Add(new WriteRegister { RegisterDto = mapper.Map<RegisterDto>(item) });
                 }
             }
-           
+            if (parameter=="数字量输出")
+            {
+                for (int i = 0; i < WriteRegisters.Count; i++)
+                {
+                    WriteRegisters[i].Value = (((await modbusSerialMaster.ReadCoilsAsync(WriteRegisters[i].RegisterDto.StationNum, WriteRegisters[i].RegisterDto.Address, 1))[0]) ? 1 : 0).ToString();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < WriteRegisters.Count; i++)
+                {
+                    if (WriteRegisters[i].RegisterDto.Name.Contains("感温包") || WriteRegisters[i].RegisterDto.Name.Contains("温度"))
+                    {
+                        WriteRegisters[i].Value = ((await modbusSerialMaster.ReadHoldingRegistersAsync(WriteRegisters[i].RegisterDto.StationNum, WriteRegisters[i].RegisterDto.Address, 1))[0] / 10.0).ToString();
+                    }
+                    else
+                    {
+                        WriteRegisters[i].Value = (await modbusSerialMaster.ReadHoldingRegistersAsync(WriteRegisters[i].RegisterDto.StationNum, WriteRegisters[i].RegisterDto.Address, 1))[0].ToString();
+                    }
+                }
+            }
         }
         private DelegateCommand<string> writeBatch;
         public DelegateCommand<string> WriteBatch =>
@@ -176,13 +264,18 @@ namespace TheLast.ViewModels
                 foreach (var item in WriteRegisters)
                 {
                     bool value = false;
-                    if (item.Value == 1)
+                    if (item.Value == "1")
                     {
                         value = true;
                     }
-                    if (item.Value == 0)
+                    else if (item.Value == "0")
                     {
                         value = false;
+                    }
+                    else
+                    {
+                        HandyControl.Controls.Growl.Error("写入失败：写入值不正确");
+                        return ;
                     }
                     await modbusSerialMaster.WriteSingleCoilAsync(item.RegisterDto.StationNum, item.RegisterDto.Address, value);
                 }
@@ -191,13 +284,31 @@ namespace TheLast.ViewModels
             {
                 foreach (var item in WriteRegisters)
                 {
-                    if (item.RegisterDto.Name.Contains("温度"))
+                    if (item.RegisterDto.Name.Contains("温度")|| item.RegisterDto.Name.Contains("感温包"))
                     {
-                        await modbusSerialMaster.WriteSingleRegisterAsync(item.RegisterDto.StationNum, item.RegisterDto.Address, (ushort)(item.Value*10));
+                        try
+                        {
+                            await modbusSerialMaster.WriteSingleRegisterAsync(item.RegisterDto.StationNum, item.RegisterDto.Address, (ushort)(Convert.ToDouble(item.Value) * 10));
+
+                        }
+                        catch (Exception ex)
+                        {
+
+                            HandyControl.Controls.Growl.Error($"写入失败：{ex.Message}");
+                        }
                     }
                     else
                     {
-                        await modbusSerialMaster.WriteSingleRegisterAsync(item.RegisterDto.StationNum, item.RegisterDto.Address, item.Value);
+                        try
+                        {
+                            await modbusSerialMaster.WriteSingleRegisterAsync(item.RegisterDto.StationNum, item.RegisterDto.Address, Convert.ToUInt16(item.Value));
+
+                        }
+                        catch (Exception ex)
+                        {
+
+                            HandyControl.Controls.Growl.Error($"写入失败：{ex.Message}");
+                        }
                     }
                 }
             }

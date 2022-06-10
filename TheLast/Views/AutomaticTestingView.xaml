@@ -19,15 +19,15 @@
         </Grid.ColumnDefinitions>
         <TextBox
             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-            Text="{Binding CurrentDto.SpecificationRequirements}"
+            Text="{Binding StepResult}"
             VerticalAlignment="Stretch"
             AcceptsReturn="True"
             TextWrapping="Wrap"
             VerticalScrollBarVisibility="Auto"
-            md:HintAssist.Hint="规格书要求"/>
+            md:HintAssist.Hint="测试内容" Cursor="Arrow"/>
         <Grid  Margin="20 0"  Grid.Column="1" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.2*"/>
+                <RowDefinition Height="0.3*"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <StackPanel>
@@ -41,7 +41,6 @@
                 </StackPanel>
                 <DockPanel>
                     <Button Content="开始运行" Command="{Binding StartRun}" Width="200" HorizontalAlignment="Right" Margin="0 0 10 0" Cursor="Hand"/>
-
                 </DockPanel>
             </StackPanel>
             <DataGrid  SelectionUnit="FullRow" IsReadOnly="True" Grid.Row="1" SelectedItem="{Binding CurrentItem}" MinHeight="400" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="grid" LoadingRow="DataGrid_LoadingRow" AutoGenerateColumns="False"  CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding TestStepDtos}">

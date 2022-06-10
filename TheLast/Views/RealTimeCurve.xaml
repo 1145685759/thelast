@@ -11,31 +11,132 @@
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
              Background="{DynamicResource MaterialDesignPaper}"
-             xmlns:oxy="http://oxyplot.org/wpf" xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:oxy="http://oxyplot.org/wpf" xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             MinWidth="800"
+             MinHeight="600">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="0.1*"/>
         </Grid.RowDefinitions>
         <oxy:PlotView Model="{Binding MyModel}" Margin="50"/>
-        <ScrollViewer Grid.Row="1" Grid.RowSpan="2">
-            <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding RegisterDtos}">
+        <StackPanel 
+            Grid.Row="1" 
+            Orientation="Horizontal" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center">
+            <StackPanel 
+                Orientation="Horizontal">
+                    <TextBlock 
+                        Text="站号："
+                        VerticalAlignment="Center"/>
+                <ComboBox 
+                    VerticalAlignment="Center"
+                    ItemsSource="{Binding StationNums}"
+                    Name="Station">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger
+                            EventName="SelectionChanged">
+                            <i:InvokeCommandAction 
+                                CommandParameter="{Binding ElementName=Station, Path=SelectedItem}"
+                                 Command="{Binding StationSelected}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+                </StackPanel>
+            <StackPanel 
+                Orientation="Horizontal" 
+                Margin="20 0 0 0">
+                <TextBlock 
+                    Text="寄存器类型："
+                    VerticalAlignment="Center"/>
+                <ComboBox 
+                    VerticalAlignment="Center" 
+                    ItemsSource="{Binding RegisterTypes}"
+                    Name="RegisterTypes">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger 
+                            EventName="SelectionChanged">
+                            <i:InvokeCommandAction 
+                                 CommandParameter="{Binding ElementName=RegisterTypes, Path=SelectedItem}"
+                                 Command="{Binding TypesSelected}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel 
+                Orientation="Horizontal" 
+                Margin="20 0 0 0" 
+                Visibility="{Binding IsIndoor}">
+                <TextBlock 
+                    Text="内机号："
+                    VerticalAlignment="Center" 
+                    Visibility="{Binding IsIndoor}"/>
+                <ComboBox 
+                    VerticalAlignment="Center"
+                    ItemsSource="{Binding Indoors}" 
+                    SelectedIndex="{Binding Index}" 
+                    Name="Indoor" 
+                    Visibility="{Binding IsIndoor}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger 
+                            EventName="SelectionChanged">
+                            <i:InvokeCommandAction 
+                                CommandParameter="{Binding ElementName=Indoor, Path=SelectedItem}"
+                                Command="{Binding SelectedIndoors}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel 
+                Orientation="Horizontal" 
+                Margin="20 0 0 0" 
+                Visibility="{Binding IsOutdoor}">
+                <TextBlock 
+                    Text="外机号："
+                    VerticalAlignment="Center" 
+                    Visibility="{Binding IsOutdoor}"/>
+                <ComboBox 
+                    VerticalAlignment="Center"
+                    ItemsSource="{Binding Outdoors}" 
+                    Name="Outdoor" 
+                    SelectedIndex="{Binding Index}"  
+                    Visibility="{Binding IsOutdoor}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger 
+                            EventName="SelectionChanged">
+                            <i:InvokeCommandAction 
+                                CommandParameter="{Binding ElementName=Outdoor, Path=SelectedItem}"
+                                Command="{Binding SelectedOutdoors}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+            </StackPanel>
+        </StackPanel>
+        <!--<ScrollViewer 
+            Grid.Row="2" >
+            <ItemsControl 
+                HorizontalAlignment="Center" 
+                ItemsSource="{Binding RegisterDtosDisplay}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Margin="10 0">
+                        <StackPanel 
+                            Orientation="Horizontal" 
+                            Margin="10 0">
                             <TextBlock Text="{Binding Name}"/>
-                            <CheckBox IsChecked="{Binding IsVisible}" CommandParameter="{Binding}" Command="{Binding DataContext.Check, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                            <CheckBox 
+                                IsChecked="{Binding IsVisible}"
+                                CommandParameter="{Binding}" 
+                                Command="{Binding DataContext.Check, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </ScrollViewer>
+        </ScrollViewer>-->
     </Grid>
 </UserControl>

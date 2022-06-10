@@ -13,6 +13,7 @@ using System.Linq;
 using System.Windows.Input;
 using TheLast.Common;
 using TheLast.Extensions;
+using TheLast.Views;
 
 namespace TheLast.ViewModels
 {
@@ -67,11 +68,14 @@ namespace TheLast.ViewModels
                 new SecondLevelNavigationItem() { Label = "数字量输出配置", Icon = PackIconKind.AlphaDBoxOutline },
                 new SecondLevelNavigationItem() { Label = "内机数据配置", Icon = PackIconKind.DatabaseAlert },
                 new SecondLevelNavigationItem() { Label = "外机数据配置", Icon = PackIconKind.DatabaseAlertOutline },
+                new SecondLevelNavigationItem() { Label = "反馈脉冲数配置", Icon = PackIconKind.Abacus },
                 new FirstLevelNavigationItem() { Label = "用例管理", Icon = PackIconKind.TestTube },
                 new SecondLevelNavigationItem() { Label = "编辑用例", Icon = PackIconKind.ApplicationEdit },
                 new FirstLevelNavigationItem() { Label = "测试管理", Icon = PackIconKind.TestTubeEmpty },
                 new SecondLevelNavigationItem() { Label = "手动测试", Icon = PackIconKind.HandBackRight },
+                new SecondLevelNavigationItem() { Label = "遥控页面", Icon = PackIconKind.Yahoo },
                 new SecondLevelNavigationItem() { Label = "实时曲线", Icon = PackIconKind.ChartBellCurve },
+                new SecondLevelNavigationItem() { Label = "实时监控", Icon = PackIconKind.Read },
                 new FirstLevelNavigationItem() { Label = "历史数据管理", Icon = PackIconKind.DatabaseExportOutline },
                 new SecondLevelNavigationItem() { Label = "历史曲线", Icon = PackIconKind.ChartBox },
             };
@@ -91,7 +95,11 @@ namespace TheLast.ViewModels
 
             var s = ((NavigationItem)eventArgs.NavigationItemToSelect).Label;
             var menu = Views.FirstOrDefault(x => x.NavigationName == s);
-            if (menu.NavigationName== "基础参数配置"|| menu.NavigationName == "内机控制参数配置" || menu.NavigationName == "内机数据配置" || menu.NavigationName == "数字量输出配置" || menu.NavigationName == "步进电机脉冲检测" || menu.NavigationName == "数字量输入配置" || menu.NavigationName == "外机数据配置"||menu.NavigationName== "20个温度设置")
+            if (menu==null)
+            {
+                return;
+            }
+            if (menu.NavigationName== "基础参数配置"|| menu.NavigationName == "反馈脉冲数配置" || menu.NavigationName == "内机控制参数配置" || menu.NavigationName == "内机数据配置" || menu.NavigationName == "数字量输出配置" || menu.NavigationName == "步进电机脉冲检测" || menu.NavigationName == "数字量输入配置" || menu.NavigationName == "外机数据配置"||menu.NavigationName== "20个温度设置")
             {
                 if (App.User.RoleName=="普通用户")
                 {
@@ -101,14 +109,31 @@ namespace TheLast.ViewModels
             }
             if (menu != null)
             {
-                UpdateLoading(true);
-                NavigationParameters keyValuePairs = new NavigationParameters();
-                keyValuePairs.Add("Type", s);
-                regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(menu.View, back =>
+                if (menu.NavigationName=="实时曲线")
                 {
-                    journal = back.Context.NavigationService.Journal;
-                }, keyValuePairs);
-                UpdateLoading(false);
+                  
+                    dialog.Show("RealTimeCurve");
+                }
+                else if (menu.NavigationName == "历史曲线")
+                {
+                    dialog.Show("HistoricalCurve");
+                }
+                else if (menu.NavigationName=="实时监控")
+                {
+                    dialog.Show("Realtime");
+                }
+                else
+                {
+                    UpdateLoading(true);
+                    NavigationParameters keyValuePairs = new NavigationParameters();
+                    keyValuePairs.Add("Type", s);
+                    regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(menu.View, back =>
+                    {
+                        journal = back.Context.NavigationService.Journal;
+                    }, keyValuePairs);
+                    UpdateLoading(false);
+                }
+               
             }
             else
             {
@@ -127,13 +152,16 @@ namespace TheLast.ViewModels
                 new Navigation2View{NavigationName="数字量输出配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="内机数据配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="外机数据配置",View="BasicParameters" },
+                new Navigation2View{NavigationName="反馈脉冲数配置",View="BasicParameters" },
                 new Navigation2View{NavigationName="20个温度设置",View="BasicParameters" },
                 new Navigation2View{NavigationName="编辑用例",View="ProjectManager" },
                 new Navigation2View{NavigationName="手动测试",View="ManualTest" },
                 new Navigation2View{NavigationName="实时曲线",View="RealTimeCurve" },
                 new Navigation2View{NavigationName="历史曲线",View="HistoricalCurve" },
                 new Navigation2View{NavigationName="基础设置",View="ComSetting" },
-                new Navigation2View{NavigationName="个性化",View="SkinView" }
+                new Navigation2View{NavigationName="个性化",View="SkinView" },
+                new Navigation2View{NavigationName="遥控页面",View="RemoteControl" },
+                new Navigation2View{ NavigationName="实时监控",View="Realtime"}
             };
         }
 

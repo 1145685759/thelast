@@ -16,6 +16,12 @@ namespace TheLast.ViewModels
 {
     public class AddFeedbackViewModel : BindableBase, IDialogHostAware
     {
+        private int offsetValue;
+        public int OffsetValue
+        {
+            get { return offsetValue; }
+            set { SetProperty(ref offsetValue, value); }
+        }
         private List<int> indoorNums;
         public List<int> IndoorNums
         {
@@ -229,6 +235,7 @@ namespace TheLast.ViewModels
                         TestStepId = item.TestStepId,
                         TagetValue = item.TagetValue,
                         DisplayTagetValue = item.DisplayTagetValue,
+                        Offset=item.Offset,
                         DelayModeId = item.DelayModeId,
                         DelayTime = item.DelayTime,
                         IsJump=item.IsJump
@@ -243,6 +250,7 @@ namespace TheLast.ViewModels
                 {
                     await sqlSugarClient.Updateable(new FeedBack
                     {
+                        Offset = item.Offset,
                         Operational = CurrentOperational,
                         Id = item.Id,
                         RegisterId = item.RegisterId,
@@ -293,6 +301,7 @@ namespace TheLast.ViewModels
                 feedBackDto.StationNum = sqlSugarClient.Queryable<Register>().First(x => x.Id == item.RegisterId).StationNum;
                 feedBackDto.Address = sqlSugarClient.Queryable<Register>().First(x => x.Id == item.RegisterId).Name;
                 feedBackDto.Id = item.Id;
+                feedBackDto.Offset=item.Offset;
                 feedBackDto.Operational = item.Operational;
                 feedBackDto.RegisterId = item.RegisterId;
                 feedBackDto.TestStepId = item.TestStepId;
@@ -432,6 +441,7 @@ namespace TheLast.ViewModels
                 feedBackDto.TagetValue = inputValue;
                 feedBackDto.DelayModeId = CurrentDelayMode + 1;
                 feedBackDto.DisplayTagetValue = inputValue;
+                feedBackDto.Offset = OffsetValue;
                 AddFeedbackDtoList.Add(feedBackDto);
             }
             else
@@ -447,6 +457,7 @@ namespace TheLast.ViewModels
                 feedBackDto.TagetValue = CurrentValueDictionary.RealValue;
                 feedBackDto.DelayModeId = CurrentDelayMode + 1;
                 feedBackDto.DisplayTagetValue = inputValue;
+                feedBackDto.Offset = OffsetValue;
                 AddFeedbackDtoList.Add(feedBackDto);
             }  
           

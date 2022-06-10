@@ -129,7 +129,7 @@ namespace TheLast.ViewModels
             get { return currentRegister; }
             set { SetProperty(ref currentRegister, value); }
         }
-        private string[] sensorTypes=new string[2] { "15K传感器", "20K传感器" };
+        private string[] sensorTypes=new string[6] { "15K传感器10K串联电阻", "20K传感器10K串联电阻", "50K传感器5.1K串联电阻", "15K传感器20K串联电阻", "20K传感器20K串联电阻", "50K传感器20K串联电阻" };
         public string[] SensorTypes
         {
             get { return sensorTypes; }

@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using TheLast.Common;
+using TheLast.Dtos;
 
 namespace TheLast.Common
 {

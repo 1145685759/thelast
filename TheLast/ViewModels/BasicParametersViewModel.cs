@@ -17,12 +17,20 @@ using TheLast.Common;
 using TheLast.Dtos;
 using TheLast.Entities;
 using TheLast.Extensions;
+using Newtonsoft.Json;
+using MaterialDesignThemes.Wpf;
+using System.IO;
 
 namespace TheLast.ViewModels
 {
     public class BasicParametersViewModel: NavigationViewModel
     {
-
+        private Visibility isTemp=Visibility.Collapsed;
+        public Visibility IsTemp
+        {
+            get { return isTemp; }
+            set { SetProperty(ref isTemp, value); }
+        }
         private readonly IDialogHostService dialog;
         private string GetType;
         private ObservableCollection<RegisterDto> registerDtos;
@@ -89,6 +97,7 @@ namespace TheLast.ViewModels
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
+            IsTemp = Visibility.Collapsed;
             Indoors.Clear();
             Outdoors.Clear();
             for (int i = 1; i <= App.IndoorCount; i++)
@@ -109,14 +118,25 @@ namespace TheLast.ViewModels
                 
                 IsOutdoor = Visibility.Collapsed;
                 IsIndoor = Visibility.Visible;
+                IsTemp = Visibility.Collapsed;
             }
             else if (GetType == "外机数据")
             {
                 IsIndoor = Visibility.Collapsed;
                 IsOutdoor = Visibility.Visible;
+                IsTemp = Visibility.Collapsed;
             }
             else
             {
+                if (GetType=="20个温度设置")
+                {
+                    IsTemp = Visibility.Visible;
+                }
+                else
+                {
+                    IsTemp = Visibility.Collapsed;
+                }
+               
                 IsOutdoor=Visibility.Collapsed;
                 IsIndoor = Visibility.Collapsed;
                 var registers = await sqlSugarClient.Queryable<Register>().Where(x => x.RegisterType == GetType).ToListAsync();
@@ -148,6 +168,40 @@ namespace TheLast.ViewModels
                 RegisterDtos.AddRange(mapper.Map<List<RegisterDto>>(registers));
             }
             UpdateLoading(false);
+        }
+        private DelegateCommand exportConfig;
+        public DelegateCommand ExportConfig =>
+            exportConfig ?? (exportConfig = new DelegateCommand(ExecuteExportConfig));
+
+        async void ExecuteExportConfig()
+        {
+            var registers=await sqlSugarClient.Queryable<Register>().ToListAsync();
+            var json= JsonConvert.SerializeObject(registers);
+            string fp = System.Windows.Forms.Application.StartupPath + "\\config.json";
+            if (!File.Exists(fp))  // 判断是否已有相同文件 
+            {
+                FileStream fs1 = new FileStream(fp, FileMode.Create, FileAccess.ReadWrite);
+                fs1.Close();
+            }
+            await File.WriteAllTextAsync(fp, json);
+            HandyControl.Controls.Growl.Success("导出配置成功");
+        }
+        private DelegateCommand loadConfig;
+        public DelegateCommand LoadConfig =>
+            loadConfig ?? (loadConfig = new DelegateCommand(ExecuteLoadConfig));
+
+        async void ExecuteLoadConfig()
+        {
+            string fp = System.Windows.Forms.Application.StartupPath + "\\config.json";
+            if (!File.Exists(fp))  // 判断是否已有相同文件 
+            {
+                HandyControl.Controls.Growl.Error("不存在配置文件");
+            }
+            else
+            {
+               await sqlSugarClient.Updateable(JsonConvert.DeserializeObject<List<Register>>(await File.ReadAllTextAsync(fp))).ExecuteCommandAsync();
+                HandyControl.Controls.Growl.Success("加载成功");
+            }
         }
         private DelegateCommand<int?> selectedIndoorCommand;
         public DelegateCommand<int?> SelectedIndoorCommand =>

@@ -9,7 +9,7 @@
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:pass="clr-namespace:TheLast.Extensions"
     xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
-     TextOptions.TextFormattingMode="Ideal" 
+    TextOptions.TextFormattingMode="Ideal" 
              TextOptions.TextRenderingMode="Auto"        
              TextElement.Foreground="{DynamicResource LightInfoBrush}"
              TextElement.FontWeight="Regular"
@@ -61,7 +61,7 @@
                         Margin="0,10"
                         md:HintAssist.Hint="请输入账号"
                         DockPanel.Dock="Top"
-                        Text="{Binding UserName}" />
+                        Text="{Binding UserName}" Cursor="Arrow" />
                     <PasswordBox
                         Margin="0,10"
                         md:HintAssist.Hint="请输入密码"

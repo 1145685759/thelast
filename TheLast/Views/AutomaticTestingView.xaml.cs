@@ -29,14 +29,16 @@ namespace TheLast.Views
 
         private void Remark_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (((TextBox)sender).Text=="未通过")
+            if (((TextBox)sender).Text.Contains("未通过"))
             {
                 ((TextBox)sender).Foreground = new SolidColorBrush(Colors.Red);
             }
-            if (((TextBox)sender).Text == "通过")
+            else
             {
                 ((TextBox)sender).Foreground = new SolidColorBrush(Colors.Black);
             }
+                
+
         }
     }
 }

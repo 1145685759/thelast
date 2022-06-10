@@ -56,6 +56,10 @@
               "target": "Package",
               "version": "[5.1.0, )"
             },
+            "FluentModbus": {
+              "target": "Package",
+              "version": "[3.2.1, )"
+            },
             "HandyControl": {
               "target": "Package",
               "version": "[3.3.0, )"
@@ -66,7 +70,7 @@
             },
             "MaterialDesignThemes": {
               "target": "Package",
-              "version": "[4.4.0, )"
+              "version": "[4.6.0-ci198, )"
             },
             "Microsoft.Extensions.DependencyInjection": {
               "target": "Package",
@@ -76,9 +80,9 @@
               "target": "Package",
               "version": "[1.24.3, )"
             },
-            "NModbus4.Core": {
+            "NModbus4.NetCore": {
               "target": "Package",
-              "version": "[1.0.2, )"
+              "version": "[1.0.1, )"
             },
             "OxyPlot.Wpf": {
               "target": "Package",
@@ -95,6 +99,10 @@
             "SqlSugarCore": {
               "target": "Package",
               "version": "[5.0.6.1, )"
+            },
+            "UtilsSharp": {
+              "target": "Package",
+              "version": "[2.5.0, )"
             },
             "unvell.ReoGridWPF.dll": {
               "target": "Package",

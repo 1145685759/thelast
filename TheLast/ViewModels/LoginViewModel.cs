@@ -41,6 +41,8 @@ namespace TheLast.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
+            UserName = "admin";
+            PassWord = "admin";
         }
 
         #region Login

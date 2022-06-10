@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HandyControl.Controls;
 using MiniExcelLibs;
 using Prism.Commands;
 using Prism.Ioc;
@@ -111,7 +112,7 @@ namespace TheLast.ViewModels
                     var re = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == init.RegisterId);
                     if (!re.IsEnable)
                     {
-                        HandyControl.Controls.Growl.Error($"{re.Name}未启用，请检查");
+                        Growl.Error($"{re.Name}未启用，请检查");
                         return;
                     } 
                 }
@@ -121,13 +122,13 @@ namespace TheLast.ViewModels
                     var re = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Id == feedback.RegisterId);
                     if (!re.IsEnable)
                     {
-                        HandyControl.Controls.Growl.Error($"{re.Name}未启用，请检查");
+                        Growl.Error($"{re.Name}未启用，请检查");
                         return;
                     }
                 }
                 
             }
-            HandyControl.Controls.Growl.Success("检查完毕，无异常！");
+            Growl.Success("检查完毕，无异常！");
         }
         private DelegateCommand<TestStepDto> deleteTestStep;
         public DelegateCommand<TestStepDto> DeleteTestStep =>
@@ -159,7 +160,7 @@ namespace TheLast.ViewModels
             var rows = MiniExcel.Query<ExcelModel>(path).ToList();
             UpdateLoading(true);
             Task thread = Task.Factory.StartNew(async ()=>await load(rows));
-            await Task.Delay(15000);
+            await Task.Delay(10000);
             var list = await sqlSugarClient.Queryable<TestStep>().Where(x => x.ModuleId == CurrentDto.Id).ToListAsync();
             TestStepDtos.Clear();
             foreach (var item in list)
@@ -202,6 +203,7 @@ namespace TheLast.ViewModels
         {
             foreach (var item in rows)
             {
+                List<string> pianchazhi = new List<string>();
                 List<string> xieruzhi = new List<string>();
                 List<string> jicunqixieru = new List<string>();
                 List<string> jicunqipanduan = new List<string>();
@@ -229,6 +231,10 @@ namespace TheLast.ViewModels
                 if (!string.IsNullOrEmpty(item.目标值))
                 {
                     mubiaozhi = item.目标值.Split("\n").ToList();
+                }
+                if (!string.IsNullOrEmpty(item.偏差值))
+                {
+                    pianchazhi = item.偏差值.Split("\n").ToList();
                 }
                 if (!string.IsNullOrEmpty(item.站号))
                 {
@@ -263,14 +269,20 @@ namespace TheLast.ViewModels
                     Remark = item.备注,
                     JudgmentContent = JudgmentContent,
                     TestProcess = TestProcess,
-                    TestContent = item.测试内容
+                    TestContent = item.测试内容,
                 };
                 int id = await sqlSugarClient.Insertable(testStep).ExecuteReturnIdentityAsync();
                 for (int i = 0; i < jicunqixieru.Count; i++)
                 {
                     string registerName = jicunqixieru[i].Remove(0, 2);
                     string writevalue = xieruzhi[i].Remove(0, 2);
-                    int registerid = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == registerName)).Id;
+                    var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == registerName);
+                    if (register==null)
+                    {
+                        Growl.Warning($"未找到寄存器{registerName}请检查!");
+                        return;
+                    }
+                    int registerid = register.Id;
                     var valuedic = await sqlSugarClient.Queryable<ValueDictionary>().Where(x => x.RegisterId == registerid).ToListAsync();
                     if (valuedic.Count != 0)
                     {
@@ -293,7 +305,7 @@ namespace TheLast.ViewModels
                             }
                             else
                             {
-                                HandyControl.Controls.Growl.Error($"Excel配置格式错误:{rows.IndexOf(item) + 2}行写入值错误");
+                                Growl.Error($"Excel配置格式错误:{rows.IndexOf(item) + 2}行写入值错误");
                                 await sqlSugarClient.Deleteable<TestStep>(id).ExecuteCommandAsync();
                                 return;
                             }
@@ -317,10 +329,22 @@ namespace TheLast.ViewModels
                 for (int i = 0; i < jicunqipanduan.Count; i++)
                 {
                     string registerName = jicunqipanduan[i].Remove(0, 2);
+                    string offset = pianchazhi[i].Remove(0, 2);
                     string tagetvalue = mubiaozhi[i].Remove(0, 2);
                     string delayMode = yanshimoshi[i].Remove(0, 2);
                     string yunsuanfuStr = yunsuanfu[i].Remove(0, 2);
-                    int registerid = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == registerName)).Id;
+                    var register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == registerName);
+                    if (register == null)
+                    {
+                        Growl.Warning($"未找到寄存器{registerName}请检查!");
+                        return;
+                    }
+                    if (registerName.Contains("扫风电机/膨胀阀"))
+                    {
+                        register = await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == mubiaozhi[i].Remove(0, 2));
+                        tagetvalue= register.Address.ToString();
+                    }
+                    int registerid = register.Id;
                     if (sqlSugarClient.Queryable<ValueDictionary>().Where(x => x.RegisterId == registerid).ToList().Count != 0)
                     {
                         try
@@ -334,13 +358,14 @@ namespace TheLast.ViewModels
                             feedBack.DisplayTagetValue = tagetvalue;
                             feedBack.RegisterId = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == registerName)).Id;
                             feedBack.TestStepId = id;
+                            feedBack.Offset = Convert.ToInt32(pianchazhi[i].Remove(0, 2));
                             if (tagetvalues != null)
                             {
                                 feedBack.TagetValue = tagetvalues.RealValue;
                             }
                             else
                             {
-                                HandyControl.Controls.Growl.Error($"Excel配置格式错误:{rows.IndexOf(item) + 2}行目标值错误");
+                                Growl.Error($"Excel配置格式错误:{rows.IndexOf(item) + 2}行目标值错误");
                                 await sqlSugarClient.Deleteable<TestStep>(id).ExecuteCommandAsync();
                                 return;
                             }
@@ -348,7 +373,7 @@ namespace TheLast.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            HandyControl.Controls.Growl.Error($"Excel配置格式错误{ex.Message}");
+                            Growl.Error($"Excel配置格式错误{ex.Message}");
                         }
 
 
@@ -365,6 +390,7 @@ namespace TheLast.ViewModels
                             RegisterId = (await sqlSugarClient.Queryable<Register>().FirstAsync(x => x.Name == registerName)).Id,
                             TestStepId = id,
                             TagetValue = tagetvalue,
+                            Offset= Convert.ToInt32(pianchazhi[i].Remove(0, 2)),
                         });
                     }
                 }
@@ -389,7 +415,6 @@ namespace TheLast.ViewModels
                     feedbackStr.Append($"站号【{register.StationNum}】 寄存器【{register.Name}】{feedBack.Operational}【{feedBack.TagetValue}】\r\n");
                 }
             }
-          
         }
         private DelegateCommand jumpConfig;
         public DelegateCommand JumpConfig =>
@@ -445,8 +470,10 @@ namespace TheLast.ViewModels
                             Result = item.Result,
                             TestContent = item.TestContent,
                             TestProcess = initStr.ToString(),
+                            
                             JudgmentContent = feedbackStr.ToString(),
                             Id = item.Id
+                            
                         });
                     }
 

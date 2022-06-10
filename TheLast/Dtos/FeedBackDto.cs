@@ -20,6 +20,12 @@ namespace TheLast.Dtos
             get { return registerId; }
             set { SetProperty(ref registerId, value); }
         }
+        private int offset;
+        public int Offset
+        {
+            get { return offset; }
+            set { SetProperty(ref offset, value); }
+        }
         private Register register;
         public Register Register
         {

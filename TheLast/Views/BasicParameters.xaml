@@ -14,7 +14,14 @@
              TextOptions.TextFormattingMode="Ideal" 
              TextOptions.TextRenderingMode="Auto"        
              Background="{DynamicResource MaterialDesignPaper}"
-             xmlns:mde="https://spiegelp.github.io/MaterialDesignExtensions/winfx/xaml" xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
+             xmlns:prox="clr-namespace:TheLast.Common"
+             xmlns:mde="https://spiegelp.github.io/MaterialDesignExtensions/winfx/xaml" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:cv="clr-namespace:TheLast.Common.Converters">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <cv:TypeConverter x:Key="TypeConverter"/>
+            <prox:BindingProxy x:Key="proxy" Data="{Binding}"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid Margin="50 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -56,8 +63,8 @@
                     </ComboBox>
                 </StackPanel>
             </Grid>
-            
-            
+            <Button Content="导出寄存器配置" Margin="20"  VerticalAlignment="Center" Cursor="Hand" DockPanel.Dock="Right" Command="{Binding ExportConfig}"/>
+            <Button Content="加载寄存器配置" Margin="20"  VerticalAlignment="Center" Cursor="Hand" DockPanel.Dock="Right" Command="{Binding LoadConfig}"/>
             <Button Content="添 加 寄 存 器" Margin="20"  VerticalAlignment="Center" Cursor="Hand" DockPanel.Dock="Right" Command="{Binding AddRegister}"/>
         </DockPanel>
         <DataGrid Grid.Row="1" IsReadOnly="True" Name="RegisterDataGrid" LoadingRow="DataGrid_LoadingRow" ItemsSource="{Binding RegisterDtos}" AutoGenerateColumns="False" CanUserAddRows="False">
@@ -71,6 +78,7 @@
                 </DataGridTemplateColumn>
                 <DataGridCheckBoxColumn Header="是否启用" Binding="{Binding IsEnable}" />
                 <DataGridTextColumn Header="寄存器命名" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="传感器类型" Binding="{Binding Type, Converter={StaticResource TypeConverter}}" Visibility="{Binding Data.IsTemp,Source={StaticResource proxy}}" />
                 <DataGridTextColumn Header="所属站号" Binding="{Binding StationNum}"/>
                 <DataGridTextColumn Header="寄存器地址" Binding="{Binding Address}"/>
                 <DataGridTemplateColumn Header="操作">

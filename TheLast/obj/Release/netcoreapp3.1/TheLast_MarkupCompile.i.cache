@@ -12,9 +12,9 @@ TRACE;RELEASE;NETCOREAPP;NETCOREAPP3_1;
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\App.xaml
 191365023317
 
-78-1701856477
+81-1699306946
 263-1211164833
 Views\AutomaticTestingView.xaml;Views\BasicParameters.xaml;Views\Dialog\AddFeedback.xaml;Views\Dialog\AddInit.xaml;Views\Dialog\AddRegister.xaml;Views\Dialog\CheckRegister.xaml;Views\Dialog\ComSetting.xaml;Views\Dialog\JumpConfig.xaml;Views\HistoricalCurve.xaml;Views\LoginView.xaml;Views\MainWindow.xaml;Views\ManualTest.xaml;Views\ModuleView.xaml;Views\MsgView.xaml;Views\ProgressView.xaml;Views\ProjectManager.xaml;Views\RealTimeCurve.xaml;Views\SkinView.xaml;Views\TestStep.xaml;
 
-True
+False
 

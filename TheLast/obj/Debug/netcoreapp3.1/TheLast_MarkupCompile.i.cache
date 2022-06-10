@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1;
 E:\奥克斯项目\奥克斯项目\TheLast\TheLast\App.xaml
-191365023317
+211966736114
 
-78-1654416406
-263-1211164833
-Views\AutomaticTestingView.xaml;Views\BasicParameters.xaml;Views\Dialog\AddFeedback.xaml;Views\Dialog\AddInit.xaml;Views\Dialog\AddRegister.xaml;Views\Dialog\CheckRegister.xaml;Views\Dialog\ComSetting.xaml;Views\Dialog\JumpConfig.xaml;Views\HistoricalCurve.xaml;Views\LoginView.xaml;Views\MainWindow.xaml;Views\ManualTest.xaml;Views\ModuleView.xaml;Views\MsgView.xaml;Views\ProgressView.xaml;Views\ProjectManager.xaml;Views\RealTimeCurve.xaml;Views\SkinView.xaml;Views\TestStep.xaml;
+86799021933
+3021411677371
+Views\AutomaticTestingView.xaml;Views\BasicParameters.xaml;Views\Dialog\AddFeedback.xaml;Views\Dialog\AddInit.xaml;Views\Dialog\AddRegister.xaml;Views\Dialog\CheckRegister.xaml;Views\Dialog\ComSetting.xaml;Views\Dialog\JumpConfig.xaml;Views\Dialog\Realtime.xaml;Views\HistoricalCurve.xaml;Views\LoginView.xaml;Views\MainWindow.xaml;Views\ManualTest.xaml;Views\ModuleView.xaml;Views\MsgView.xaml;Views\ProgressView.xaml;Views\ProjectManager.xaml;Views\RealTimeCurve.xaml;Views\RemoteControl.xaml;Views\SkinView.xaml;Views\TestStep.xaml;
 
 False
 

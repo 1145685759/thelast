@@ -20,5 +20,6 @@ namespace TheLast.Dtos
         public string 延时模式 { get; set; }
         public string 测试内容 { get; set; }
         public string 延时时间 { get; set; }
+        public string 偏差值 { get; set; }
     }
 }

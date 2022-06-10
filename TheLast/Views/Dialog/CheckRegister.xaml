@@ -11,8 +11,8 @@
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
              Background="{DynamicResource MaterialDesignPaper}"
-             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-             Width="450" >
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             Width="600" >
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -40,7 +40,7 @@
                 Margin="20,10" md:HintAssist.Hint="请输入寄存器地址" DockPanel.Dock="Top" Cursor="IBeam"/>
                 <TextBlock Text="寄存器描述：" DockPanel.Dock="Top" Margin="20 10"/>
                 <TextBox Margin="20,10" 
-                      Text="{Binding Model.Name}"
+                     Text="{Binding Name}"
                      VerticalAlignment="Center"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
@@ -58,15 +58,82 @@
                      TextWrapping="Wrap"
                      VerticalAlignment="Center"
                      md:HintAssist.Hint="接入设备地址" DockPanel.Dock="Top" Cursor="IBeam"/>
+                    
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Top" Visibility="{Binding Visibility}" Margin="20,10">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="内机：" VerticalAlignment="Center"/>
+                        <ComboBox 
+                        Name="indoor"
+                        md:HintAssist.Hint="内机号"
+                        SelectedIndex="{Binding IndoorIndex}"
+                        ItemsSource="{Binding IndoorCount}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction 
+                            CommandParameter="{Binding ElementName=indoor, Path=SelectedValue}"
+                                                    Command="{Binding DataContext.SelectedindoorCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                        <ComboBox 
+                        SelectedIndex="{Binding IndoorPrarmIndex}"
+                        md:HintAssist.Hint="内机参数"  
+                        DisplayMemberPath="Name"
+                        Name="indoorprarm"
+                        ItemsSource="{Binding IndoorPrarm}"
+                        Margin="20 0">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction 
+                            CommandParameter="{Binding ElementName=indoorprarm, Path=SelectedValue}"
+                                                    Command="{Binding DataContext.SelectedindoorPrarmCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="外机：" VerticalAlignment="Center"/>
+                        <ComboBox 
+                        md:HintAssist.Hint="外机号"
+                        Name="outdoor"
+                        SelectedIndex="{Binding OutdoorIndex}"
+                        ItemsSource="{Binding OutdoorCount}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction 
+                            CommandParameter="{Binding ElementName=outdoor, Path=SelectedValue}"
+                                                    Command="{Binding DataContext.SelectedoutdoorCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                        <ComboBox 
+                        md:HintAssist.Hint="外机参数"
+                        Name="outdoorprarm"
+                        DisplayMemberPath="Name"
+                        SelectedIndex="{Binding OutdoorPrarmIndex}"
+                        ItemsSource="{Binding OutdoorPrarm}"
+                        Margin="20 0">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction 
+                            CommandParameter="{Binding ElementName=outdoorprarm, Path=SelectedValue}"
+                                                    Command="{Binding DataContext.SelectedoutdoorPrarmCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="20,10" DockPanel.Dock="Top" Visibility="{Binding Visibility}">
                     <TextBlock Text="传感器类型：" VerticalAlignment="Center" />
                     <ComboBox md:HintAssist.Hint="请选择传感器类型" ItemsSource="{Binding Types}" SelectedIndex="{Binding Model.Type}" />
+                    <CheckBox Content="勾选开启精调" Margin="20 0" IsChecked="{Binding Model.FineTuning}"/>
+                    <TextBox md:HintAssist.Hint="允许偏差范围" Text="{Binding AllowableRangeDeviation}"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="20,10" DockPanel.Dock="Top" Visibility="{Binding Visibility}">
+                <!--<StackPanel Orientation="Horizontal" Margin="20,10" DockPanel.Dock="Top" Visibility="{Binding Visibility}">
                     <TextBlock Text="电路电源等级：" VerticalAlignment="Center"/>
                     <ComboBox md:HintAssist.Hint="请选择电路电源等级" ItemsSource="{Binding Castes}"  SelectedIndex="{Binding Model.Caste}"/>
-                </StackPanel>
+                </StackPanel>-->
                 <TextBlock Text="是否需要历史记录：" DockPanel.Dock="Top" Margin="20 10"/>
                 <CheckBox Margin="20,10" 
                       IsChecked="{Binding Model.IsHsData}"

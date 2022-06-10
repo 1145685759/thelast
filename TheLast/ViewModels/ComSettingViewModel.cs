@@ -1,5 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Modbus.Device;
+using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -8,6 +9,7 @@ using Prism.Services.Dialogs;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Ports;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,11 +17,18 @@ using TheLast.Common;
 using TheLast.Entities;
 using TheLast.Events;
 using TheLast.Extensions;
+using UtilsSharp;
 
 namespace TheLast.ViewModels
 {
-    public class ComSettingViewModel : BindableBase
+    public class ComSettingViewModel : BindableBase, INavigationAware
     {
+        private int comPortIndex;
+        public int ComPortIndex
+        {
+            get { return comPortIndex; }
+            set { SetProperty(ref comPortIndex, value); }
+        }
         SerialPort serialPort;
         private int indoorCount;
         public int IndoorCount
@@ -98,6 +107,10 @@ namespace TheLast.ViewModels
 
         private void Cancel()
         {
+            if (DialogHostName==null)
+            {
+                return;
+            }
             if (DialogHost.IsDialogOpen(DialogHostName))
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No)); //取消返回NO告诉操作结束
         }
@@ -141,6 +154,11 @@ namespace TheLast.ViewModels
                     {
                         serialPort.Open();
                         App.ModbusSerialMaster = ModbusSerialMaster.CreateRtu(serialPort);
+                        //App.ModbusSerialMaster.Transport.ReadTimeout = 100;
+                        //App.ModbusSerialMaster.Transport.WriteTimeout = 100;//写入数据超时100ms
+                        //App.ModbusSerialMaster.Transport.Retries = 3;//重试次数
+                        //App.ModbusSerialMaster.Transport.WaitToRetryMilliseconds = 10;//重试间隔
+
                         HandyControl.Controls.Growl.Success("串口连接成功");
                         await App.ModbusSerialMaster.WriteSingleRegisterAsync(1, 0, Convert.ToUInt16(VREF * 10));
                         await App.ModbusSerialMaster.WriteSingleRegisterAsync(1, 1, Convert.ToUInt16(IMCM));
@@ -164,7 +182,31 @@ namespace TheLast.ViewModels
                             var registers= await sqlSugarClient.Queryable<Register>().Where(x => x.IsEnable == true&&x.IsHsData==true).ToListAsync();
                             foreach (var item in registers)
                             {
-                                hsDatas.Add(new HsData { DateTime = DateTime.Now, RealValue = (await App.ModbusSerialMaster.ReadHoldingRegistersAsync(item.StationNum, item.Address, 1))[0], Register = item, RegisterId = item.Id });
+                                try
+                                {
+                                    if (item.RegisterType == "步进电机脉冲检测" || item.RegisterType == "外机数据" || item.RegisterType == "内机数据"||item.RegisterType== "反馈脉冲数")
+                                    {
+                                        hsDatas.Add(new HsData { DateTime = DateTime.Now, RealValue = (await App.ModbusSerialMaster.ReadInputRegistersAsync(item.StationNum, item.Address, 1))[0], Register = item, RegisterId = item.Id });
+                                    }
+                                    else if (item.RegisterType == "数字量输入")
+                                    {
+                                        hsDatas.Add(new HsData { DateTime = DateTime.Now, RealValue = Convert.ToUInt16((await App.ModbusSerialMaster.ReadInputsAsync(item.StationNum, item.Address, 1))[0]), Register = item, RegisterId = item.Id });
+                                    }
+                                    else if (item.RegisterType == "数字量输出")
+                                    {
+                                        hsDatas.Add(new HsData { DateTime = DateTime.Now, RealValue = Convert.ToUInt16((await App.ModbusSerialMaster.ReadCoilsAsync(item.StationNum, item.Address, 1))[0]), Register = item, RegisterId = item.Id });
+                                    }
+                                    else
+                                    {
+                                        hsDatas.Add(new HsData { DateTime = DateTime.Now, RealValue = (await App.ModbusSerialMaster.ReadHoldingRegistersAsync(item.StationNum, item.Address, 1))[0], Register = item, RegisterId = item.Id });
+
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    HandyControl.Controls.Growl.Error(item.Name);
+                                }
+                                
                             }
                             await sqlSugarClient.Insertable(hsDatas).ExecuteCommandAsync();
                             await Task.Delay(1000);
@@ -183,6 +225,37 @@ namespace TheLast.ViewModels
             {
                 HandyControl.Controls.Growl.Error("串口已打开");
             }
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            ComPortIndex = comPorts.Length - 1;
+            try
+            {
+                IndoorCount = Convert.ToInt32(AppsettingsHelper.GetValue("IndoorCount"));
+                OutdoorCount = Convert.ToInt32(AppsettingsHelper.GetValue("OutdoorCount"));
+                IMCM = Convert.ToInt32(AppsettingsHelper.GetValue("IndoorControl"));
+                UCM = Convert.ToInt32(AppsettingsHelper.GetValue("UnitControl"));
+                WSG = Convert.ToInt32(AppsettingsHelper.GetValue("Gears"));
+            }
+            catch (Exception ex)
+            {
+                HandyControl.Controls.Growl.Error("配置文件异常");
+            }
+           
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public async void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            var setting = new Settings { Gears = WSG, IndoorControl = IMCM, UnitControl = UCM, IndoorCount = IndoorCount, OutdoorCount = OutdoorCount };
+            var json= JsonConvert.SerializeObject(setting);
+            string path = Directory.GetCurrentDirectory() + "\\appsettings.json";
+            await File.WriteAllTextAsync(path,json);
         }
     }
 }

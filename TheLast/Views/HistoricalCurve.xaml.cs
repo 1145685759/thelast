@@ -29,7 +29,7 @@ namespace TheLast.Views
         public HistoricalCurve(ISqlSugarClient isqlsuagerclient,IContainerProvider containerProvider,IMapper mapper)
         {
             InitializeComponent();
-            DataContext = historicalCurveViewModel = new HistoricalCurveViewModel(isqlsuagerclient,containerProvider);
+            DataContext = historicalCurveViewModel = new HistoricalCurveViewModel(isqlsuagerclient, mapper,containerProvider);
             this.isqlsuagerclient = isqlsuagerclient;
             this.containerProvider = containerProvider;
         }

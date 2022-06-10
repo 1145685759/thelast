@@ -17,6 +17,7 @@ namespace TheLast.ViewModels
 {
     public class ModuleViewModel: NavigationViewModel
     {
+        
         private readonly IDialogHostService dialogHost;
         private readonly ISqlSugarClient sqlSugarClient;
         private readonly IMapper mapper;

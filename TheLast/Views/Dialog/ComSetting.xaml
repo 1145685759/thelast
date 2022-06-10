@@ -24,7 +24,7 @@
             <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <TextBlock Text="内机数量：" VerticalAlignment="Center" />
-                    <TextBox Text="{Binding IndoorCount}" VerticalAlignment="Center" Width="200"/>
+                    <TextBox Text="{Binding IndoorCount}" VerticalAlignment="Center" Width="200" Cursor="Arrow"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 5">
                     <TextBlock Text="外机数量：" VerticalAlignment="Center" />
@@ -44,7 +44,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left" Margin="0 5">
                     <TextBlock Text="端口号：" VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding ComPorts}" SelectedItem="{Binding CurrentComPort}" VerticalContentAlignment="Center" Width="215" />
+                    <ComboBox ItemsSource="{Binding ComPorts}" SelectedItem="{Binding CurrentComPort}" SelectedIndex="{Binding ComPortIndex}" VerticalContentAlignment="Center" Width="215" />
                 </StackPanel>
             </StackPanel>
             
